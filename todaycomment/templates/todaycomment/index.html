@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" >
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <title>Poster</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+     <link rel="stylesheet" href="{% static 'todaycomment/css/style.css' %}">
+
+</head>
+
+<body>
+
+ <div id="pagewrap">
+  <form class="frm" action="{% url 'todaycomment:index' comment_list %}" method="post">
+   {% csrf_token %}
+      <div class="inpt">
+          <input type="text" value="" id="comment_text" placeholder="share your thoughts">
+      </div>
+   <div class="submit-button">
+     <button type="submit" id="submit">post</button>
+   </div>
+  </form>
+
+  <div class="feeds">
+   <ul id="comments">
+    {% for list in comment_list %}
+        {{ comment_list.comment_text }}
+    {% endfor %}
+    <li>Let's get farted!</li>
+   </ul>
+  </div>
+ </div>
+
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+
+</body>
+
+</html>

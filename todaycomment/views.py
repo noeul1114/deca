@@ -8,22 +8,22 @@ from .models import Comment_list
 
 # Create your views here.
 
-def index(request):
+def com_index(request):
     comment_list = Comment_list.objects.order_by('created_at').reverse()
     return render(request, 'todaycomment/index.html', {'comment_list': comment_list})
 
-def post(request):
+def com_post(request):
     C = Comment_list(comment_text=request.POST['comment_text'], created_at=timezone.now())
     try:
         C.save()
-        return HttpResponseRedirect(reverse('todaycomment:index'))
+        return HttpResponseRedirect(reverse('todaycomment:com_index'))
     except:
-        return HttpResponseRedirect('todaycomment:index')
+        return HttpResponseRedirect('todaycomment:com_index')
 
-def delete(request, id):
-    C = Comment_list.objects.get(id=id)
+def com_delete(request):
+    C = Comment_list.objects.get(id=request.POST['comment_del'])
     try:
         C.delete()
-        return HttpResponseRedirect(reverse('todaycomment:index'))
+        return HttpResponseRedirect(reverse('todaycomment:com_index'))
     except:
-        return HttpResponseRedirect('todaycomment:index')
+        return HttpResponseRedirect('todaycomment:com_index')

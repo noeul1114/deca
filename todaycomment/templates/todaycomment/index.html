@@ -17,7 +17,7 @@
 <body>
 
  <div id="pagewrap">
-  <form class="frm" action="{% url 'todaycomment:post' %}" method="post">
+  <form class="frm" action="{% url 'todaycomment:com_post' %}" method="post">
    {% csrf_token %}
       <div class="paper">
           <div class="paper-content">
@@ -37,9 +37,9 @@
         {% csrf_token %}
             <button type="submit" id="submit">수정</button>
         </form>
-        <form action="" method="post">
+        <form action="{% url 'todaycomment:com_delete' %}" method="post">
         {% csrf_token %}
-            <button type="submit" id="submit">삭제</button>
+            <button type="submit" value="{{ list.id }}" name="comment_del">삭제</button>
         </form>
     {% endfor %}
     <li>Let's get farted!</li>

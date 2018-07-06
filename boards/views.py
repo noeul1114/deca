@@ -4,13 +4,24 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse
 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, get_user, login, logout
+
+from django.utils import timezone
+
+from django.shortcuts import get_object_or_404
+
+from .models import Article
 
 # Create your views here.
 
 def board_index(request):
-    return render(request, 'boards/board_index.html', {'user': User.objects.filter(pk=3),
-                                                       })
+    user = get_user(request)
+    article_list = Article.objects.all()
+    if user.is_authenticated :
+        return render(request, 'boards/board_index.html', {'user_id': user,
+                                                           'article_list': article_list})
+    else:
+        return render(request, 'boards/board_index.html')
 
 def board_login(request):
     if request.method == 'POST':
@@ -21,11 +32,16 @@ def board_login(request):
                             password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse('boards:board_index'), {'id': user.id})
+            return HttpResponseRedirect(reverse('boards:board_index'))
         else:
             return render(request, 'boards/board_login.html')
     else:
         return render(request, 'boards/board_login.html')
+
+def board_logout(request):
+    logout(request)
+    return render(request, 'boards/board_index.html')
+
 
 def board_register(request):
     if request.method == 'POST':
@@ -40,3 +56,17 @@ def board_register(request):
             return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다.'})
     else:
         return  render(request, 'boards/board_register.html')
+
+
+def board_write(request):
+    if request.method == 'POST':
+        A = Article(title=request.POST['title'],
+                    article_text=request.POST['article_text'],
+                    created_at=timezone.now())
+        try:
+            A.save()
+            return HttpResponseRedirect(reverse('boards:board_index'))
+        except:
+            return render(request, 'boards/board_write.html', {'error_message': '글 작성에 실패하였습니다.'})
+    else:
+        return render(request, 'boards/board_write.html')

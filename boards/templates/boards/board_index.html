@@ -6,11 +6,26 @@
 </head>
 <body>
 
-{% if user.is %}
-<p>안녕하세요! {{ user. }} 님!</p>
+{% if user.is_authenticated %}
+    <p>
+        안녕하세요! {{ user.username }} 님!
+    </p>
+    <a href="{% url 'boards:board_logout'%}">
+        Logout
+    </a>
 {% else %}
-<a href="{% url 'boards:board_login' %}">Login</a>
+    <a href="{% url 'boards:board_login' %}">Login</a>
 {% endif %}
+
+
+<h2>Article List</h2>
+<ul>
+    {% for article in article_list %}
+    <li><a href="">{{ article.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'boards:board_write' %}">글쓰기</a>
 
 </body>
 </html>

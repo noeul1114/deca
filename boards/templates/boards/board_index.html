@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% if user.is %}
+<p>안녕하세요! {{ user. }} 님!</p>
+{% else %}
+<a href="{% url 'boards:board_login' %}">Login</a>
+{% endif %}
+
+</body>
+</html>

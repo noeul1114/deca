@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="text" name="username" placeholder="Email Or ID">
+    <input type="password" name="password" placeholder="Password">
+    <button type="submit">
+        Login
+    </button>
+</form>
+
+<p>아직 계정이 없으신가요?</p>
+<a href="{% url 'boards:board_register' %}">회원가입</a>
+
+</body>
+</html>

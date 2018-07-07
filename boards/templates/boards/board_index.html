@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Blue Board</title>
 </head>
 <body>
 
@@ -30,7 +30,7 @@
         </p>
 
         {% if user == article.writer %}
-        <form action="">
+        <form action="{% url 'boards:board_edit' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="article_id" value="{{ article.id }}">
             <button>

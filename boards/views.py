@@ -14,6 +14,7 @@ from .models import Article
 
 # Create your views here.
 
+
 def board_index(request):
     user = get_user(request)
     article_list = Article.objects.all()
@@ -22,6 +23,7 @@ def board_index(request):
                                                            'article_list': article_list})
     else:
         return render(request, 'boards/board_index.html', {'article_list': article_list})
+
 
 def board_login(request):
     if request.method == 'POST':
@@ -37,6 +39,7 @@ def board_login(request):
             return render(request, 'boards/board_login.html')
     else:
         return render(request, 'boards/board_login.html')
+
 
 def board_logout(request):
     logout(request)
@@ -78,9 +81,47 @@ def board_write(request):
         return HttpResponseRedirect(reverse('boards:board_index'))
 
 
+def board_edit(request):
+    if request.method == "POST":
+        user = get_user(request)
+        A = get_object_or_404(Article, pk=request.POST['article_id'])
+        if user.is_authenticated:
+            if A.writer_id == user.id:
+                return render(request, 'boards/board_edit.html', {'article_edit': A})
+            else:
+                return HttpResponseRedirect(reverse('boards:board_index'))
+        else:
+            return HttpResponseRedirect(reverse('boards:board_index'))
+    else:
+        return HttpResponseRedirect(reverse('boards:board_index'))
+
+
+def board_edit_fix(request):
+    if request.method == "POST":
+        user = get_user(request)
+        A = get_object_or_404(Article, pk=request.POST['article_id'])
+        if user.is_authenticated:
+            if A.writer_id == user.id:
+                try:
+                    A.article_text = request.POST['article_text']
+                    A.title = request.POST['title']
+                    A.edited_at = timezone.now()
+                    A.save()
+                    return HttpResponseRedirect(reverse('boards:board_index'))
+                except:
+                    return HttpResponseRedirect(reverse('boards:board_edit'))
+            else:
+                return HttpResponseRedirect(reverse('boards:board_index'))
+        else:
+            return HttpResponseRedirect(reverse('boards:board_index'))
+    else:
+        return HttpResponseRedirect(reverse('boards:board_index'))
+
+
+
 def board_delete(request):
     try:
-        A = Article.objects.get(pk=request.POST['article_id'])
+        A = get_object_or_404(Article, pk=request.POST['article_id'])
         A.delete()
         return HttpResponseRedirect(reverse('boards:board_index'))
     except:

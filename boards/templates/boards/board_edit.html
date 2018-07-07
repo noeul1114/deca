@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Write</title>
+    <title>Edit</title>
 </head>
 <body>
 
@@ -10,12 +10,14 @@
 <h3>{{ error_message }}</h3>
 {% endif %}
 
-<form action="{% url 'boards:board_write' %}" method="post">
+<form action="{% url 'boards:board_edit_fix' %}" method="post">
     {% csrf_token %}
-    <input type="text" name="title" placeholder="Title">
+    <input type="text" name="title" placeholder="Title" value="{{ article_edit.title }}">
     <textarea name="article_text" cols="30" rows="10">
-
+            {{ article_edit.article_text }}
     </textarea>
+
+    <input type="hidden" name="article_id" value="{{ article_edit.id }}">
     <button type="submit">
         글쓰기
     </button>

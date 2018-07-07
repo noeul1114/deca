@@ -10,4 +10,6 @@ urlpatterns = [
     path('register/', views.board_register, name='board_register'),
     path('write/', views.board_write, name='board_write'),
     path('delete/', views.board_delete, name='board_delete'),
+    path('edit/', views.board_edit, name='board_edit'),
+    path('edit_fix/', views.board_edit_fix, name='board_edit_fix'),
 ]

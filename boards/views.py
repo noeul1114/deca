@@ -18,10 +18,10 @@ def board_index(request):
     user = get_user(request)
     article_list = Article.objects.all()
     if user.is_authenticated :
-        return render(request, 'boards/board_index.html', {'user_id': user,
+        return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list})
     else:
-        return render(request, 'boards/board_index.html')
+        return render(request, 'boards/board_index.html', {'article_list': article_list})
 
 def board_login(request):
     if request.method == 'POST':
@@ -40,7 +40,7 @@ def board_login(request):
 
 def board_logout(request):
     logout(request)
-    return render(request, 'boards/board_index.html')
+    return HttpResponseRedirect(reverse('boards:board_index'))
 
 
 def board_register(request):
@@ -59,14 +59,29 @@ def board_register(request):
 
 
 def board_write(request):
-    if request.method == 'POST':
-        A = Article(title=request.POST['title'],
-                    article_text=request.POST['article_text'],
-                    created_at=timezone.now())
-        try:
-            A.save()
-            return HttpResponseRedirect(reverse('boards:board_index'))
-        except:
-            return render(request, 'boards/board_write.html', {'error_message': '글 작성에 실패하였습니다.'})
-    else:
+    user = get_user(request)
+    if user.is_authenticated:
+        if request.method == 'POST':
+            A = Article(title=request.POST['title'],
+                        article_text=request.POST['article_text'],
+                        created_at=timezone.now(),
+                        writer=user,
+                        )
+            try:
+                A.save()
+                return HttpResponseRedirect(reverse('boards:board_index'))
+            except:
+                return HttpResponseRedirect(reverse('boards:board_write'))
+
         return render(request, 'boards/board_write.html')
+    else:
+        return HttpResponseRedirect(reverse('boards:board_index'))
+
+
+def board_delete(request):
+    try:
+        A = Article.objects.get(pk=request.POST['article_id'])
+        A.delete()
+        return HttpResponseRedirect(reverse('boards:board_index'))
+    except:
+        return HttpResponseRedirect(reverse('boards:board_index'))

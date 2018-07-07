@@ -21,7 +21,36 @@
 <h2>Article List</h2>
 <ul>
     {% for article in article_list %}
-    <li><a href="">{{ article.title }}</a></li>
+    <li>
+        <a href="">
+            {{ article.title }}
+        </a>
+        <p>
+            {{ article.writer.username }}
+        </p>
+
+        {% if user == article.writer %}
+        <form action="">
+            {% csrf_token %}
+            <input type="hidden" name="article_id" value="{{ article.id }}">
+            <button>
+                수정
+            </button>
+        </form>
+        <form action="{% url 'boards:board_delete' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="article_id" value="{{ article.id }}">
+            <button>
+                삭제
+            </button>
+        </form>
+        {% endif %}
+
+
+        <p>
+            {{ article.created_at }}
+        </p>
+    </li>
     {% endfor %}
 </ul>
 

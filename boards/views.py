@@ -10,7 +10,7 @@ from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 
-from .models import Article
+from .models import Article, Comment
 
 # Create your views here.
 
@@ -23,6 +23,29 @@ def board_index(request):
                                                            'article_list': article_list})
     else:
         return render(request, 'boards/board_index.html', {'article_list': article_list})
+
+
+def board_detail(request, article_id):
+    article_list = Article.objects.all()
+    A = get_object_or_404(Article, pk=article_id)
+    C = Comment.objects.filter(article_id=article_id)
+    return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                        'article_list': article_list,
+                                                        'comment_list': C})
+
+
+def board_vote(request, article_id):
+    A = get_object_or_404(Article, pk=article_id)
+    if request.POST['vote'] == 'up':
+        A.upvote += 1
+        A.save()
+        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+    if request.POST['vote'] == 'down':
+        A.downvote += 1
+        A.save()
+        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+    # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
+
 
 
 def board_login(request):
@@ -118,7 +141,6 @@ def board_edit_fix(request):
         return HttpResponseRedirect(reverse('boards:board_index'))
 
 
-
 def board_delete(request):
     try:
         A = get_object_or_404(Article, pk=request.POST['article_id'])
@@ -126,3 +148,41 @@ def board_delete(request):
         return HttpResponseRedirect(reverse('boards:board_index'))
     except:
         return HttpResponseRedirect(reverse('boards:board_index'))
+
+
+def board_comment_write(request):
+    user = get_user(request)
+    article = Article.objects.get(pk=request.POST['article_id'])
+    if user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                C = Comment(comment_text=request.POST['comment_text'],
+                            created_at=timezone.now(),
+                            edited_at=timezone.now(),
+                            writer_id=user.id,
+                            article_id=article.id,
+                            )
+                C.save()
+                return HttpResponseRedirect(
+                    reverse('boards:board_detail', kwargs={'article_id': request.POST['article_id']}))
+            except:
+                return HttpResponseRedirect(
+                    reverse('boards:board_detail', kwargs={'article_id': request.POST['article_id']}))
+        else:
+            return HttpResponseRedirect(
+                reverse('boards:board_detail', kwargs={'article_id': request.POST['article_id']}))
+    else:
+        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': request.POST['article_id']}))
+
+
+def board_comment_vote(request, comment_id):
+    C = get_object_or_404(Comment, pk=comment_id)
+    if request.POST['vote'] == 'up':
+        C.upvote += 1
+        C.save()
+        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
+    if request.POST['vote'] == 'down':
+        C.downvote += 1
+        C.save()
+        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
+    # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯

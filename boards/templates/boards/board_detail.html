@@ -2,9 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ article_detail.title }}</title>
 </head>
 <body>
+
+<p>
+    <a href="{% url 'boards:board_index' %}">Home</a>
+</p>
+
+<h2>{{ article_detail.title }}</h2>
+
+<form action="{% url 'boards:board_vote' article_detail.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">
+        추천
+    </button>
+    <input type="hidden" name="vote" value="up">
+</form>
+
+<form action="{% url 'boards:board_vote' article_detail.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">
+        비추천
+    </button>
+    <input type="hidden" name="vote" value="down">
+</form>
+
+
+<p>
+    추천 : {{ article_detail.upvote }} / 비추천 : {{ article_detail.downvote }}
+</p>
+
+<p>{{ article_detail.article_text }}</p>
+
+<form action="{% url 'boards:board_comment_write' %}" method="post">
+    {% csrf_token %}
+    <textarea name="comment_text" cols="30" rows="3">
+
+    </textarea>
+    <input type="hidden" name="article_id" value="{{ article_detail.id }}">
+    <button type="submit">
+        댓글 쓰기
+    </button>
+</form>
+
+<ul>
+    {% for comment in comment_list %}
+        <li>
+            {{ comment.comment_text }} 추천 : {{ comment.upvote }} / 비추천 {{ comment.downvote }}
+            <p>
+            <form action="{% url 'boards:board_comment_vote' comment.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">
+                    추천
+                </button>
+                <input type="hidden" name="vote" value="up">
+            </form>
+
+            <form action="{% url 'boards:board_comment_vote' comment.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">
+                    비추천
+                </button>
+                <input type="hidden" name="vote" value="down">
+            </form>
+            </p>
+        </li>
+    {% endfor %}
+</ul>
+
+{# 여기까지 디테일 내용들, 밑부터는 다시 글리스트 #}
+
 
 </body>
 </html>

@@ -19,10 +19,11 @@
 
 
 <h2>Article List</h2>
+
 <ul>
     {% for article in article_list %}
     <li>
-        <a href="">
+        <a href="{% url 'boards:board_detail' article.id %}">
             {{ article.title }}
         </a>
         <p>

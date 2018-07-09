@@ -12,4 +12,8 @@ urlpatterns = [
     path('delete/', views.board_delete, name='board_delete'),
     path('edit/', views.board_edit, name='board_edit'),
     path('edit_fix/', views.board_edit_fix, name='board_edit_fix'),
+    path('<int:article_id>/', views.board_detail, name='board_detail'),
+    path('vote/<int:article_id>', views.board_vote, name='board_vote'),
+    path('comment/', views.board_comment_write, name='board_comment_write'),
+    path('comment_vote/<int:comment_id>', views.board_comment_vote, name='board_comment_vote'),
 ]

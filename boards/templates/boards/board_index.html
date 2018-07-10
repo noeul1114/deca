@@ -18,9 +18,11 @@
 {% endif %}
 
 
+<h2>{{ board.title }}</h2>
 <h2>Article List</h2>
 
 <ul>
+    {% if article_list.exists %}
     {% for article in article_list %}
     <li>
         <a href="{% url 'boards:board_detail' article.id %}">
@@ -53,6 +55,9 @@
         </p>
     </li>
     {% endfor %}
+    {% else %}
+        <p>게시글이 없습니다.</p>
+    {% endif %}
 </ul>
 
 <a href="{% url 'boards:board_write' %}">글쓰기</a>

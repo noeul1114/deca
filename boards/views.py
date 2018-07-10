@@ -10,7 +10,7 @@ from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 
-from .models import Article, Comment
+from .models import Article, Comment, BlueBoard
 
 # Create your views here.
 
@@ -21,6 +21,18 @@ def board_index(request):
     if user.is_authenticated :
         return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list})
+    else:
+        return render(request, 'boards/board_index.html', {'article_list': article_list})
+
+
+def board_index_name(request, board_url='blueboard'):
+    user = get_user(request)
+    article_list = Article.objects.filter(board_name__url=board_url)
+    board = BlueBoard.objects.get(url=board_url)
+    if user.is_authenticated :
+        return render(request, 'boards/board_index.html', {'user': user,
+                                                           'article_list': article_list,
+                                                           'board': board})
     else:
         return render(request, 'boards/board_index.html', {'article_list': article_list})
 
@@ -72,11 +84,11 @@ def board_logout(request):
 def board_register(request):
     if request.method == 'POST':
         try:
-            user = User.objects.create_user(username=request.POST['username'],
-                                            email=request.POST['email'],
-                                            password=request.POST['password'],
-                                            first_name=request.POST['first_name'],
-                                            last_name=request.POST['last_name'])
+            User.objects.create_user(username=request.POST['username'],
+                                     email=request.POST['email'],
+                                     password=request.POST['password'],
+                                     first_name=request.POST['first_name'],
+                                     last_name=request.POST['last_name'])
             return HttpResponseRedirect(reverse('boards:board_index'))
         except:
             return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다.'})
@@ -186,3 +198,24 @@ def board_comment_vote(request, comment_id):
         C.save()
         return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
     # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
+
+
+def board_blueboard_create(request):
+    user = get_user(request)
+    if user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                B = BlueBoard(created_at=timezone.now(),
+                              url=request.POST['board_url'],
+                              title=request.POST['title'],
+                              board_description=request.POST['board_description'],
+                              )
+                B.save()
+                return HttpResponseRedirect(reverse('boards:board_index_name', kwargs={'board_url': request.POST['board_url']}))
+            except:
+                return render(request, 'boards/board_blueboard_create.html', {'user': user,
+                                                                              'error_message': '게시판 생성에 실패하였습니다.'})
+        else:
+            return render(request, 'boards/board_blueboard_create.html', {'user' : user})
+    else:
+        return HttpResponseRedirect(reverse('boards:board_index'))

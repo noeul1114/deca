@@ -118,7 +118,7 @@ def _make_virtualenv():
 
 def _get_latest_source():
     if exists(project_folder + '/.git'):
-        run('cd %s && git fetch' % (project_folder,))
+        run('cd %s && git pull' % (project_folder,))
     else:
         run('git clone %s %s' % (REPO_URL, project_folder))
     current_commit = local("git log -n 1 --format=%H")

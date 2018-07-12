@@ -1,12 +1,11 @@
 from fabric.contrib.files import append, exists, sed, put
-from fabric.api import env, local, run, sudo
+from fabric.api import env, local, run, sudo, require
 import random
 import os
 import json
 
-
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-BASE_DIR = os.path.dirname(PROJECT_DIR)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 with open(os.path.join(PROJECT_DIR, "deploy.json")) as f:
     envs = json.loads(f.read())
@@ -17,20 +16,19 @@ PROJECT_NAME = envs['PROJECT_NAME']
 REMOTE_HOST_SSH = envs['REMOTE_HOST_SSH']
 REMOTE_HOST = envs['REMOTE_HOST']
 REMOTE_USER = envs['REMOTE_USER']
-REMOTE_PASSWORD = ['REMOTE_PASSWORD']
+REMOTE_PASSWORD = envs['REMOTE_PASSWORD']
 
 STATIC_ROOT_NAME = 'static_deploy'
 STATIC_URL_NAME = 'static'
 MEDIA_ROOT = 'uploads'
 
-
 env.user = REMOTE_USER
 username = env.user
+# Option: env.password
 env.hosts = [
     REMOTE_HOST_SSH,
-]
+    ]
 env.password = REMOTE_PASSWORD
-
 project_folder = '/home/{}/{}'.format(env.user, PROJECT_NAME)
 
 
@@ -44,21 +42,37 @@ apt_requirements = [
     'python3-setuptools',
     'apache2',
     'libapache2-mod-wsgi-py3',
+    'libmysqlclient-dev',
     'libssl-dev',
     'libxml2-dev',
     'libjpeg8-dev',
-    'zliib1g-dev',
+    'zlib1g-dev',
 ]
+
+
+def localhost():
+    "Use the local virtual server"
+    env.hosts = ['localhost']
+    env.user = 'username'
+    env.path = '/home/%(user)s/workspace/%(project_name)s' % env
+    env.virtualhost_path = env.path
+
+
+def test():
+    sudo('mkdir testing')
+
 
 def new_server():
     setup()
     deploy()
+
 
 def setup():
     _get_latest_apt()
     _install_apt_requirements(apt_requirements)
     _make_virtualenv()
     #_ufw_allow()
+
 
 def deploy():
     _get_latest_source()
@@ -73,19 +87,23 @@ def deploy():
     _grant_sqlite3()
     _restart_apache2()
 
+
 def _put_envs():
     put(os.path.join(PROJECT_DIR, 'envs.json'), '~/{}/envs.json'.format(PROJECT_NAME))
+
 
 def _get_latest_apt():
     update_or_not = input('would you update?: [y/n]')
     if update_or_not=='y':
         sudo('sudo apt-get update && sudo apt-get -y upgrade')
 
+
 def _install_apt_requirements(apt_requirements):
     reqs = ''
     for req in apt_requirements:
         reqs += (' ' + req)
     sudo('sudo apt-get -y install {}'.format(reqs))
+
 
 def _make_virtualenv():
     if not exists('~/.virtualenvs'):
@@ -97,13 +115,15 @@ def _make_virtualenv():
         sudo('sudo pip3 install virtualenv virtualenvwrapper')
         run('echo {} >> ~/.bashrc'.format(script))
 
+
 def _get_latest_source():
     if exists(project_folder + '/.git'):
         run('cd %s && git fetch' % (project_folder,))
     else:
         run('git clone %s %s' % (REPO_URL, project_folder))
-    current_commit = local("git log -n 1 --format=%H", capture=True)
+    current_commit = local("git log -n 1 --format=%H")
     run('cd %s && git reset --hard %s' % (project_folder, current_commit))
+
 
 def _update_settings():
     settings_path = project_folder + '/{}/settings.py'.format(PROJECT_NAME)
@@ -119,6 +139,7 @@ def _update_settings():
         append(secret_key_file, "SECRET_KEY = '%s'" % (key,))
     append(settings_path, '\nfrom .secret_key import SECRET_KEY')
 
+
 def _update_virtualenv():
     virtualenv_folder = project_folder + '/../.virtualenvs/{}'.format(PROJECT_NAME)
     if not exists(virtualenv_folder + '/bin/pip'):
@@ -127,11 +148,13 @@ def _update_virtualenv():
         virtualenv_folder, project_folder
     ))
 
+
 def _update_static_files():
     virtualenv_folder = project_folder + '/../.virtualenvs/{}'.format(PROJECT_NAME)
     run('cd %s && %s/bin/python3 manage.py collectstatic --noinput' % (
         project_folder, virtualenv_folder
     ))
+
 
 def _update_database():
     virtualenv_folder = project_folder + '/../.virtualenvs/{}'.format(PROJECT_NAME)
@@ -139,9 +162,11 @@ def _update_database():
         project_folder, virtualenv_folder
     ))
 
+
 def _ufw_allow():
     sudo("ufw allow 'Apache Full'")
     sudo("ufw reload")
+
 
 def _make_virtualhost():
     script = """'<VirtualHost *:80>
@@ -175,11 +200,14 @@ def _make_virtualhost():
     sudo('echo {} > /etc/apache2/sites-available/{}.conf'.format(script, PROJECT_NAME))
     sudo('a2ensite {}.conf'.format(PROJECT_NAME))
 
+
 def _grant_apache2():
     sudo('sudo chown -R :www-data ~/{}'.format(PROJECT_NAME))
 
+
 def _grant_sqlite3():
     sudo('sudo chmod 775 ~/{}/db.sqlite3'.format(PROJECT_NAME))
+
 
 def _restart_apache2():
     sudo('sudo service apache2 restart')

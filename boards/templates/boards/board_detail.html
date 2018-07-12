@@ -51,6 +51,9 @@
         <li>
             {{ comment.comment_text }} 추천 : {{ comment.upvote }} / 비추천 {{ comment.downvote }}
             <p>
+                작성자 : {{ comment.writer }}
+            </p>
+            <p>
             <form action="{% url 'boards:board_comment_vote' comment.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit">

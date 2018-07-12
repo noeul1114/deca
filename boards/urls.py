@@ -20,7 +20,4 @@ urlpatterns = [
     path('vote/<int:article_id>', views.board_vote, name='board_vote'),
     path('comment/', views.board_comment_write, name='board_comment_write'),
     path('comment_vote/<int:comment_id>', views.board_comment_vote, name='board_comment_vote'),
-
-    path('blue/<slug:board_url>', views.board_index_name, name='board_index_name'),
-    path('blueboard_create/', views.board_blueboard_create, name='board_blueboard_create'),
 ]

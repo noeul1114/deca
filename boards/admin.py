@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Comment, Article, BlueBoard
+from .models import Comment, Article
 
 # Register your models here.
 
@@ -11,7 +11,7 @@ class CommentInline(admin.TabularInline):
 
 class ArticleAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['article_text']}),
+        (None,  {'fields': ['article_text']}),
         ('Date information', {'fields': ['created_at'], 'classes': ['collapse']}),
     ]
     inlines = [CommentInline]
@@ -20,9 +20,4 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['writer']
 
 
-class BlueBoardAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'created_at')
-
-
 admin.site.register(Article, ArticleAdmin)
-admin.site.register(BlueBoard, BlueBoardAdmin)

@@ -121,10 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 # For deployment
-STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+#STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'
+#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # For development
-#STATIC_URL = '/static/'
-#STATIC_ROOT = STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATIC_ROOT = STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

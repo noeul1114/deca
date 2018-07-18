@@ -1,81 +1,177 @@
-<!DOCTYPE html>
+{% load static %}
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ article_detail.title }}</title>
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{% static 'boards/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all">
+        <link href="{% static 'boards/css/socicon.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="{% static 'boards/css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/theme.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/custom.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,400i,500,600,700" rel="stylesheet">
 
-<p>
-    <a href="{% url 'boards:board_index' %}">Home</a>
-</p>
+    </head>
+    <body data-smooth-scroll-offset="77">
+        <div class="nav-container">
+            <div>
+                <nav class="bar bar-toggle">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <div class="bar__module">
+                                    <a href="{% url 'boards:board_index' %}"> <img class="logo logo-dark" alt="logo" src="{% static 'boards/img/logo-dark.png' %}"> <img class="logo logo-light" alt="logo" src="{% static 'boards/img/logo-light.png' %}"> </a>
+                                </div>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end">
+                                <div class="bar__module">
+                                    <a class="menu-toggle pull-right" href="#" data-notification-link="sidebar-menu"> <i class="stack-interface stack-menu"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-5 order-lg-1">
+                                <div class="bar__module">
+                                    <ul class="menu-horizontal text-left">
+                                        <li> {% if user.is_authenticated %}
+                                            <p>
+                                                안녕하세요! {{ user.username }} 님!
+                                            </p>
+                                            <a href="{% url 'boards:board_logout'%}">
+                                                Logout
+                                            </a>
+                                            {% else %}
 
-<h2>{{ article_detail.title }}</h2>
+                                                <a href="{% url 'boards:board_login' %}">Login</a>
+                                            {% endif %}
+                                         </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
+                    <div class="side-menu__module pos-vertical-center text-right">
+                        <ul class="menu-vertical">
+                            <li class="h4"> <a href="#">Single</a> </li>
+                        </ul>
+                    </div>
+                    <div class="side-menu__module pos-bottom pos-absolute col-12 text-right">
+                        <ul class="social-list list-inline list--hover">
+                            <li><a href="#"><i class="socicon socicon-google icon icon--xs"></i></a></li>
+                            <li><a href="#"><i class="socicon socicon-twitter icon icon--xs"></i></a></li>
+                            <li><a href="#"><i class="socicon socicon-facebook icon icon--xs"></i></a></li>
+                            <li><a href="#"><i class="socicon socicon-instagram icon icon--xs"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-container">
+            <section>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 col-lg-8">
+                            <article>
+                                <div class="article__title text-center">
+                                    <h1 class="h2">{{ article_detail.title }}</h1> <span>{{ article_detail.created_at|date:"Y M d D" }}</div>
+                                <div class="article__body">
+                                    {{ article_detail.article_text }}
+                                </div>
 
-<form action="{% url 'boards:board_vote' article_detail.id %}" method="post">
-    {% csrf_token %}
-    <button type="submit">
-        추천
-    </button>
-    <input type="hidden" name="vote" value="up">
-</form>
+{#                                <div class="article__share text-center">#}
+{#                                    <a class="btn bg--facebook btn--icon" href="#"> <span class="btn__text">#}
+{#								<i class="socicon socicon-facebook"></i>#}
+{#								Share on Facebook#}
+{#							</span> </a>#}
+{#                                    <a class="btn bg--twitter btn--icon" href="#"> <span class="btn__text">#}
+{#								<i class="socicon socicon-twitter"></i>#}
+{#								Share on Twitter#}
+{#							</span> </a>#}
+{#                                </div>#}
 
-<form action="{% url 'boards:board_vote' article_detail.id %}" method="post">
-    {% csrf_token %}
-    <button type="submit">
-        비추천
-    </button>
-    <input type="hidden" name="vote" value="down">
-</form>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 col-lg-8">
+                            <div class="comments">
+                                <h3>{{ comment_list.count }} Comments</h3>
+                                <ul class="comments__list">
+                                    {% for comment in comment_list %}
+                                    <li>
+                                        <div class="comment">
+                                            <div class="comment__avatar"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </div>
+                                            <div class="comment__body">
+                                                <h5 class="type--fine-print">{{ comment.writer }}</h5>
+                                                <div class="comment__meta"> <span>{{ comment.created_at|date:'Y M d D H:i' }}</span>
+                                                    {% if user == comment.writer %}
+                                                    <a href="#">Edit</a>
+                                                    <a href="#">Delete</a>
+                                                    {% endif %}
+                                                </div>
+                                                {{ comment.comment_text }}
+                                            </div>
+                                        </div>
+{#                                        <div class="comment">#}
+{#                                            <div class="comment__avatar"> <img alt="Image" src="img/avatar-round-3.png"> </div>#}
+{#                                            <div class="comment__body">#}
+{#                                                <h5 class="type--fine-print">Jacob Sims</h5>#}
+{#                                                <div class="comment__meta"> <span>10th May 2016</span><a href="#">Reply</a> </div>#}
+{#                                                <p> Prototype intuitive intuitive thought leader personas parallax paradigm long shadow engaging unicorn SpaceTeam fund ideate paradigm. </p>#}
+{#                                            </div>#}
+{#                                        </div>#}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="comments-form">
+                                <h4>Leave a comment</h4>
+                                <form class="row" action="{% url 'boards:board_comment_write' %}" method="post">
+                                    {% csrf_token %}
+{#                                    <div class="col-md-6"> <label>Your Name:</label> <input type="text" name="Name" placeholder="Type name here"> </div>#}
+{#                                    <div class="col-md-6"> <label>Email Address:</label> <input type="email" name="email" placeholder="you@mailprovider.com"> </div>#}
+                                    <div class="col-md-12"> <label>Comment:</label> <textarea rows="4" name="comment_text"></textarea> </div>
+                                    <div class="col-md-3"> <button class="btn btn--primary" type="submit">Submit Comment</button> </div>
+                                    <input type="hidden" name="article_id" value="{{ article_detail.id }}">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="footer-7 text-center-xs">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year"></span> Medium Rare — All Rights Reserved</span>
+                        </div>
+                        <div class="col-sm-6 text-right text-center-xs">
+                            <ul class="social-list list-inline">
+                                <li><a href="#"><i class="socicon socicon-google icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-twitter icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-facebook icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-instagram icon icon--xs"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script src="{% static 'boards/js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'boards/js/parallax.js' %}"></script>
+        <script src="{% static 'boards/js/smooth-scroll.min.js' %}"></script>
+        <script src="{% static 'boards/js/scripts.js' %}"></script>
 
+    </body>
 
-<p>
-    추천 : {{ article_detail.upvote }} / 비추천 : {{ article_detail.downvote }}
-</p>
-
-<p>{{ article_detail.article_text }}</p>
-
-<form action="{% url 'boards:board_comment_write' %}" method="post">
-    {% csrf_token %}
-    <textarea name="comment_text" cols="30" rows="3">
-
-    </textarea>
-    <input type="hidden" name="article_id" value="{{ article_detail.id }}">
-    <button type="submit">
-        댓글 쓰기
-    </button>
-</form>
-
-<ul>
-    {% for comment in comment_list %}
-        <li>
-            {{ comment.comment_text }} 추천 : {{ comment.upvote }} / 비추천 {{ comment.downvote }}
-            <p>
-                작성자 : {{ comment.writer }}
-            </p>
-            <p>
-            <form action="{% url 'boards:board_comment_vote' comment.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit">
-                    추천
-                </button>
-                <input type="hidden" name="vote" value="up">
-            </form>
-
-            <form action="{% url 'boards:board_comment_vote' comment.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit">
-                    비추천
-                </button>
-                <input type="hidden" name="vote" value="down">
-            </form>
-            </p>
-        </li>
-    {% endfor %}
-</ul>
-
-{# 여기까지 디테일 내용들, 밑부터는 다시 글리스트 #}
-
-
-</body>
 </html>

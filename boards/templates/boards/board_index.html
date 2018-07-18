@@ -1,61 +1,180 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>Blue Board</title>
-</head>
-<body>
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{% static 'boards/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all">
+        <link href="{% static 'boards/css/socicon.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="{% static 'boards/css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/theme.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/custom.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,400i,500,600,700" rel="stylesheet">
 
-{% if user.is_authenticated %}
-    <p>
-        안녕하세요! {{ user.username }} 님!
-    </p>
-    <a href="{% url 'boards:board_logout'%}">
-        Logout
-    </a>
-{% else %}
-    <a href="{% url 'boards:board_login' %}">Login</a>
-{% endif %}
+    </head>
+    <body data-smooth-scroll-offset="77">
+        <div class="nav-container">
+            <div>
+                <nav class="bar bar-toggle">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <div class="bar__module">
+                                    <a href="{% url 'boards:board_index' %}"> <img class="logo logo-dark" alt="logo" src="{% static 'boards/img/logo-dark.png' %}"> <img class="logo logo-light" alt="logo" src="{% static 'boards/img/logo-light.png' %}"> </a>
+                                </div>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end">
+                                <div class="bar__module">
+                                    <a class="menu-toggle pull-right" href="#" data-notification-link="sidebar-menu"> <i class="stack-interface stack-menu"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    {# single 들어가는 부분 #}
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-5 order-lg-1">
+                                <div class="bar__module">
+                                    <ul class="menu-horizontal text-left">
+                                        <li> {% if user.is_authenticated %}
+                                            <p>
+                                                안녕하세요! {{ user.username }} 님!
+                                            </p>
+                                            <a href="{% url 'boards:board_logout'%}">
+                                                Logout
+                                            </a>
+                                            {% else %}
 
-<h2>Article List</h2>
+                                                <a href="{% url 'boards:board_login' %}">Login</a>
+                                            {% endif %}
+                                         </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {# single 들어가는 부분 #}
 
-<ul>
-    {% for article in article_list %}
-    <li>
-        <a href="{% url 'boards:board_detail' article.id %}">
-            {{ article.title }}
-        </a>
-        <p>
-            {{ article.writer.username }}
-        </p>
+                </nav>
+                <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
+                    <div class="side-menu__module pos-vertical-center text-right">
+                        <ul class="menu-vertical">
+                            <li class="h4"> <a href="#">Single</a> </li>
+                        </ul>
+                    </div>
+                    <div class="side-menu__module pos-bottom pos-absolute col-12 text-right">
+                        <ul class="social-list list-inline list--hover">
+                            <li><a href="#"><i class="socicon socicon-google icon icon--xs"></i></a></li>
+                            <li><a href="#"><i class="socicon socicon-twitter icon icon--xs"></i></a></li>
+                            <li><a href="#"><i class="socicon socicon-facebook icon icon--xs"></i></a></li>
+                            <li><a href="#"><i class="socicon socicon-instagram icon icon--xs"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-container">
+            <section>
+                <div class="container">
+                    <div class="masonry">
+                        <div class="masonry__container row masonry--active">
+                            {% for article in article_list %}
+                            <div class="col-md-4 masonry__item">
+                                <div class="card card-1 boxed boxed--sm boxed--border">
+                                    <div class="card__top">
+                                        <div class="card__avatar">
+                                            <a href="#"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </a> <span><strong>{{ article.writer }}</strong></span> </div>
+                                        <div class="card__meta"> <span>{{ article.created_at|date:"y/m/d" }}</span> </div>
+                                    </div>
+                                    <div class="card__body">
+                                        <a href="{% url 'boards:board_detail' article.id %}"> <img src="{% static 'boards/img/inner-5.jpg' %}" alt="Image" class="border--round"> </a>
+                                        {{ article.article_text|linebreaks }}
+                                    </div>
+                                    <div class="card__bottom">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <div class="card__action">
+                                                    <a href="#"> <i class="material-icons">comment</i> <span></span> </a>
+                                                </div>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <div class="card__action">
+                                                    <a href="#"> <i class="material-icons">favorite</i> <span>6</span> </a>
+                                                </div>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <div class="card__action">
+                                                    <a href="#"> <i class="material-icons">share</i> </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div class="col-md-4 masonry__item">
+                                <div class="card card-1 boxed boxed--sm boxed--border">
+                                    <div class="card__top">
+                                        <div class="card__avatar">
+                                            <a href="#"> <img alt="Image" src="{% static 'boards/img/avatar-round-2.png' %}"> </a> <span><strong>Jane Maslow</strong></span> </div>
+                                        <div class="card__meta"> <span>23 mins</span> </div>
+                                    </div>
+                                    <div class="card__body">
+                                        <a href="#"> <img src="{% static 'boards/img/knowledge-1.jpg' %}" alt="Image" class="border--round"> </a>
+                                        <p> Our workspace for today <a href="#">#lovingstack</a> </p>
+                                    </div>
+                                    <div class="card__bottom">
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <div class="card__action">
+                                                    <a href="#"> <i class="material-icons">comment</i> <span>4</span> </a>
+                                                </div>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <div class="card__action">
+                                                    <a href="#"> <i class="material-icons">favorite</i> <span>7</span> </a>
+                                                </div>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <div class="card__action">
+                                                    <a href="#"> <i class="material-icons">share</i> </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="footer-7 text-center-xs">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year"></span> Medium Rare — All Rights Reserved</span>
+                        </div>
+                        <div class="col-sm-6 text-right text-center-xs">
+                            <ul class="social-list list-inline">
+                                <li><a href="#"><i class="socicon socicon-google icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-twitter icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-facebook icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-instagram icon icon--xs"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script src="{% static 'boards/js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'boards/js/parallax.js' %}"></script>
+        <script src="{% static 'boards/js/isotope.min.js' %}"></script>
+        <script src="{% static 'boards/js/smooth-scroll.min.js' %}"></script>
+        <script src="{% static 'boards/js/scripts.js' %}"></script>
 
-        {% if user == article.writer %}
-        <form action="{% url 'boards:board_edit' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="article_id" value="{{ article.id }}">
-            <button>
-                수정
-            </button>
-        </form>
-        <form action="{% url 'boards:board_delete' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="article_id" value="{{ article.id }}">
-            <button>
-                삭제
-            </button>
-        </form>
-        {% endif %}
+    </body>
 
-
-        <p>
-            {{ article.created_at }}
-        </p>
-    </li>
-    {% endfor %}
-</ul>
-
-<a href="{% url 'boards:board_write' %}">글쓰기</a>
-
-</body>
 </html>

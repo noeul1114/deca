@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blueboard Create</title>
+</head>
+<body>
+
+{% if error_message %}
+<p>{{ error_message }}</p><br>
+{% endif %}
+
+<form action="{% url 'boards:board_blueboard_create' %}" method="post">
+    {% csrf_token %}
+    <label for="title">board name</label>
+    <input type="text" name="title"><br>
+
+    <label for="board_url">board url</label>
+    <input type="text" name="board_url"><br>
+
+    <label for="board_description">board description</label>
+    <textarea name="board_description" cols="30" rows="4">
+
+    </textarea>
+
+    <button type="submit">Create Blueboard</button>
+</form>
+
+
+</body>
+</html>

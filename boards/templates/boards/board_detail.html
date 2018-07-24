@@ -33,32 +33,46 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-5 order-lg-1">
-                                <div class="bar__module">
-                                    <ul class="menu-horizontal text-left">
-                                        <li> {% if user.is_authenticated %}
-                                            <p>
-                                                안녕하세요! {{ user.username }} 님!
-                                            </p>
-                                            <a href="{% url 'boards:board_logout'%}">
-                                                Logout
-                                            </a>
-                                            {% else %}
-
-                                                <a href="{% url 'boards:board_login' %}">Login</a>
-                                            {% endif %}
-                                         </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{#                    <div class="container">#}
+{#                        <div class="row">#}
+{#                            <div class="col-lg-5 order-lg-1">#}
+{#                                <div class="bar__module">#}
+{#                                    <ul class="menu-horizontal text-left">#}
+{#                                        <li> {% if user.is_authenticated %}#}
+{#                                            <p>#}
+{#                                                안녕하세요! {{ user.username }} 님!#}
+{#                                            </p>#}
+{#                                            <a href="{% url 'boards:board_logout'%}">#}
+{#                                                Logout#}
+{#                                            </a>#}
+{#                                            {% else %}#}
+{##}
+{#                                                <a href="{% url 'boards:board_login' %}">Login</a>#}
+{#                                            {% endif %}#}
+{#                                         </li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
                 </nav>
                 <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
                     <div class="side-menu__module pos-vertical-center text-right">
                         <ul class="menu-vertical">
+                            {% if user.is_authenticated %}
+                                <ul class="menu-vertical">
+                                    <li class="h4"> <a href="#">{{ user.username }}</a> </li>
+                                    <li class="h5">
+                                        <a href="#">Profile</a>
+                                        <a href="#">Points</a>
+                                        <a href="{% url 'boards:board_logout'%}">Logout</a>
+                                    </li>
+                                </ul>
+                            {% else %}
+                                    <li class="h4">
+                                        <a href="{% url 'boards:board_login' %}">Login</a>
+                                    </li>
+                            {% endif %}
                             <li class="h4"> <a href="#">Single</a> </li>
                         </ul>
                     </div>
@@ -80,21 +94,44 @@
                         <div class="col-md-10 col-lg-8">
                             <article>
                                 <div class="article__title text-center">
-                                    <h1 class="h2">{{ article_detail.title }}</h1> <span>{{ article_detail.created_at|date:"Y M d D" }}</div>
+                                    <h1 class="h2">{{ article_detail.title }}</h1>{{ article_detail.created_at|date:"Y M d D" }}
+                                    <br>
+                                    <br>
+                                    <div class="text-center-xs">
+                                        <ul class="social-list list-inline">
+                                            <li><a href=""><i class="material-icons icon--xs">thumb_up</i></a><p class="pos-vertical-center">{{ article_detail.upvote }}</p></li>
+                                            <li><a href=""><i class="material-icons icon--xs">comment</i></a><p class="pos-vertical-center">{{ article_detail.comment_count }}</p></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% if user.is_authenticated %}
+                                <div class="article__title text-right">
+                                    회원님이 작성하신 글입니다 <br>
+                                    <div>
+                                        <a href="{% url 'boards:board_edit' article_detail.id %}">Edit</a>
+                                        <a href="{% url 'boards:board_delete' article_detail.id %}">Delete</a>
+                                    </div>
+                                </div>
+                                {% endif %}
                                 <div class="article__body">
-                                    {{ article_detail.article_text }}
+                                    {{ article_detail.article_text|linebreaksbr }}
                                 </div>
 
-{#                                <div class="article__share text-center">#}
-{#                                    <a class="btn bg--facebook btn--icon" href="#"> <span class="btn__text">#}
-{#								<i class="socicon socicon-facebook"></i>#}
-{#								Share on Facebook#}
-{#							</span> </a>#}
-{#                                    <a class="btn bg--twitter btn--icon" href="#"> <span class="btn__text">#}
-{#								<i class="socicon socicon-twitter"></i>#}
-{#								Share on Twitter#}
-{#							</span> </a>#}
-{#                                </div>#}
+
+                                <div class="article__share text-center">
+                                    <a class="btn bg--primary btn--icon" href="{% url 'boards:board_vote' article_detail.id %}?vote=up">
+                                        <span class="btn__text">
+                                            <i class="material-icons">check</i>
+                                            LIKE!
+                                        </span>
+                                    </a>
+                                    <a class="btn bg--secondary btn--icon" href="{% url 'boards:board_vote' article_detail.id %}?vote=down">
+                                        <span class="btn__text">
+                                            <i class="material-icons">loupe</i>
+                                            CHECK!
+                                        </span>
+                                    </a>
+                                </div>
 
                             </article>
                         </div>
@@ -115,9 +152,11 @@
                                             <div class="comment__body">
                                                 <h5 class="type--fine-print">{{ comment.writer }}</h5>
                                                 <div class="comment__meta"> <span>{{ comment.created_at|date:'Y M d D H:i' }}</span>
+                                                    <a href="#"> <i class="material-icons icon icon--xs">thumb_up</i> <span>{{ comment.upvote }}</span> </a>
+                                                    <a href="#"> <i class="color--dark material-icons icon icon--xs">thumb_down</i> <span>{{ comment.downvote }}</span> </a>
                                                     {% if user == comment.writer %}
-                                                    <a href="#">Edit</a>
-                                                    <a href="#">Delete</a>
+                                                        <a href="#">Edit</a>
+                                                        <a href="#">Delete</a>
                                                     {% endif %}
                                                 </div>
                                                 {{ comment.comment_text }}

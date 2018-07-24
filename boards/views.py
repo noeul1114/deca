@@ -10,14 +10,12 @@ from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 
-from .models import Article, Comment
-
-# Create your views here.
+from .models import Article, Comment, Vote
 
 
 def board_index(request):
     user = get_user(request)
-    article_list = Article.objects.all()
+    article_list = Article.objects.all().order_by('upvote')
     if user.is_authenticated :
         return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list})
@@ -37,46 +35,79 @@ def board_index_name(request, board_url='blueboard'):
 
 
 def board_detail(request, article_id):
-    article_list = Article.objects.all()
-    A = get_object_or_404(Article, pk=article_id)
-    C = Comment.objects.filter(article_id=article_id)
-    return render(request, 'boards/board_detail.html', {'article_detail': A,
-                                                        'article_list': article_list,
-                                                        'comment_list': C})
+    user = get_user(request)
+    if user.is_authenticated:
+        article_list = Article.objects.all()
+        A = get_object_or_404(Article, pk=article_id)
+        C = Comment.objects.filter(article_id=article_id)
+        return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                            'user': user,
+                                                            'article_list': article_list,
+                                                            'comment_list': C})
+    else:
+        article_list = Article.objects.all()
+        A = get_object_or_404(Article, pk=article_id)
+        C = Comment.objects.filter(article_id=article_id)
+        return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                            'article_list': article_list,
+                                                            'comment_list': C})
 
 
 def board_vote(request, article_id):
     A = get_object_or_404(Article, pk=article_id)
-    if request.POST['vote'] == 'up':
-        A.upvote += 1
-        A.save()
+    user = get_user(request)
+    if request.method == 'POST':
+        if request.POST['vote'] == 'up':
+            A.upvote += 1
+            A.save()
+            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+        if request.POST['vote'] == 'down':
+            A.downvote += 1
+            A.save()
+            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+        # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
+    elif request.method == 'GET':
+        if request.GET['vote'] == 'up':
+            A.upvote += 1
+            A.save()
+            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+        if request.GET['vote'] == 'down':
+            A.downvote += 1
+            A.save()
+            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+    else:
         return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
-    if request.POST['vote'] == 'down':
-        A.downvote += 1
-        A.save()
-        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
-    # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
-
 
 
 def board_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request,
-                            username=username,
-                            password=password)
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse('boards:board_index'))
+    user = get_user(request)
+    if user.is_authenticated:
+        article_list = Article.objects.all()
+        return render(request, 'boards/board_index.html', {'user': user,
+                                                           'article_list': article_list,
+                                                           'error_message': '이미 로그인 되어있습니다'
+                                                           })
+    else:
+        if request.method == 'POST':
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request,
+                                username=username,
+                                password=password)
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('boards:board_index'))
+            else:
+                return render(request, 'boards/board_login.html', {'error_message': '아이디 혹은 비밀번호가 틀립니다.'})
         else:
             return render(request, 'boards/board_login.html')
-    else:
-        return render(request, 'boards/board_login.html')
 
 
 def board_logout(request):
-    logout(request)
+    user = get_user(request)
+    if user.is_authenticated:
+        logout(request)
+        return HttpResponseRedirect(reverse('boards:board_index'))
     return HttpResponseRedirect(reverse('boards:board_index'))
 
 
@@ -92,7 +123,7 @@ def board_register(request):
         except:
             return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다.'})
     else:
-        return  render(request, 'boards/board_register.html')
+        return render(request, 'boards/board_register.html')
 
 
 def board_write(request):
@@ -115,19 +146,88 @@ def board_write(request):
         return HttpResponseRedirect(reverse('boards:board_index'))
 
 
-def board_edit(request):
-    if request.method == "POST":
-        user = get_user(request)
-        A = get_object_or_404(Article, pk=request.POST['article_id'])
+def board_delete(request, article_id):
+    user = get_user(request)
+    A = get_object_or_404(Article, pk=article_id)
+    if user.is_authenticated:
+        if user == A.writer:
+            return render(request, 'boards/board_delete.html', {'user' : user,
+                                                                'article': A,
+                                                                })
+        else:
+            article_list = Article.objects.all()
+            C = Comment.objects.filter(article_id=article_id)
+            return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                                'article_list': article_list,
+                                                                'comment_list': C,
+                                                                'error_message': "잘못된 접근입니다."})
+    else:
+        article_list = Article.objects.all()
+        C = Comment.objects.filter(article_id=article_id)
+        return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                            'article_list': article_list,
+                                                            'comment_list': C,
+                                                            'error_message': "잘못된 접근입니다."})
+
+
+def board_delete_fix(request):
+    user = get_user(request)
+    A = get_object_or_404(Article, pk=request.POST['article_id'])
+    if user.is_authenticated:
+        if user == A.writer:
+            try:
+                A.delete()
+                return HttpResponseRedirect(reverse('boards:board_index'))
+            except:
+                article_list = Article.objects.all()
+                C = Comment.objects.filter(article_id=request.POST['article_id'])
+                return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                                    'article_list': article_list,
+                                                                    'comment_list': C,
+                                                                    'error_message': "잘못된 접근입니다."})
+        else:
+            article_list = Article.objects.all()
+        C = Comment.objects.filter(article_id=request.POST['article_id'])
+        return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                            'article_list': article_list,
+                                                            'comment_list': C,
+                                                            'error_message': "잘못된 접근입니다."})
+    else:
+        article_list = Article.objects.all()
+        C = Comment.objects.filter(article_id=request.POST['article_id'])
+        return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                            'article_list': article_list,
+                                                            'comment_list': C,
+                                                            'error_message': "잘못된 접근입니다."})
+
+def board_edit(request, article_id):
+    user = get_user(request)
+    A = get_object_or_404(Article, pk=article_id)
+    if request.method == "GET":
         if user.is_authenticated:
             if A.writer_id == user.id:
                 return render(request, 'boards/board_edit.html', {'article_edit': A})
             else:
-                return HttpResponseRedirect(reverse('boards:board_index'))
+                article_list = Article.objects.all()
+                C = Comment.objects.filter(article_id=article_id)
+                return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                                    'article_list': article_list,
+                                                                    'comment_list': C,
+                                                                    'error_message': "잘못된 접근입니다."})
         else:
-            return HttpResponseRedirect(reverse('boards:board_index'))
+            article_list = Article.objects.all()
+            C = Comment.objects.filter(article_id=article_id)
+            return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                                'article_list': article_list,
+                                                                'comment_list': C,
+                                                                'error_message': "잘못된 접근입니다."})
     else:
-        return HttpResponseRedirect(reverse('boards:board_index'))
+        article_list = Article.objects.all()
+        C = Comment.objects.filter(article_id=article_id)
+        return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                            'article_list': article_list,
+                                                            'comment_list': C,
+                                                            'error_message': "잘못된 접근입니다."})
 
 
 def board_edit_fix(request):
@@ -152,15 +252,6 @@ def board_edit_fix(request):
         return HttpResponseRedirect(reverse('boards:board_index'))
 
 
-def board_delete(request):
-    try:
-        A = get_object_or_404(Article, pk=request.POST['article_id'])
-        A.delete()
-        return HttpResponseRedirect(reverse('boards:board_index'))
-    except:
-        return HttpResponseRedirect(reverse('boards:board_index'))
-
-
 def board_comment_write(request):
     user = get_user(request)
     article = Article.objects.get(pk=request.POST['article_id'])
@@ -173,7 +264,10 @@ def board_comment_write(request):
                             writer_id=user.id,
                             article_id=article.id,
                             )
+                article.comment_count += 1
+
                 C.save()
+                article.save()
                 return HttpResponseRedirect(
                     reverse('boards:board_detail', kwargs={'article_id': request.POST['article_id']}))
             except:

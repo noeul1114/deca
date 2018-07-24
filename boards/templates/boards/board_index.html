@@ -35,35 +35,54 @@
                     </div>
 
                     {# single 들어가는 부분 #}
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-5 order-lg-1">
-                                <div class="bar__module">
-                                    <ul class="menu-horizontal text-left">
-                                        <li> {% if user.is_authenticated %}
-                                            <p>
-                                                안녕하세요! {{ user.username }} 님!
-                                            </p>
-                                            <a href="{% url 'boards:board_logout'%}">
-                                                Logout
-                                            </a>
-                                            {% else %}
-
-                                                <a href="{% url 'boards:board_login' %}">Login</a>
-                                            {% endif %}
-                                         </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{#                    <div class="container">#}
+{#                        <div class="row">#}
+{#                            <div class="col-lg-5 order-lg-1">#}
+{#                                <div class="bar__module">#}
+{#                                    <ul class="menu-horizontal text-left">#}
+{#                                        <li> {% if user.is_authenticated %}#}
+{#                                            <p>#}
+{#                                                안녕하세요! {{ user.username }} 님!#}
+{#                                            </p>#}
+{#                                            <a href="{% url 'boards:board_logout'%}">#}
+{#                                                Logout#}
+{#                                            </a>#}
+{#                                            {% else %}#}
+{##}
+{#                                                <a href="{% url 'boards:board_login' %}">Login</a>#}
+{#                                            {% endif %}#}
+{#                                         </li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
                     {# single 들어가는 부분 #}
 
                 </nav>
                 <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
                     <div class="side-menu__module pos-vertical-center text-right">
+                        {% if user.is_authenticated %}
                         <ul class="menu-vertical">
-                            <li class="h4"> <a href="#">Single</a> </li>
+                            <li class="h4"> <a href="#">{{ user.username }}</a> </li>
+                            <li class="h5">
+                                <a href="#">Profile</a>
+                                <a href="#">Points</a>
+                                <a href="{% url 'boards:board_logout'%}">Logout</a>
+                            </li>
+                        </ul>
+                        {% else %}
+                        <ul class="menu-vertical">
+                            <li class="h5">
+                                <a href="{% url 'boards:board_login' %}">Login</a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        <ul class="menu-vertical">
+                            <li class="h5"> <a href="#">Single</a> </li>
+                        </ul>
+                        <ul class="menu-vertical">
+                            <li class="h5"> <a href="#">Single</a> </li>
                         </ul>
                     </div>
                     <div class="side-menu__module pos-bottom pos-absolute col-12 text-right">
@@ -92,23 +111,23 @@
                                     </div>
                                     <div class="card__body">
                                         <a href="{% url 'boards:board_detail' article.id %}"> <img src="{% static 'boards/img/inner-5.jpg' %}" alt="Image" class="border--round"> </a>
-                                        {{ article.article_text|linebreaks }}
+                                        {{ article.article_text|linebreaksbr }}
                                     </div>
                                     <div class="card__bottom">
                                         <ul class="list-inline">
                                             <li class="list-inline-item">
                                                 <div class="card__action">
-                                                    <a href="#"> <i class="material-icons">comment</i> <span></span> </a>
+                                                    <a href="#"> <i class="material-icons">favorite</i> <span>{{ article.upvote }}</span> </a>
                                                 </div>
                                             </li>
                                             <li class="list-inline-item">
                                                 <div class="card__action">
-                                                    <a href="#"> <i class="material-icons">favorite</i> <span>6</span> </a>
+                                                    <a href="#"> <i class="material-icons">comment</i> <span>{{ article.comment_count }}</span> </a>
                                                 </div>
                                             </li>
                                             <li class="list-inline-item">
                                                 <div class="card__action">
-                                                    <a href="#"> <i class="material-icons">share</i> </a>
+                                                    <a href="#"> <i class="material-icons">share</i>{{ article.shared }}</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -131,12 +150,12 @@
                                         <ul class="list-inline">
                                             <li class="list-inline-item">
                                                 <div class="card__action">
-                                                    <a href="#"> <i class="material-icons">comment</i> <span>4</span> </a>
+                                                    <a href="#"> <i class="material-icons">favorite</i> <span>7</span> </a>
                                                 </div>
                                             </li>
                                             <li class="list-inline-item">
                                                 <div class="card__action">
-                                                    <a href="#"> <i class="material-icons">favorite</i> <span>7</span> </a>
+                                                    <a href="#"> <i class="material-icons">comment</i> <span>4</span> </a>
                                                 </div>
                                             </li>
                                             <li class="list-inline-item">
@@ -155,7 +174,7 @@
             <footer class="footer-7 text-center-xs">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year"></span> Medium Rare — All Rights Reserved</span>
+                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year"></span>Say::Project — All Rights Reserved</span>
                         </div>
                         <div class="col-sm-6 text-right text-center-xs">
                             <ul class="social-list list-inline">

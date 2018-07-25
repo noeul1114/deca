@@ -15,7 +15,7 @@ from .models import Article, Comment, Vote
 
 def board_index(request):
     user = get_user(request)
-    article_list = Article.objects.all().order_by('upvote')
+    article_list = Article.objects.all().order_by('upvote').reverse()
     if user.is_authenticated :
         return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list})

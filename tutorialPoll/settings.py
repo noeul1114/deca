@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'polls',
     'boards',
     'todaycomment',
+    'django_summernote',
 ]
 
 MIDDLEWARE = [
@@ -128,15 +129,17 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 # For deployment
-STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # For development
-# STATIC_URL = '/static/'
-# STATIC_ROOT = STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

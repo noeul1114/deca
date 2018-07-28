@@ -17,4 +17,5 @@ urlpatterns = [
     path('vote/<int:article_id>', views.board_vote, name='board_vote'),
     path('comment/', views.board_comment_write, name='board_comment_write'),
     path('comment_vote/<int:comment_id>', views.board_comment_vote, name='board_comment_vote'),
+    path('summernote/', views.summer, name='summer'),
 ]

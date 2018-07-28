@@ -11,6 +11,13 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
 from .models import Article, Comment, Vote
+from .form import BasicForm
+
+
+def summer(request):
+    form = BasicForm()
+    return render(request, 'boards/tui.html', {'form': form
+                                               })
 
 
 def board_index(request):

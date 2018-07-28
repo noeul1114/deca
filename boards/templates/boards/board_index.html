@@ -111,7 +111,7 @@
                                     </div>
                                     <div class="card__body">
                                         <a href="{% url 'boards:board_detail' article.id %}"> <img src="{% static 'boards/img/inner-5.jpg' %}" alt="Image" class="border--round"> </a>
-                                        {{ article.article_text|linebreaksbr }}
+                                        {{ article.article_text|striptags|truncatechars:30 }}
                                     </div>
                                     <div class="card__bottom">
                                         <ul class="list-inline">
@@ -135,42 +135,27 @@
                                 </div>
                             </div>
                             {% endfor %}
-                            <div class="col-md-4 masonry__item">
-                                <div class="card card-1 boxed boxed--sm boxed--border">
-                                    <div class="card__top">
-                                        <div class="card__avatar">
-                                            <a href="#"> <img alt="Image" src="{% static 'boards/img/avatar-round-2.png' %}"> </a> <span><strong>Jane Maslow</strong></span> </div>
-                                        <div class="card__meta"> <span>23 mins</span> </div>
-                                    </div>
-                                    <div class="card__body">
-                                        <a href="#"> <img src="{% static 'boards/img/knowledge-1.jpg' %}" alt="Image" class="border--round"> </a>
-                                        <p> Our workspace for today <a href="#">#lovingstack</a> </p>
-                                    </div>
-                                    <div class="card__bottom">
-                                        <ul class="list-inline">
-                                            <li class="list-inline-item">
-                                                <div class="card__action">
-                                                    <a href="#"> <i class="material-icons">favorite</i> <span>7</span> </a>
-                                                </div>
-                                            </li>
-                                            <li class="list-inline-item">
-                                                <div class="card__action">
-                                                    <a href="#"> <i class="material-icons">comment</i> <span>4</span> </a>
-                                                </div>
-                                            </li>
-                                            <li class="list-inline-item">
-                                                <div class="card__action">
-                                                    <a href="#"> <i class="material-icons">share</i> </a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <section class="unpad instagram text-center">
+                <div class="instafeed instafeed--gapless" data-user-name="mediumrarethemes" data-amount="15" data-grid="3">
+                    <ul class="">
+                    {% spaceless %}
+                        {% for i in article_list %}
+                        <li class="">
+                            <a href="">
+                                <img src="https://scontent.cdninstagram.com/vp/54c7626766ee6006db5deed2cd156423/5BEDA535/t51.2885-15/e35/s320x320/14574117_223262144753776_4686345941739896832_n.jpg" alt="">
+                            </a>
+                        </li>
+                        {% endfor %}
+                    {% endspaceless %}
+                    </ul>
+                </div>
+            </section>
+
             <footer class="footer-7 text-center-xs">
                 <div class="container">
                     <div class="row">

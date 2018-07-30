@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 
 from django.contrib.auth.models import User
+from django_summernote.models import AbstractAttachment
 
 # Create your models here.
 
@@ -31,6 +32,9 @@ class Article(models.Model):
     upvote = models.IntegerField(default=0)
     downvote = models.IntegerField(default=0)
 
+    published = models.BooleanField(default=False)
+    activated = models.BooleanField(default=False)
+
 
 class Comment(models.Model):
     comment_text = models.TextField()
@@ -42,3 +46,10 @@ class Comment(models.Model):
 
     upvote = models.IntegerField(default=0)
     downvote = models.IntegerField(default=0)
+
+    activated = models.BooleanField(default=False)
+
+
+class Attachment(AbstractAttachment):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True)
+    activated = models.BooleanField(default=False)

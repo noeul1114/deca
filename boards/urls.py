@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/', views.board_login, name='board_login'),
     path('logout/', views.board_logout, name='board_logout'),
     path('register/', views.board_register, name='board_register'),
-    path('write/', views.board_write, name='board_write'),
+    # path('write/', views.board_write, name='board_write'),
     path('delete/<int:article_id>', views.board_delete, name='board_delete'),
     path('delete_fix/', views.board_delete_fix, name='board_delete_fix'),
     path('edit/<int:article_id>', views.board_edit, name='board_edit'),
@@ -17,5 +17,5 @@ urlpatterns = [
     path('vote/<int:article_id>', views.board_vote, name='board_vote'),
     path('comment/', views.board_comment_write, name='board_comment_write'),
     path('comment_vote/<int:comment_id>', views.board_comment_vote, name='board_comment_vote'),
-    path('summernote/', views.summer, name='summer'),
+    path('write/', views.board_write, name='board_write'),
 ]

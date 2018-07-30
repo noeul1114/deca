@@ -91,47 +91,76 @@
             <section>
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-md-10 col-lg-8">
+                        <div class="col-md-10 col-lg-10">
                             <article>
                                 <div class="article__title text-center">
                                     <h1 class="h2">{{ article_detail.title }}</h1>{{ article_detail.created_at|date:"Y M d D" }}
                                     <br>
                                     <br>
-                                    <div class="text-center-xs">
+                                    <div class="text-left">
                                         <ul class="social-list list-inline">
-                                            <li><a href=""><i class="material-icons icon--xs">thumb_up</i></a><p class="pos-vertical-center">{{ article_detail.upvote }}</p></li>
-                                            <li><a href=""><i class="material-icons icon--xs">comment</i></a><p class="pos-vertical-center">{{ article_detail.comment_count }}</p></li>
+                                            <li><a href=""><i class="material-icons">thumb_up</i></a><p class="pos-vertical-center"><b>{{ article_detail.upvote }}</b> likes</p></li>
+                                            <li><a href=""><i class="material-icons">comment</i></a><p class="pos-vertical-center"><b>{{ article_detail.comment_count }}</b> comments</p></li>
                                         </ul>
                                     </div>
                                 </div>
-                                {% if user.is_authenticated %}
-                                <div class="article__title text-right">
-                                    회원님이 작성하신 글입니다 <br>
-                                    <div>
-                                        <a href="{% url 'boards:board_edit' article_detail.id %}">Edit</a>
-                                        <a href="{% url 'boards:board_delete' article_detail.id %}">Delete</a>
+                                {% if user == article_detail.writer %}
+                                    <div class="article__title text-right">
+                                        회원님이 작성하신 글입니다 <br>
+                                        <div>
+                                            <a href="{% url 'boards:board_edit' article_detail.id %}">Edit</a>
+                                            <a href="{% url 'boards:board_delete' article_detail.id %}">Delete</a>
+                                        </div>
                                     </div>
-                                </div>
                                 {% endif %}
                                 <div class="article__body">
                                     {{ article_detail.article_text|safe }}
                                 </div>
 
-
                                 <div class="article__share text-center">
-                                    <a class="btn bg--primary btn--icon" href="{% url 'boards:board_vote' article_detail.id %}?vote=up">
-                                        <span class="btn__text">
-                                            <i class="material-icons">check</i>
-                                            LIKE!
-                                        </span>
-                                    </a>
-                                    <a class="btn bg--secondary btn--icon" href="{% url 'boards:board_vote' article_detail.id %}?vote=down">
-                                        <span class="btn__text">
-                                            <i class="material-icons">loupe</i>
-                                            CHECK!
-                                        </span>
-                                    </a>
+                                    <ul class="social-list list-inline">
+                                        <li>
+                                            <a href="{% url 'boards:board_vote' article_detail.id %}?vote=up">
+                                                <i class="material-icons color--dark">check</i>
+                                                <p>Like!</p>
+                                            </a>
+                                        </li>
+                                        <li></li>
+                                        <li>
+                                            <a href="{% url 'boards:board_vote' article_detail.id %}?vote=down">
+                                                <i class="material-icons color--dark">loupe</i>
+                                            </a>
+                                            <p>Check</p>
+                                        </li>
+                                    </ul>
                                 </div>
+
+
+{#                                <div class="article__share text-center hidden-xs">#}
+                                {#                                    <a class="btn bg--primary col-md-3" href="{% url 'boards:board_vote' article_detail.id %}?vote=up">#}
+                                {#                                        <i class="material-icons">check</i>#}
+                                {#                                    </a>#}
+                                {#                                    <a class="btn bg--secondary col-md-3" href="{% url 'boards:board_vote' article_detail.id %}?vote=down">#}
+                                {#                                        <i class="material-icons">loupe</i>#}
+                                {#                                    </a>#}
+                                {#                                    <div class="btn bg--primary btn--icon col-md-3">#}
+                                {#                                        <a  href="{% url 'boards:board_vote' article_detail.id %}?vote=up">#}
+                                {#                                            <span class="btn__text">#}
+                                {#                                                <i class="material-icons">check</i>#}
+                                {#                                                LIKE!#}
+                                {#                                            </span>#}
+                                {#                                        </a>#}
+                                {#                                    </div>#}
+                                {#                                    <div class="btn bg--secondary btn--icon col-md-3">#}
+                                {#                                        <a href="{% url 'boards:board_vote' article_detail.id %}?vote=down">#}
+                                {#                                            <span class="btn__text">#}
+                                {#                                                <i class="material-icons">loupe</i>#}
+                                {#                                                CHECK!#}
+                                {#                                            </span>#}
+                                {#                                        </a>#}
+                                {#                                    </div>#}
+
+                                {#                        </div>#}
 
                             </article>
                         </div>
@@ -146,31 +175,31 @@
                                 <h3>{{ comment_list.count }} Comments</h3>
                                 <ul class="comments__list">
                                     {% for comment in comment_list %}
-                                    <li>
-                                        <div class="comment">
-                                            <div class="comment__avatar"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </div>
-                                            <div class="comment__body">
-                                                <h5 class="type--fine-print">{{ comment.writer }}</h5>
-                                                <div class="comment__meta"> <span>{{ comment.created_at|date:'Y M d D H:i' }}</span>
-                                                    <a href="#"> <i class="material-icons icon icon--xs">thumb_up</i> <span>{{ comment.upvote }}</span> </a>
-                                                    <a href="#"> <i class="color--dark material-icons icon icon--xs">thumb_down</i> <span>{{ comment.downvote }}</span> </a>
-                                                    {% if user == comment.writer %}
-                                                        <a href="#">Edit</a>
-                                                        <a href="#">Delete</a>
-                                                    {% endif %}
+                                        <li>
+                                            <div class="comment">
+                                                <div class="comment__avatar"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </div>
+                                                <div class="comment__body">
+                                                    <h5 class="type--fine-print">{{ comment.writer }}</h5>
+                                                    <div class="comment__meta"> <span>{{ comment.created_at|date:'Y M d D H:i' }}</span>
+                                                        <a href="#"> <i class="material-icons icon icon--xs">thumb_up</i> <span>{{ comment.upvote }}</span> </a>
+                                                        <a href="#"> <i class="color--dark material-icons icon icon--xs">thumb_down</i> <span>{{ comment.downvote }}</span> </a>
+                                                        {% if user == comment.writer %}
+                                                            <a href="#">Edit</a>
+                                                            <a href="#">Delete</a>
+                                                        {% endif %}
+                                                    </div>
+                                                    {{ comment.comment_text }}
                                                 </div>
-                                                {{ comment.comment_text }}
                                             </div>
-                                        </div>
-{#                                        <div class="comment">#}
-{#                                            <div class="comment__avatar"> <img alt="Image" src="img/avatar-round-3.png"> </div>#}
-{#                                            <div class="comment__body">#}
-{#                                                <h5 class="type--fine-print">Jacob Sims</h5>#}
-{#                                                <div class="comment__meta"> <span>10th May 2016</span><a href="#">Reply</a> </div>#}
-{#                                                <p> Prototype intuitive intuitive thought leader personas parallax paradigm long shadow engaging unicorn SpaceTeam fund ideate paradigm. </p>#}
-{#                                            </div>#}
-{#                                        </div>#}
-                                    </li>
+                                            {#                                        <div class="comment">#}
+                                            {#                                            <div class="comment__avatar"> <img alt="Image" src="img/avatar-round-3.png"> </div>#}
+                                            {#                                            <div class="comment__body">#}
+                                            {#                                                <h5 class="type--fine-print">Jacob Sims</h5>#}
+                                            {#                                                <div class="comment__meta"> <span>10th May 2016</span><a href="#">Reply</a> </div>#}
+                                            {#                                                <p> Prototype intuitive intuitive thought leader personas parallax paradigm long shadow engaging unicorn SpaceTeam fund ideate paradigm. </p>#}
+                                            {#                                            </div>#}
+                                            {#                                        </div>#}
+                                        </li>
                                     {% endfor %}
                                 </ul>
                             </div>
@@ -178,8 +207,8 @@
                                 <h4>Leave a comment</h4>
                                 <form class="row" action="{% url 'boards:board_comment_write' %}" method="post">
                                     {% csrf_token %}
-{#                                    <div class="col-md-6"> <label>Your Name:</label> <input type="text" name="Name" placeholder="Type name here"> </div>#}
-{#                                    <div class="col-md-6"> <label>Email Address:</label> <input type="email" name="email" placeholder="you@mailprovider.com"> </div>#}
+                                    {#                                    <div class="col-md-6"> <label>Your Name:</label> <input type="text" name="Name" placeholder="Type name here"> </div>#}
+                                    {#                                    <div class="col-md-6"> <label>Email Address:</label> <input type="email" name="email" placeholder="you@mailprovider.com"> </div>#}
                                     <div class="col-md-12"> <label>Comment:</label> <textarea rows="4" name="comment_text"></textarea> </div>
                                     <div class="col-md-3"> <button class="btn btn--primary" type="submit">Submit Comment</button> </div>
                                     <input type="hidden" name="article_id" value="{{ article_detail.id }}">

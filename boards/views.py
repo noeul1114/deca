@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 
 from django.contrib.auth.models import User
@@ -11,18 +11,16 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
 from .models import Article, Comment, Vote
+from django_summernote.models import Attachment
 from .form import BasicForm
 
 
-def summer(request):
-    form = BasicForm()
-    return render(request, 'boards/tui.html', {'form': form
-                                               })
 
 
 def board_index(request):
     user = get_user(request)
-    article_list = Article.objects.all().order_by('upvote').reverse()
+    article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+
     if user.is_authenticated :
         return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list})
@@ -32,7 +30,7 @@ def board_index(request):
 
 def board_index_name(request, board_url='blueboard'):
     user = get_user(request)
-    article_list = Article.objects.filter(board_name__url=board_url)
+    article_list = Article.objects.filter(board_name__url=board_url, published=True, activated=True)
     if user.is_authenticated :
         return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list,
@@ -44,7 +42,7 @@ def board_index_name(request, board_url='blueboard'):
 def board_detail(request, article_id):
     user = get_user(request)
     if user.is_authenticated:
-        article_list = Article.objects.all()
+        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
         A = get_object_or_404(Article, pk=article_id)
         C = Comment.objects.filter(article_id=article_id)
         return render(request, 'boards/board_detail.html', {'article_detail': A,
@@ -52,7 +50,7 @@ def board_detail(request, article_id):
                                                             'article_list': article_list,
                                                             'comment_list': C})
     else:
-        article_list = Article.objects.all()
+        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
         A = get_object_or_404(Article, pk=article_id)
         C = Comment.objects.filter(article_id=article_id)
         return render(request, 'boards/board_detail.html', {'article_detail': A,
@@ -89,7 +87,7 @@ def board_vote(request, article_id):
 def board_login(request):
     user = get_user(request)
     if user.is_authenticated:
-        article_list = Article.objects.all()
+        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
         return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list,
                                                            'error_message': '이미 로그인 되어있습니다'
@@ -136,21 +134,58 @@ def board_register(request):
 def board_write(request):
     user = get_user(request)
     if user.is_authenticated:
-        if request.method == 'POST':
-            A = Article(title=request.POST['title'],
-                        article_text=request.POST['article_text'],
-                        created_at=timezone.now(),
-                        writer=user,
-                        )
-            try:
-                A.save()
-                return HttpResponseRedirect(reverse('boards:board_index'))
-            except:
-                return HttpResponseRedirect(reverse('boards:board_write'))
+        if Article.objects.filter(writer=user, published=False).count() == 0:
+            A = Article.objects.create(title='',
+                                       article_text='',
+                                       created_at=timezone.now(),
+                                       writer=user,
+                                       )
+        else:
+            A = get_object_or_404(Article, writer=user, published=False)
 
-        return render(request, 'boards/board_write.html')
+        if request.method == 'POST':
+            A.title = request.POST['title']
+            A.article_text = request.POST['article_text']
+            A.created_at = timezone.now()
+            A.writer = user
+            try:
+                A.published = True
+                A.activated = True
+                A.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': A.id}))
+            except:
+                form = BasicForm()
+                return render(request, 'boards/board_write.html', {'form': form,
+                                                                   })
+        else:
+            form = BasicForm()
+            return render(request, 'boards/board_write.html', {'form': form,
+                                                               })
     else:
-        return HttpResponseRedirect(reverse('boards:board_index'))
+        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+        return render(request, 'boards/board_index.html', {'user': user,
+                                                           'article_list': article_list,
+                                                           'error_message': '글을 쓰기 위해선 로그인 해주세요!'
+                                                           })
+
+# def board_write(request):
+#     user = get_user(request)
+#     if user.is_authenticated:
+#         if request.method == 'POST':
+#             A = Article(title=request.POST['title'],
+#                         article_text=request.POST['article_text'],
+#                         created_at=timezone.now(),
+#                         writer=user,
+#                         )
+#             try:
+#                 A.save()
+#                 return HttpResponseRedirect(reverse('boards:board_index'))
+#             except:
+#                 return HttpResponseRedirect(reverse('boards:board_write'))
+#
+#         return render(request, 'boards/board_write.html')
+#     else:
+#         return HttpResponseRedirect(reverse('boards:board_index'))
 
 
 def board_delete(request, article_id):
@@ -183,10 +218,10 @@ def board_delete_fix(request):
     if user.is_authenticated:
         if user == A.writer:
             try:
-                A.delete()
+                A.de()
                 return HttpResponseRedirect(reverse('boards:board_index'))
             except:
-                article_list = Article.objects.all()
+                article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
                 C = Comment.objects.filter(article_id=request.POST['article_id'])
                 return render(request, 'boards/board_detail.html', {'article_detail': A,
                                                                     'article_list': article_list,
@@ -215,21 +250,21 @@ def board_edit(request, article_id):
             if A.writer_id == user.id:
                 return render(request, 'boards/board_edit.html', {'article_edit': A})
             else:
-                article_list = Article.objects.all()
+                article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
                 C = Comment.objects.filter(article_id=article_id)
                 return render(request, 'boards/board_detail.html', {'article_detail': A,
                                                                     'article_list': article_list,
                                                                     'comment_list': C,
                                                                     'error_message': "잘못된 접근입니다."})
         else:
-            article_list = Article.objects.all()
+            article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
             C = Comment.objects.filter(article_id=article_id)
             return render(request, 'boards/board_detail.html', {'article_detail': A,
                                                                 'article_list': article_list,
                                                                 'comment_list': C,
                                                                 'error_message': "잘못된 접근입니다."})
     else:
-        article_list = Article.objects.all()
+        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
         C = Comment.objects.filter(article_id=article_id)
         return render(request, 'boards/board_detail.html', {'article_detail': A,
                                                             'article_list': article_list,

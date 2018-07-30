@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'tutorialPoll.middleware.AttachmentMiddleware'
 ]
 
 ROOT_URLCONF = 'tutorialPoll.urls'
@@ -128,6 +129,33 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+SUMMERNOTE_CONFIG = {
+
+    'summernote': {
+        # As an example, using Summernote Air-mode
+        'airMode': False,
+
+        # Change editor size
+        'width': '100%',
+        'height': '900',
+
+        # Use proper language setting automatically (default)
+        'lang': None,
+
+        # Or, set editor language/locale forcely
+        'lang': 'ko-KR',
+
+        # You can add custom css/js for SummernoteWidget.
+        'css': (
+        ),
+        'js': (
+
+        ),
+    },
+
+    'attachment_model': 'boards.Attachment'
+}
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

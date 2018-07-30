@@ -12,14 +12,12 @@
 
 <form action="{% url 'boards:board_write' %}" method="post">
     {% csrf_token %}
-    <input type="text" name="title" placeholder="Title">
-    <textarea name="article_text" cols="30" rows="10">
 
-    </textarea>
+    {{ form|safe }}
+
     <button type="submit">
-        글쓰기
+        submit
     </button>
-
 </form>
 
 </body>

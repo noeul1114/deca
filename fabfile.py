@@ -17,6 +17,7 @@ REMOTE_HOST_SSH = envs['REMOTE_HOST_SSH']
 REMOTE_HOST = envs['REMOTE_HOST']
 REMOTE_USER = envs['REMOTE_USER']
 REMOTE_PASSWORD = envs['REMOTE_PASSWORD']
+PASSWORD = envs['DB_ROOT_']
 
 STATIC_ROOT_NAME = 'static_deploy'
 STATIC_URL_NAME = 'static'
@@ -47,6 +48,7 @@ apt_requirements = [
     'libxml2-dev',
     'libjpeg8-dev',
     'zlib1g-dev',
+    'postgresql',
 ]
 
 
@@ -84,9 +86,17 @@ def deploy():
     _ufw_allow()
     _make_virtualhost()
     _grant_apache2()
+    _postgres_update()
     _grant_sqlite3()
     _restart_apache2()
 
+
+def _postgres_update():
+    sudo('sudo -u postgres psql')
+    run('ALTER USER postgres with encrypted password \'{}\';'.format(PASSWORD))
+    run('CREATE USER django PASSWORD \'{}\''.format(REMOTE_PASSWORD))
+    run('\q')
+    sudo('sudo /etc/init.d/postgresql restart')
 
 def _put_envs():
     put(os.path.join(PROJECT_DIR, 'envs.json'), '~/{}/envs.json'.format(PROJECT_NAME))

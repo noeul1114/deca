@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'tutorialPoll.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'posttgresql',
+        'NAME': 'postgresql',
         'USER': 'django',
         'PASSWORD': 'qudtlstz1',
         'HOST': '127.0.0.1',

@@ -180,7 +180,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 # For deployment
-STATIC_URL = 'https://thl1110.jpg2.kr/staticfiles/'
+# STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# For deployment
+STATIC_URL = 'http://thl1110.jpg2.kr/staticfiles/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 

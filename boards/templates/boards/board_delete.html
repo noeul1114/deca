@@ -63,7 +63,7 @@
                             <form action="{% url 'boards:board_delete_fix'%}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="article_id" value="{{ article.id }}">
-                                <button type="submit">
+                                <button class="btn btn--primary-1 color--white col-md-4" type="submit">
                                     삭제
                                 </button>
                             </form>

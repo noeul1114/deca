@@ -23,6 +23,8 @@ class Article(models.Model):
     created_at = models.DateTimeField('Date published')
     edited_at = models.DateTimeField('Latest edited date', auto_now=True)
 
+    image = models.CharField(max_length=200, null=True)
+
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
 
     comment_count = models.IntegerField(default=0)

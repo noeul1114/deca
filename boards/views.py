@@ -11,8 +11,10 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
 from .models import Article, Comment, Vote
-from django_summernote.models import Attachment
+from .models import Attachment
 from .form import BasicForm
+
+from bs4 import BeautifulSoup
 
 
 
@@ -148,10 +150,20 @@ def board_write(request):
             A.article_text = request.POST['article_text']
             A.created_at = timezone.now()
             A.writer = user
+
+            soup = BeautifulSoup(A.article_text, "html.parser")
+
+            if soup.img != None:
+                A.image = soup.img['src']
+            else:
+                # 여기에 사진 없을경우 랜덤으로 붙여넣을 알고리즘 추가
+                pass
+
             try:
                 A.published = True
                 A.activated = True
                 A.save()
+                Attachment.objects.filter(article=A).update(activated=True)
                 return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': A.id}))
             except:
                 form = BasicForm()
@@ -220,6 +232,7 @@ def board_delete_fix(request):
             try:
                 A.activated = False
                 A.save()
+                Attachment.objects.filter(article=A).update(activated=False)
                 return HttpResponseRedirect(reverse('boards:board_index'))
             except:
                 article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()

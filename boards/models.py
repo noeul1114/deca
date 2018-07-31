@@ -51,5 +51,6 @@ class Comment(models.Model):
 
 
 class Attachment(AbstractAttachment):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True)
     activated = models.BooleanField(default=False)

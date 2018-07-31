@@ -218,7 +218,8 @@ def board_delete_fix(request):
     if user.is_authenticated:
         if user == A.writer:
             try:
-                A.de()
+                A.activated = False
+                A.save()
                 return HttpResponseRedirect(reverse('boards:board_index'))
             except:
                 article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()

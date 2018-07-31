@@ -11,6 +11,20 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from datetime import datetime
+import uuid
+
+def custom_uploaded_filepath(instance, filename):
+    """
+    Returns default filepath for uploaded files.
+    """
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    year = datetime.now().strftime('%Y')
+    month = datetime.now().strftime('%m')
+    day = datetime.now().strftime('%d')
+    hour = datetime.now().strftime('%H')
+    return os.path.join('django-summernote', year, month, day, hour, filename)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -149,10 +163,12 @@ SUMMERNOTE_CONFIG = {
         # You can add custom css/js for SummernoteWidget.
         'css': (
         ),
-        'js': (
-
-        ),
+        # 'js': ('$(".summernote").summernote({onMediaDelete : function($target, editor, $editable) {console.log($target.context.dataset.filename);$target.remove();console.log("all gone!");}})'
+        #
+        # ),
     },
+
+    'attachment_upload_to': custom_uploaded_filepath,
 
     'attachment_model': 'boards.Attachment'
 }

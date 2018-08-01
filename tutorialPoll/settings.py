@@ -26,6 +26,7 @@ def custom_uploaded_filepath(instance, filename):
     hour = datetime.now().strftime('%H')
     return os.path.join('django-summernote', year, month, day, hour, filename)
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -93,23 +94,26 @@ WSGI_APPLICATION = 'tutorialPoll.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sayproject',
-        'USER': 'django',
-        'PASSWORD': 'qudtlstz1',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'sayproject',
+            'USER': 'django',
+            'PASSWORD': 'qudtlstz1',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+    }
+
 
 
 
@@ -171,6 +175,8 @@ SUMMERNOTE_CONFIG = {
 
     'attachment_upload_to': custom_uploaded_filepath,
 
+    'attachment_storage_class': 'storages.backends.sftpstorage.SFTPStorage',
+
     'attachment_model': 'boards.Attachment'
 }
 
@@ -180,22 +186,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-# For deployment
-STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+if DEBUG:
+    # For development
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+else:
+    # For deployment
+    STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # For deployment
 # STATIC_URL = 'http://thl1110.jpg2.kr/staticfiles/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-
-# For development
-# STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 DEFAULT_FILE_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
 
-SFTP_STORAGE_HOST = '45.32.250.25'
+SFTP_STORAGE_HOST = 'thl1110.jpg2.kr'
 SFTP_STORAGE_ROOT = ('/media/')
 SFTP_STORAGE_PARAMS = {
     'username': 'thl1110',

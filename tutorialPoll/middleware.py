@@ -20,20 +20,22 @@ class AttachmentMiddleware:
 
         if request.path == '/summernote/upload_attachment/':
             if request.method == 'POST':
+                try:
+                    container = json.loads(response.getvalue().decode("utf-8"))
+                    files = container['files']
+                    user = get_user(request)
 
-                container = json.loads(response.getvalue().decode("utf-8"))
-                files = container['files']
-                user = get_user(request)
-
-                for file in files:
-                    mod_url = file['url'].replace(MEDIA_URL, '')
-                    ATT = Attachment.objects.get(activated=False, file=mod_url)
-                    ATT.user = user
-                    ATT.article = Article.objects.get(writer=user, published=False)
-                    try:
-                        ATT.save()
-                    except:
-                        pass
+                    for file in files:
+                        mod_url = file['url'].replace(MEDIA_URL, '')
+                        ATT = Attachment.objects.get(activated=False, file=mod_url)
+                        ATT.user = user
+                        ATT.article = Article.objects.get(writer=user, published=False)
+                        try:
+                            ATT.save()
+                        except:
+                            print('failed to save ATT attribute')
+                except:
+                    print('failed to get response from request / middleware')
 
             else:
                 pass

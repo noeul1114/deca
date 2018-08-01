@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 from datetime import datetime
 import uuid
+import posixpath
 
-def custom_uploaded_filepath(instance, filename):
+
+def custom_uploaded_filepath_debug(instance, filename):
     """
     Returns default filepath for uploaded files.
     """
@@ -25,6 +27,19 @@ def custom_uploaded_filepath(instance, filename):
     day = datetime.now().strftime('%d')
     hour = datetime.now().strftime('%H')
     return os.path.join('django-summernote', year, month, day, hour, filename)
+
+
+def custom_uploaded_filepath_deploy(instance, filename):
+    """
+    Returns default filepath for uploaded files.
+    """
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    year = datetime.now().strftime('%Y')
+    month = datetime.now().strftime('%m')
+    day = datetime.now().strftime('%d')
+    hour = datetime.now().strftime('%H')
+    return posixpath.join('django-summernote', year, month, day, hour, filename)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -39,6 +54,11 @@ SECRET_KEY = '+c1@o4ikm@!1s+!wcqdtuaab*c_&3pphnkh7wgmek9v^)uqg8-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+if DEBUG:
+    custom_uploaded_filepath = custom_uploaded_filepath_debug
+else:
+    custom_uploaded_filepath = custom_uploaded_filepath_deploy
 
 ALLOWED_HOSTS = ['*']
 
@@ -105,14 +125,20 @@ if DEBUG:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'sayproject',
-            'USER': 'django',
-            'PASSWORD': 'qudtlstz1',
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #         'NAME': 'sayproject',
+    #         'USER': 'django',
+    #         'PASSWORD': 'qudtlstz1',
+    #         'HOST': '127.0.0.1',
+    #         'PORT': '5432',
+    #     }
+    # }
 
 
 
@@ -149,64 +175,91 @@ USE_L10N = True
 
 USE_TZ = True
 
-SUMMERNOTE_CONFIG = {
+if DEBUG:
+    SUMMERNOTE_CONFIG = {
 
-    'summernote': {
-        # As an example, using Summernote Air-mode
-        'airMode': False,
+        'summernote': {
+            # As an example, using Summernote Air-mode
+            'airMode': False,
 
-        # Change editor size
-        'width': '100%',
-        'height': '900',
+            # Change editor size
+            'width': '100%',
+            'height': '900',
 
-        # Use proper language setting automatically (default)
-        'lang': None,
+            # Use proper language setting automatically (default)
+            'lang': None,
 
-        # Or, set editor language/locale forcely
-        'lang': 'ko-KR',
+            # Or, set editor language/locale forcely
+            'lang': 'ko-KR',
 
-        # You can add custom css/js for SummernoteWidget.
-        'css': (
-        ),
-        # 'js': ('$(".summernote").summernote({onMediaDelete : function($target, editor, $editable) {console.log($target.context.dataset.filename);$target.remove();console.log("all gone!");}})'
-        #
-        # ),
-    },
+            # You can add custom css/js for SummernoteWidget.
+            'css': (
+            ),
+            # 'js': ('$(".summernote").summernote({onMediaDelete : function($target, editor, $editable) {console.log($target.context.dataset.filename);$target.remove();console.log("all gone!");}})'
+            #
+            # ),
+        },
 
-    'attachment_upload_to': custom_uploaded_filepath,
+        'attachment_upload_to': custom_uploaded_filepath,
 
-    # 'attachment_storage_class': 'storages.backends.sftpstorage.SFTPStorage',
+        'attachment_model': 'boards.Attachment'
+    }
+else:
+    SUMMERNOTE_CONFIG = {
 
-    'attachment_model': 'boards.Attachment'
-}
+        'summernote': {
+            # As an example, using Summernote Air-mode
+            'airMode': False,
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+            # Change editor size
+            'width': '100%',
+            'height': '900',
+
+            # Use proper language setting automatically (default)
+            'lang': None,
+
+            # Or, set editor language/locale forcely
+            'lang': 'ko-KR',
+
+            # You can add custom css/js for SummernoteWidget.
+            'css': (
+            ),
+            # 'js': ('$(".summernote").summernote({onMediaDelete : function($target, editor, $editable) {console.log($target.context.dataset.filename);$target.remove();console.log("all gone!");}})'
+            #
+            # ),
+        },
+
+        'attachment_upload_to': custom_uploaded_filepath,
+
+        'attachment_storage_class': 'storages.backends.ftp.FTPStorage',
+
+        'attachment_model': 'boards.Attachment'
+    }
+
+
+if DEBUG:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+else:
+    MEDIA_URL = 'http://thl1110.jpg2.kr/media/'
+    MEDIA_ROOT = '/media/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 if DEBUG:
     # For development
-    STATIC_URL = '/static/'
+    STATIC_URL = '/staticfiles/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 else:
     # For deployment
     STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+    FTP_STORAGE_LOCATION = 'ftp://thl1110:qudtlstz1@thl1110.jpg2.kr:21'
+
 # For deployment
 # STATIC_URL = 'http://thl1110.jpg2.kr/staticfiles/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-if DEBUG:
-    DEFAULT_FILE_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
 
-    SFTP_STORAGE_HOST = 'thl1110.jpg2.kr'
-    SFTP_STORAGE_ROOT = ('/media/')
-    SFTP_STORAGE_PARAMS = {
-        'username': 'thl1110',
-        'password': 'qudtlstz1',
-        'allow_agent': False,
-        'look_for_keys': False,
-    }

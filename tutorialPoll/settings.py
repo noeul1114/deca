@@ -175,7 +175,7 @@ SUMMERNOTE_CONFIG = {
 
     'attachment_upload_to': custom_uploaded_filepath,
 
-    'attachment_storage_class': 'storages.backends.sftpstorage.SFTPStorage',
+    # 'attachment_storage_class': 'storages.backends.sftpstorage.SFTPStorage',
 
     'attachment_model': 'boards.Attachment'
 }
@@ -199,13 +199,14 @@ else:
 # STATIC_URL = 'http://thl1110.jpg2.kr/staticfiles/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-DEFAULT_FILE_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
+if DEBUG:
+    DEFAULT_FILE_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
 
-SFTP_STORAGE_HOST = 'thl1110.jpg2.kr'
-SFTP_STORAGE_ROOT = ('/media/')
-SFTP_STORAGE_PARAMS = {
-    'username': 'thl1110',
-    'password': 'qudtlstz1',
-    'allow_agent': False,
-    'look_for_keys': False,
-}
+    SFTP_STORAGE_HOST = 'thl1110.jpg2.kr'
+    SFTP_STORAGE_ROOT = ('/media/')
+    SFTP_STORAGE_PARAMS = {
+        'username': 'thl1110',
+        'password': 'qudtlstz1',
+        'allow_agent': False,
+        'look_for_keys': False,
+    }

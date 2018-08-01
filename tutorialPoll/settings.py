@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'boards',
     'todaycomment',
     'django_summernote',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -191,3 +192,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # For development
 # STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+DEFAULT_FILE_STORAGE = 'storages.backends.sftpstorage.SFTPStorage'
+
+SFTP_STORAGE_HOST = '45.32.250.25'
+SFTP_STORAGE_ROOT = ('/media/')
+SFTP_STORAGE_PARAMS = {
+    'username': 'thl1110',
+    'password': 'qudtlstz1',
+    'allow_agent': False,
+    'look_for_keys': False,
+}

@@ -78,12 +78,20 @@
         <div class="main-container">
             <section>
                 <div class="container">
+                    {% if success_message %}
+                    <div class="alert col-12 bg--success">
+                        {{ success_message }}
+                    </div>
+                    {% endif %}
                     <form action="{% url 'boards:board_write' %}" method="post">
                         {% csrf_token %}
 
                         {{ form|safe }}
 
-                        <button class="btn btn--primary pos-right col-md-4" type="submit">
+                        <button class="btn btn--white pos-right col-md-4" value="False" name="SS" type="submit">
+                            Save for later
+                        </button>
+                        <button class="btn btn--primary pos-right col-md-4 type--uppercase" value="True" name="SS" type="submit">
                             submit
                         </button>
                     </form>

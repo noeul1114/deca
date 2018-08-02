@@ -17,8 +17,6 @@ from .form import BasicForm
 from bs4 import BeautifulSoup
 
 
-
-
 def board_index(request):
     user = get_user(request)
     article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
@@ -43,21 +41,31 @@ def board_index_name(request, board_url='blueboard'):
 
 def board_detail(request, article_id):
     user = get_user(request)
-    if user.is_authenticated:
-        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
-        A = get_object_or_404(Article, pk=article_id)
-        C = Comment.objects.filter(article_id=article_id)
-        return render(request, 'boards/board_detail.html', {'article_detail': A,
-                                                            'user': user,
-                                                            'article_list': article_list,
-                                                            'comment_list': C})
+    A = get_object_or_404(Article, pk=article_id)
+    if A.published and A.activated:
+        if user.is_authenticated:
+            article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+            C = Comment.objects.filter(article_id=article_id)
+            return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                                'user': user,
+                                                                'article_list': article_list,
+                                                                'comment_list': C})
+        else:
+            article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+            C = Comment.objects.filter(article_id=article_id)
+            return render(request, 'boards/board_detail.html', {'article_detail': A,
+                                                                'article_list': article_list,
+                                                                'comment_list': C})
     else:
         article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
-        A = get_object_or_404(Article, pk=article_id)
-        C = Comment.objects.filter(article_id=article_id)
-        return render(request, 'boards/board_detail.html', {'article_detail': A,
-                                                            'article_list': article_list,
-                                                            'comment_list': C})
+
+        if user.is_authenticated:
+            return render(request, 'boards/board_index.html', {'user': user,
+                                                               'article_list': article_list,
+                                                               'error_message': '볼 수 없는 게시물입니다.'})
+        else:
+            return render(request, 'boards/board_index.html', {'article_list': article_list,
+                                                               'error_message': '볼 수 없는 게시물입니다.'})
 
 
 def board_vote(request, article_id):
@@ -146,31 +154,66 @@ def board_write(request):
             A = get_object_or_404(Article, writer=user, published=False)
 
         if request.method == 'POST':
-            A.title = request.POST['title']
-            A.article_text = request.POST['article_text']
-            A.created_at = timezone.now()
-            A.writer = user
+            if request.POST['SS'] == 'True':
+                A.title = request.POST['title']
+                A.article_text = request.POST['article_text']
+                A.created_at = timezone.now()
+                A.writer = user
 
-            soup = BeautifulSoup(A.article_text, "html.parser")
+                soup = BeautifulSoup(A.article_text, "html.parser")
 
-            if soup.img != None:
-                A.image = soup.img['src']
-            else:
-                # 여기에 사진 없을경우 랜덤으로 붙여넣을 알고리즘 추가
-                pass
+                if soup.img != None:
+                    A.image = soup.img['src']
+                else:
+                    # 여기에 사진 없을경우 랜덤으로 붙여넣을 알고리즘 추가
+                    pass
 
-            try:
-                A.published = True
-                A.activated = True
-                A.save()
-                Attachment.objects.filter(article=A).update(activated=True)
-                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': A.id}))
-            except:
-                form = BasicForm()
-                return render(request, 'boards/board_write.html', {'form': form,
-                                                                   })
+                try:
+                    A.published = True
+                    A.activated = True
+                    A.save()
+                    Attachment.objects.filter(article=A).update(activated=True)
+                    return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': A.id}))
+                except:
+                    form = BasicForm(initial={'title': A.title,
+                                              'article_text': A.article_text,
+                                              })
+                    return render(request, 'boards/board_write.html', {'form': form,
+                                                                       'error_message': '글을 쓰는데에 실패했습니다. 다시 시도해주세요',
+                                                                       })
+            if request.POST['SS'] == 'False':
+                A.title = request.POST['title']
+                A.article_text = request.POST['article_text']
+                A.created_at = timezone.now()
+                A.writer = user
+
+                soup = BeautifulSoup(A.article_text, "html.parser")
+
+                if soup.img != None:
+                    A.image = soup.img['src']
+                else:
+                    # 여기에 사진 없을경우 랜덤으로 붙여넣을 알고리즘 추가
+                    pass
+
+                try:
+                    A.save()
+                    form = BasicForm(initial={'title': A.title,
+                                              'article_text': A.article_text,
+                                              })
+                    return render(request, 'boards/board_write.html', {'form': form,
+                                                                       'success_message': '글을 저장했습니다.',
+                                                                       })
+                except:
+                    form = BasicForm(initial={'title': A.title,
+                                              'article_text': A.article_text,
+                                              })
+                    return render(request, 'boards/board_write.html', {'form': form,
+                                                                       'error_message': '글을 저장하는 데에 실패했습니다. 다시 시도해주세요',
+                                                                       })
         else:
-            form = BasicForm()
+            form = BasicForm(initial={'title': A.title,
+                                      'article_text': A.article_text,
+                                      })
             return render(request, 'boards/board_write.html', {'form': form,
                                                                })
     else:

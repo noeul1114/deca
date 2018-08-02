@@ -104,6 +104,11 @@
                             <div class="col-md-12">
                                 <h2>Main Project</h2>
                             </div>
+                            {% if error_message %}
+                            <div class="alert bg--error col-12 text-center">
+                                {{ error_message }}
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="masonry__container row masonry--active">
                             {% for article in article_list %}

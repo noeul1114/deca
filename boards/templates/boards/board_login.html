@@ -15,13 +15,19 @@
     <body data-smooth-scroll-offset="77">
         <div class="nav-container"> </div>
         <div class="main-container">
-            <section class="imagebg height-100 text-center" data-overlay="6">
-                <div class="background-image-holder"><img alt="background" src="{% static 'boards/img/landing-10.jpg' %}"></div>
+            <section class="height-100 text-center">
                 <div class="container pos-vertical-center">
                     <div class="row">
                         <div class="col-md-7 col-lg-5">
-                            <h2>Login to continue</h2>
-                            <p class="lead"> Welcome back, sign in with your existing Stack account credentials </p>
+                            <a href="{% url 'boards:board_index' %}">
+                                <img src="{% static 'boards/img/logo-dark.png' %}" alt="Say::Project">
+                            </a>
+                            <p class="lead">Say it for more</p>
+                            {% if error_message %}
+                                <div class="alert bg--error col-12">
+                                    {{ error_message }}
+                                </div>
+                            {% endif %}
                             <form action="{% url 'boards:board_login' %}" method="post">
                                 {% csrf_token %}
                                 <div class="row">

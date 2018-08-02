@@ -262,7 +262,12 @@ def board_edit(request, article_id):
     if request.method == "GET":
         if user.is_authenticated:
             if A.writer_id == user.id:
-                return render(request, 'boards/board_edit.html', {'article_edit': A})
+                form = BasicForm(initial={'title':A.title,
+                                          'article_text': A.article_text,
+                                          })
+                return render(request, 'boards/board_edit.html', {'article_edit': A,
+                                                                  'form': form,
+                                                                  })
             else:
                 article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
                 C = Comment.objects.filter(article_id=article_id)

@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('boards/', include('boards.urls')),
+    path('', include('boards.urls')),
     # path('todaycomment/', include('todaycomment.urls')),
     # path('boards/', include('boards.urls')),
     # path('polls/', include('polls.urls')),

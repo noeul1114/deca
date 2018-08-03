@@ -19,13 +19,19 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from boards.views import assetlink
+
+
 urlpatterns = [
-    path('boards/', include('boards.urls')),
+    path('', include('boards.urls')),
     # path('todaycomment/', include('todaycomment.urls')),
     # path('boards/', include('boards.urls')),
     # path('polls/', include('polls.urls')),
     path('say/admin/', admin.site.urls),
+
     re_path(r'^summernote/', include('django_summernote.urls')),
+
+    re_path(r'^\.well-known/assetlinks\.json', assetlink.as_view())
 ]
 
 if settings.DEBUG:

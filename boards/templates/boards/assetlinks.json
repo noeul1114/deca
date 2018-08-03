@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "site.sayproject.sayproject",
+    "sha256_cert_fingerprints":
+    ["C6:D2:6B:B8:81:A4:A8:F5:7B:98:DD:65:61:97:58:03:1D:62:F0:EE:28:E5:A4:2A:B9:E8:D8:E9:3A:9E:06:E1"]
+  }
+}]

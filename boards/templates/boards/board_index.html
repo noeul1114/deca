@@ -3,7 +3,8 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>Say::Project - Say it for MORE</title>
+        <link rel="icon" href="{% static 'boards/favicon.ico' %}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="{% static 'boards/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all">
         <link href="{% static 'boards/css/socicon.css' %}" rel="stylesheet" type="text/css" media="all" />
@@ -33,32 +34,6 @@
                             </div>
                         </div>
                     </div>
-
-                    {# single 들어가는 부분 #}
-{#                    <div class="container">#}
-{#                        <div class="row">#}
-{#                            <div class="col-lg-5 order-lg-1">#}
-{#                                <div class="bar__module">#}
-{#                                    <ul class="menu-horizontal text-left">#}
-{#                                        <li> {% if user.is_authenticated %}#}
-{#                                            <p>#}
-{#                                                안녕하세요! {{ user.username }} 님!#}
-{#                                            </p>#}
-{#                                            <a href="{% url 'boards:board_logout'%}">#}
-{#                                                Logout#}
-{#                                            </a>#}
-{#                                            {% else %}#}
-{##}
-{#                                                <a href="{% url 'boards:board_login' %}">Login</a>#}
-{#                                            {% endif %}#}
-{#                                         </li>#}
-{#                                    </ul>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-                    {# single 들어가는 부분 #}
-
                 </nav>
                 <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
                     <div class="side-menu__module pos-vertical-center text-right">

@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user, login, logout
 
+from django.views.generic import TemplateView
+
 from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
@@ -15,6 +17,11 @@ from .models import Attachment
 from .form import BasicForm
 
 from bs4 import BeautifulSoup
+
+
+class assetlink(TemplateView):
+    template_name = "boards/assetlinks.json"
+    content_type = "application/json"
 
 
 def board_index(request):

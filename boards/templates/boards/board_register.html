@@ -23,10 +23,10 @@
                                 <h2>Create a Stack account</h2> <span>Already have an account? <a href="#">Sign In</a></span>
                                 <hr class="short">
                                 {% if error_message %}
-                                    <div class="alert align-content-center">
-                                        <p>{{ error_message }}</p>
+                                    <div class="alert bg--error col-12 text-center">
+                                        {{ error_message }}
                                     </div>
-                                {% endif %}
+                            {% endif %}
                                 <form action="{% url 'boards:board_register' %}" method="post">
                                     {% csrf_token %}
                                     <div class="row">

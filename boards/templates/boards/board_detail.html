@@ -90,6 +90,11 @@
         <div class="main-container">
             <section>
                 <div class="container">
+                    {% if error_message %}
+                        <div class="alert bg--error col-12 text-center">
+                            {{ error_message }}
+                        </div>
+                    {% endif %}
                     <div class="row justify-content-center">
                         <div class="col-md-10 col-lg-10">
                             <article>

@@ -7,8 +7,14 @@ import json
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-with open(os.path.join(PROJECT_DIR, "deploy.json")) as f:
-    envs = json.loads(f.read())
+Deploy = False
+
+if Deploy:
+    with open(os.path.join(PROJECT_DIR, "deploy.json")) as f:
+        envs = json.loads(f.read())
+else:
+    with open(os.path.join(PROJECT_DIR, "deploy_2.json")) as f:
+        envs = json.loads(f.read())
 
 
 REPO_URL = envs['REPO_URL']
@@ -64,6 +70,18 @@ def test():
     sudo('mkdir testing')
 
 
+def _run_as_pg(command):
+    return sudo('sudo -u postgres %s' % command)
+
+
+def pg_create_user(username, password):
+    _run_as_pg('''psql -t -A -c "CREATE USER %(username)s WITH PASSWORD '%(password)s';"''' % locals())
+
+
+def pg_create_database(database, owner):
+    _run_as_pg('createdb %(database)s -O %(owner)s' % locals())
+
+
 def new_server():
     setup()
     deploy()
@@ -73,7 +91,12 @@ def setup():
     _get_latest_apt()
     _install_apt_requirements(apt_requirements)
     _make_virtualenv()
+    _postgres_update()
     #_ufw_allow()
+
+
+def ssl_certificate():
+    pass
 
 
 def deploy():
@@ -84,19 +107,28 @@ def deploy():
     _update_static_files()
     _update_database()
     _ufw_allow()
+    _setup_for_ssl
+    _grant_ssl_live
     _make_virtualhost()
+    _make_virtualhost_https()
     _grant_apache2()
-    _postgres_update()
-    _grant_sqlite3()
+    # _grant_sqlite3()
     _restart_apache2()
 
 
 def _postgres_update():
-    sudo('sudo -u postgres psql')
-    run('ALTER USER postgres with encrypted password \'{}\';'.format(PASSWORD))
-    run('CREATE USER django PASSWORD \'{}\''.format(REMOTE_PASSWORD))
-    run('\q')
+    _run_as_pg('''psql -t -A -c "ALTER USER postgres with encrypted password \'{}\';"'''.format(PASSWORD))
+    _run_as_pg('''psql -t -A -c "CREATE USER django PASSWORD \'{}\';"'''.format(REMOTE_PASSWORD))
+    _run_as_pg('''psql -t -A -c "CREATE DATABASE sayproject;"''')
+    _run_as_pg('''psql -t -A -c "GRANT ALL PRIVILEGES ON DATABASE sayproject TO django;"''')
     sudo('sudo /etc/init.d/postgresql restart')
+
+    # sudo('sudo -u postgres psql')
+    # run('ALTER USER postgres with encrypted password \'{}\';'.format(PASSWORD))
+    # run('CREATE USER django PASSWORD \'{}\''.format(REMOTE_PASSWORD))
+    # run('\q')
+    # sudo('sudo /etc/init.d/postgresql restart')
+    # sudo('sudo -u postgres createdb sayproject')
 
 def _put_envs():
     put(os.path.join(PROJECT_DIR, 'envs.json'), '~/{}/envs.json'.format(PROJECT_NAME))
@@ -127,12 +159,12 @@ def _make_virtualenv():
 
 
 def _get_latest_source():
+    current_commit = local('git log -n 1 --format=%H')
     if exists(project_folder + '/.git'):
+        run('cd %s && git reset --hard %s' % (project_folder, current_commit))
         run('cd %s && git pull' % (project_folder,))
     else:
         run('git clone %s %s' % (REPO_URL, project_folder))
-    current_commit = local("git log -n 1 --format=%H")
-    run('cd %s && git reset --hard %s' % (project_folder, current_commit))
 
 
 def _update_settings():
@@ -181,6 +213,34 @@ def _ufw_allow():
 def _make_virtualhost():
     script = """'<VirtualHost *:80>
     ServerName {servername}
+    <Directory /home/{username}/{project_name}/{project_name}>
+        <Files wsgi.py>
+            Require all granted
+        </Files>
+    </Directory>
+
+    WSGIScriptAlias / /home/{username}/{project_name}/{project_name}/wsgi.py
+    
+    Redirect permanent / https://sayproject.site/
+    
+    ErrorLog ${{APACHE_LOG_DIR}}/error.log
+    CustomLog ${{APACHE_LOG_DIR}}/access.log combined
+    </VirtualHost>'""".format(
+        static_root=STATIC_ROOT_NAME,
+        username=env.user,
+        project_name=PROJECT_NAME,
+        static_url=STATIC_URL_NAME,
+        servername=REMOTE_HOST,
+        media_url=MEDIA_ROOT
+    )
+    sudo('echo {} > /etc/apache2/sites-available/{}.conf'.format(script, PROJECT_NAME))
+    sudo('sudo a2ensite {}.conf'.format(PROJECT_NAME))
+
+
+def _make_virtualhost_https():
+    script = """'    
+    <VirtualHost *:443>
+    ServerName {servername}
     Alias /{static_url} /home/{username}/{project_name}/{static_root}
     Alias /{media_url} /home/{username}/{project_name}/{media_url}
     <Directory /home/{username}/{project_name}/{media_url}>
@@ -194,6 +254,11 @@ def _make_virtualhost():
             Require all granted
         </Files>
     </Directory>
+    
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/{servername}/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/{servername}/privkey.pem
+    
     WSGIDaemonProcess {project_name} python-home=/home/{username}/.virtualenvs/{project_name} python-path=/home/{username}/{project_name}
     WSGIProcessGroup {project_name}
     WSGIScriptAlias / /home/{username}/{project_name}/{project_name}/wsgi.py
@@ -207,8 +272,8 @@ def _make_virtualhost():
         servername=REMOTE_HOST,
         media_url=MEDIA_ROOT
     )
-    sudo('echo {} > /etc/apache2/sites-available/{}.conf'.format(script, PROJECT_NAME))
-    sudo('a2ensite {}.conf'.format(PROJECT_NAME))
+    sudo('echo {} > /etc/apache2/sites-available/{}.conf'.format(script, PROJECT_NAME+'_https'))
+    sudo('sudo a2ensite {}.conf'.format(PROJECT_NAME+'_https'))
 
 
 def _grant_apache2():
@@ -219,5 +284,22 @@ def _grant_sqlite3():
     sudo('sudo chmod 775 ~/{}/db.sqlite3'.format(PROJECT_NAME))
 
 
+def _grant_ssl_live():
+    sudo('sudo chmod 775 /etc/letsencrypt/live'.format(PROJECT_NAME))
+
+
 def _restart_apache2():
     sudo('sudo service apache2 restart')
+
+
+def _setup_for_ssl():
+    sudo('sudo a2enmod ssl')
+    sudo('sudo service apache2 restart')
+
+
+def apache_stop():
+    sudo('sudo service apache2 stop')
+
+
+def apache_start():
+    sudo('sudo service apache2 start')

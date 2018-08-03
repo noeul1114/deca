@@ -16,10 +16,6 @@
 
     </head>
 
-    {% if error_message %}
-        <h3>{{ error_message }}</h3>
-    {% endif %}
-
     <body data-smooth-scroll-offset="77">
         <div class="nav-container">
             <div>
@@ -76,6 +72,11 @@
             </div>
         </div>
         <div class="main-container">
+            {% if error_message %}
+                <div class="alert bg--error col-12 text-center">
+                    {{ error_message }}
+                </div>
+            {% endif %}
             <section>
                 <div class="container">
                     <form action="{% url 'boards:board_edit_fix' %}" method="post">

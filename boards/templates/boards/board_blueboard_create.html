@@ -7,7 +7,7 @@
 <body>
 
 {% if error_message %}
-<p>{{ error_message }}</p><br>
+<b>{{ error_message }}</b><br>
 {% endif %}
 
 <form action="{% url 'boards:board_blueboard_create' %}" method="post">

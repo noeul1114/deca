@@ -92,7 +92,7 @@
                 <div class="container">
                     {% if error_message %}
                         <div class="alert bg--error col-12 text-center">
-                            {{ error_message }}
+                            <b>{{ error_message }}</b>
                         </div>
                     {% endif %}
                     <div class="row justify-content-center">
@@ -102,10 +102,10 @@
                                     <h1 class="h2">{{ article_detail.title }}</h1>{{ article_detail.created_at|date:"Y M d D" }}
                                     <br>
                                     <br>
-                                    <div class="text-left">
+                                    <div class="text-center card__action">
                                         <ul class="social-list list-inline">
-                                            <li><a href=""><i class="material-icons">thumb_up</i></a><p class="pos-vertical-center"><b>{{ article_detail.upvote }}</b> likes</p></li>
-                                            <li><a href=""><i class="material-icons">comment</i></a><p class="pos-vertical-center"><b>{{ article_detail.comment_count }}</b> comments</p></li>
+                                            <li><a href="{% url 'boards:board_vote' article_detail.id %}?vote=up"><i class="material-icons">thumb_up</i></a><p class="pos-vertical-center"><b>{{ article_detail.upvote }}</b> Likes</p></li>
+                                            <li><a href="#"><i class="material-icons">comment</i></a><p class="pos-vertical-center"><b>{{ article_detail.comment_count }}</b> Comment</p></li>
                                         </ul>
                                     </div>
                                 </div>

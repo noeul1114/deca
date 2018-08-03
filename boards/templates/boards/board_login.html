@@ -19,13 +19,17 @@
                 <div class="container pos-vertical-center">
                     <div class="row">
                         <div class="col-md-7 col-lg-5">
-                            <a href="{% url 'boards:board_index' %}">
-                                <img src="{% static 'boards/img/logo-dark.png' %}" alt="Say::Project">
-                            </a>
+                        <div class="text-center">
+                            <div class="col-6 height-10">
+                                <a href="{% url 'boards:board_index' %}">
+                                    <img src="{% static 'boards/img/logo-dark.png' %}" alt="Say::Project">
+                                </a>
+                            </div>
+                        </div>
                             <p class="lead">Say it for more</p>
                             {% if error_message %}
                                 <div class="alert bg--error col-12">
-                                    {{ error_message }}
+                                    <b>{{ error_message }}</b>
                                 </div>
                             {% endif %}
                             <form action="{% url 'boards:board_login' %}" method="post">

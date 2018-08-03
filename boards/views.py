@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.exceptions import ValidationError
 
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -136,14 +137,12 @@ def board_logout(request):
 def board_register(request):
     if request.method == 'POST':
         try:
-            user = User.objects.create_user(username=request.POST['username'],
-                                            email=request.POST['email'],
-                                            password=request.POST['password'],
-                                            first_name=request.POST['first_name'],
-                                            last_name=request.POST['last_name'])
+            user = User.objects.create(username=request.POST['username'],
+                                       password=request.POST['password'],)
+            user.full_clean()
             return HttpResponseRedirect(reverse('boards:board_index'))
         except:
-            return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다.'})
+            return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다'})
     else:
         return render(request, 'boards/board_register.html')
 

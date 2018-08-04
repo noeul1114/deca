@@ -7,7 +7,7 @@ import json
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-Deploy = False
+Deploy = True
 
 if Deploy:
     with open(os.path.join(PROJECT_DIR, "deploy.json")) as f:

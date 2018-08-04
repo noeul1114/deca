@@ -14,7 +14,13 @@
         <link href="{% static 'boards/css/theme.css' %}" rel="stylesheet" type="text/css" media="all" />
         <link href="{% static 'boards/css/custom.css' %}" rel="stylesheet" type="text/css" media="all" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,400i,500,600,700" rel="stylesheet">
-
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({
+                google_ad_client: "ca-pub-4075622845853806",
+                enable_page_level_ads: true
+            });
+        </script>
     </head>
     <body data-smooth-scroll-offset="77">
         <div class="nav-container">
@@ -41,10 +47,11 @@
                         <ul class="menu-vertical">
                             <li class="h4"> <a href="#">{{ user.username }}</a> </li>
                             <li class="h5">
-                                <a href="#">Profile</a>
-                                <a href="#">Points</a>
                                 <a href="{% url 'boards:board_logout'%}">Logout</a>
                             </li>
+                        </ul>
+                        <ul class="menu-vertical">
+                            <li class="h5"> <a href="{% url 'boards:board_write' %}">Write</a> </li>
                         </ul>
                         {% else %}
                         <ul class="menu-vertical">
@@ -53,12 +60,9 @@
                             </li>
                         </ul>
                         {% endif %}
-                        <ul class="menu-vertical">
-                            <li class="h5"> <a href="{% url 'boards:board_write' %}">Write</a> </li>
-                        </ul>
-                        <ul class="menu-vertical">
-                            <li class="h5"> <a href="#">Single</a> </li>
-                        </ul>
+{#                        <ul class="menu-vertical">#}
+{#                            <li class="h5"> <a href="#">Single</a> </li>#}
+{#                        </ul>#}
                     </div>
                     <div class="side-menu__module pos-bottom pos-absolute col-12 text-right">
                         <ul class="social-list list-inline list--hover">
@@ -93,7 +97,6 @@
                                         <a href="{% url 'boards:board_detail' article.id %}" class="block"> <img alt="Image" src="{{ article.image }}"> </a>
                                         {% endif %}
                                         <div class="feature__body boxed boxed--border card">
-
                                             <div class="card__body">
                                                 <span>{{ article.created_at|date:"y/m/d" }}</span>
                                                 <a href="{% url 'boards:board_detail' article.id %}">
@@ -118,6 +121,20 @@
                                     </article>
                                 </div>
                             {% endfor %}
+                            <div class="col-md-4 masonry__item">
+                                <article class="feature feature-1">
+                                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                    <ins class="adsbygoogle"
+                                         style="display:block"
+                                         data-ad-format="fluid"
+                                         data-ad-layout-key="+2t+rl+2h-1m-4u"
+                                         data-ad-client="ca-pub-4075622845853806"
+                                         data-ad-slot="5717386800"></ins>
+                                    <script>
+                                        (adsbygoogle = window.adsbygoogle || []).push({});
+                                    </script>
+                                </article>
+                            </div>
                         </div>
                     </div>
                 </div>

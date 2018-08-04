@@ -1,5 +1,5 @@
 /*! Place your custom styles here */
 
-p {
-    font-size: 1em;
+.article__body {
+    font-size: 1.15714286em;
 }

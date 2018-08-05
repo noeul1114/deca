@@ -36,8 +36,8 @@
 .boxed {
   position: relative;
   overflow: hidden;
-  padding: 1.0em;
-  margin-bottom: 30px;
+  padding: 0.5em;
+  margin-bottom: 0px;
 }
 
 @media all and (max-width: 767px) {
@@ -46,4 +46,9 @@
     section.section--even {
         padding: 1.57142857em 0;
     }
+}
+
+.masonry__container {
+    margin-left:5px;
+    margin-right:5px;
 }

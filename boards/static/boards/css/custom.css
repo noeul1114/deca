@@ -70,8 +70,3 @@
 .list-inline li:not(:last-child) {
   margin-right: 0.45714286em;
 }
-
-.card__action a i {
-  color: #252525;
-  font-size: 1em;
-}

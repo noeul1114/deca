@@ -3,3 +3,7 @@
 .article__body {
     font-size: 1.15714286em;
 }
+
+.feature-1 > a.block img {
+    border-radius: 6px;
+}

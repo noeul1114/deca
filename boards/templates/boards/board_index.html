@@ -91,18 +91,48 @@
                         </div>
                         <div class="masonry__container row masonry--active">
                             {% for article in article_list %}
-                                <div class="col-md-4 masonry__item">
+{#                                <div class="col-6 col-md-4 masonry__item">#}
+{#                                    <article class="feature feature-1">#}
+{#                                        {% if article.image %}#}
+{#                                        <a href="{% url 'boards:board_detail' article.id %}" class="block"> <img alt="Image" src="{{ article.image }}"> </a>#}
+{#                                        {% endif %}#}
+{#                                        <div class="feature__body boxed boxed--border card">#}
+{#                                            <div class="card__body">#}
+{#                                                <span>{{ article.created_at|date:"y/m/d" }}</span>#}
+{#                                                <a href="{% url 'boards:board_detail' article.id %}">#}
+{#                                                    <h5>{{ article.title|striptags|truncatechars:50 }}</h5>#}
+{#                                                </a>#}
+{#                                            </div>#}
+{#                                            <div class="card__bottom text-right">#}
+{#                                                <ul class="list-inline">#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <div class="card__action">#}
+{#                                                            <a href="#"> <i class="material-icons">favorite</i> <span>{{ article.upvote }}</span> </a>#}
+{#                                                        </div>#}
+{#                                                    </li>#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <div class="card__action">#}
+{#                                                            <a href="#"> <i class="material-icons">comment</i> <span>{{ article.comment_count }}</span> </a>#}
+{#                                                        </div>#}
+{#                                                    </li>#}
+{#                                                </ul>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </article>#}
+{#                                </div>#}
+
+                                <div class="col-6 col-md-4 masonry__item">
                                     <article class="feature feature-1">
                                         {% if article.image %}
                                         <a href="{% url 'boards:board_detail' article.id %}" class="block"> <img alt="Image" src="{{ article.image }}"> </a>
                                         {% endif %}
-                                        <div class="feature__body boxed boxed--border card">
-                                            <div class="card__body">
-                                                <span>{{ article.created_at|date:"y/m/d" }}</span>
-                                                <a href="{% url 'boards:board_detail' article.id %}">
-                                                    <h5>{{ article.title|striptags|truncatechars:50 }}</h5>
-                                                </a>
-                                            </div>
+                                        <div class="feature__body boxed card">
+{#                                            <div class="card__body">#}
+{#                                                <span>{{ article.created_at|date:"y/m/d" }}</span>#}
+{#                                                <a href="{% url 'boards:board_detail' article.id %}">#}
+{#                                                    <h5>{{ article.title|striptags|truncatechars:50 }}</h5>#}
+{#                                                </a>#}
+{#                                            </div>#}
                                             <div class="card__bottom text-right">
                                                 <ul class="list-inline">
                                                     <li class="list-inline-item">

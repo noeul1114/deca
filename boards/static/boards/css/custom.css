@@ -39,3 +39,11 @@
   padding: 1.0em;
   margin-bottom: 30px;
 }
+
+@media all and (max-width: 767px) {
+    section,
+    footer,
+    section.section--even {
+        padding: 1.57142857em 0;
+    }
+}

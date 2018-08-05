@@ -7,3 +7,35 @@
 .feature-1 > a.block img {
     border-radius: 6px;
 }
+
+.masonry__item:not(:empty) {
+    margin-bottom: 0px;
+    transform-style: preserve-3d;
+}
+
+.col-6, .col-md-4 {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 5px;
+  padding-left: 5px; }
+
+@media all and (max-width: 767px) {
+    .boxed {
+        padding: 0.93809524em;
+        margin-bottom: 0px;
+    }
+}
+
+@media all and (max-width: 767px) {
+  .list-inline:not(.social-list):not(.list-inline--images) li:not(:last-child) {
+    margin-bottom: 0em;
+  }
+}
+
+.boxed {
+  position: relative;
+  overflow: hidden;
+  padding: 1.0em;
+  margin-bottom: 30px;
+}

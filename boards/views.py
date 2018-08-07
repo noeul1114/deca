@@ -137,9 +137,9 @@ def board_logout(request):
 def board_register(request):
     if request.method == 'POST':
         try:
-            user = User.objects.create(username=request.POST['username'],
-                                       password=request.POST['password'],)
-            user.full_clean()
+            user = User.objects.create_user(username=request.POST['username'],
+                                            password=request.POST['password'],)
+            user.save()
             return HttpResponseRedirect(reverse('boards:board_index'))
         except:
             return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다'})

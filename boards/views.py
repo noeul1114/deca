@@ -160,7 +160,7 @@ def board_write(request):
             A = get_object_or_404(Article, writer=user, published=False)
 
         if request.method == 'POST':
-            if request.POST['SS'] == 'True':
+            if request.POST['submit'] == 'True':
                 A.title = request.POST['title']
                 A.article_text = request.POST['article_text']
                 A.created_at = timezone.now()

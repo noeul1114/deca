@@ -21,7 +21,6 @@ from django.conf.urls.static import static
 
 from boards.views import assetlink
 
-
 urlpatterns = [
     path('', include('boards.urls')),
     # path('todaycomment/', include('todaycomment.urls')),
@@ -31,7 +30,9 @@ urlpatterns = [
 
     re_path(r'^summernote/', include('django_summernote.urls')),
 
-    re_path(r'^\.well-known/assetlinks\.json', assetlink.as_view())
+    re_path(r'^\.well-known/assetlinks\.json', assetlink.as_view()),
+
+    path('API/', include('router.urls'))
 ]
 
 if settings.DEBUG:

@@ -77,6 +77,9 @@ INSTALLED_APPS = [
     'todaycomment',
     'django_summernote',
     'storages',
+    'rest_framework',
+    'router',
+    'snippets.apps.SnippetsConfig',
 ]
 
 MIDDLEWARE = [
@@ -229,6 +232,14 @@ else:
 
         'attachment_model': 'boards.Attachment'
     }
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 
 if DEBUG:

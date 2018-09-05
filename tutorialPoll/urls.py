@@ -32,7 +32,7 @@ urlpatterns = [
 
     re_path(r'^\.well-known/assetlinks\.json', assetlink.as_view()),
 
-    path('API/', include('router.urls'))
+    path('API/', include('router.urls')),
 ]
 
 if settings.DEBUG:

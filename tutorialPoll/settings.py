@@ -56,7 +56,7 @@ SECRET_KEY = '+c1@o4ikm@!1s+!wcqdtuaab*c_&3pphnkh7wgmek9v^)uqg8-'
 DEBUG = True
 
 if DEBUG:
-    custom_uploaded_filepath = custom_uploaded_filepath_debug
+    custom_uploaded_filepath = custom_uploaded_filepath_deploy
 else:
     custom_uploaded_filepath = custom_uploaded_filepath_deploy
 
@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     'storages',
     'rest_framework',
     'router',
-    'snippets.apps.SnippetsConfig',
 ]
 
 MIDDLEWARE = [
@@ -199,6 +198,8 @@ if DEBUG:
 
         'attachment_upload_to': custom_uploaded_filepath,
 
+        'attachment_storage_class': 'storages.backends.ftp.FTPStorage',
+
         'attachment_model': 'boards.Attachment'
     }
 else:
@@ -243,8 +244,8 @@ REST_FRAMEWORK = {
 
 
 if DEBUG:
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+    MEDIA_URL = 'http://thl1110.jpg2.kr/media/'
+    MEDIA_ROOT = '/media/'
 else:
     MEDIA_URL = 'http://thl1110.jpg2.kr/media/'
     MEDIA_ROOT = '/media/'
@@ -256,6 +257,8 @@ if DEBUG:
     # For development
     STATIC_URL = '/staticfiles/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+    FTP_STORAGE_LOCATION = 'ftp://thl1110:qudtlstz1@thl1110.jpg2.kr:21'
 else:
     # For deployment
     STATIC_URL = 'https://willypower.cafe24.com/staticfiles/'

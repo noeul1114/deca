@@ -1,0 +1,159 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+@import url(https://fonts.googleapis.com/css?family=Handlee);
+@import url(https://fonts.googleapis.com/css?family=Do+Hyeon);
+
+*{
+ box-sizing: border-box;
+ -webkit-box-sizing: border-box;
+ -ms-box-sizing: border-box;
+ -o-box-sizing: border-box;
+ -moz-box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+}
+
+body{
+ font-family: 'Montserrat', 'Roboto', Verdana, sans-serif;;
+ font-size: 16px;
+ color: #F2F1EF;
+ background-color: #ca9475;
+ height: 100%;
+ margin: 40px 0 20%;
+}
+
+#pagewrap{
+ max-width: 600px;
+ width: 100%;
+ height: 100%;
+ margin: 0 auto;
+ padding: 10px;
+ display: flex;
+ flex-direction: column;
+}
+
+.frm{
+ width: 100%;
+ padding-top: 20vh;
+ margin: 5% 0;
+ display: flex;
+ justify-content: center;
+}
+
+input, button{
+ font-size: 20px;
+}
+
+.inpt input {
+ background-color: #f0f0f0;
+ border-radius: 2px;
+ border: none;
+ border-right: 10px solid #E08283;
+ padding: 10px;
+ width: 100%;
+}
+
+textarea{
+ font-size: 12px;
+ outline: none;
+}
+
+.feeds{
+    outline-color: black;
+    outline-width: 2px;
+}
+
+.inpt input, button, textarea{
+ outline: none;
+ borer-radius: 2px;
+
+}
+
+button{
+ background-color: #4f5d73;
+ color: #fff;
+ border: none;
+ border-radius: 2px;
+ padding: 10px 15px;
+ cursor: pointer;
+ transition: background .6s, color .6s;
+}
+
+button:hover{
+ border: 2px solid #4f5d73;
+ broder-radius: 2px;
+ background-color: transparent;
+ padding: 8px 13px;
+ color: #4f5d73;
+}
+
+ul{
+ list-style-type: none;
+ padding: 0;
+ margin-top: 5%;
+ margin: 0 auto;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ width: 50%;
+}
+
+ul li{
+ border-left: 5px solid #4f5d73;
+ margin-top: 5%;
+ padding-left: 10px;
+ font-size: 14px;
+ flex: 1;
+}
+
+/*textarea paper css line below*/
+
+.paper {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    min-width: 400px;
+    height: 480px;
+    margin: 0 auto;
+    background: #fafafa;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    overflow: hidden;
+}
+.paper:before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 60px;
+    background: radial-gradient(#575450 6px, transparent 7px) repeat-y;
+    background-size: 30px 30px;
+    border-right: 3px solid #D44147;
+    box-sizing: border-box;
+}
+
+.paper-content {
+    position: absolute;
+    top: 30px; right: 0; bottom: 30px; left: 60px;
+    background: linear-gradient(transparent, transparent 28px, #91D1D3 28px);
+    background-size: 30px 30px;
+}
+
+.paper-content textarea {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    line-height: 30px;
+    padding: 0 10px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: black;
+    font-family: 'Do Hyeon', cursive;
+    font-weight: bold;
+    font-size: 18px;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+/* textarea paper css line above */

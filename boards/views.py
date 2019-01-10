@@ -4,6 +4,10 @@ from django.core.exceptions import ValidationError
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 
+from datetime import timedelta
+
+from django.db.models import F
+
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, get_user, login, logout
 
@@ -13,7 +17,7 @@ from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 
-from .models import Article, Comment, Vote
+from .models import Article, ArticleIpLog, Comment, CommentIpLog
 from .models import Attachment
 from .form import BasicForm
 
@@ -27,13 +31,17 @@ class assetlink(TemplateView):
 
 def board_index(request):
     user = get_user(request)
-    article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+    print(timezone.now() - timedelta(days=3))
+    article_list_top = Article.objects.filter(published=True, activated=True, created_at__gte=timezone.now() - timedelta(days=60)).order_by('upvote').reverse()[:8]
+    article_list = Article.objects.filter(published=True, activated=True).reverse()
 
     if user.is_authenticated :
         return render(request, 'boards/board_index.html', {'user': user,
-                                                           'article_list': article_list})
+                                                           'article_list': article_list,
+                                                           'article_list_top': article_list_top})
     else:
-        return render(request, 'boards/board_index.html', {'article_list': article_list})
+        return render(request, 'boards/board_index.html', {'article_list': article_list,
+                                                           'article_list_top': article_list_top})
 
 
 def board_index_name(request, board_url='blueboard'):
@@ -79,27 +87,40 @@ def board_detail(request, article_id):
 def board_vote(request, article_id):
     A = get_object_or_404(Article, pk=article_id)
     user = get_user(request)
-    if request.method == 'POST':
-        if request.POST['vote'] == 'up':
-            A.upvote += 1
-            A.save()
-            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
-        if request.POST['vote'] == 'down':
-            A.downvote += 1
-            A.save()
-            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
-        # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
-    elif request.method == 'GET':
-        if request.GET['vote'] == 'up':
-            A.upvote += 1
-            A.save()
-            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
-        if request.GET['vote'] == 'down':
-            A.downvote += 1
-            A.save()
-            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
-    else:
+    user_ip = get_client_ip(request)
+    if ArticleIpLog.objects.filter(ip=user_ip, article=A).exists():
         return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+    else:
+        if get_user(request).is_active:
+            ArticleIpLog.objects.create(ip=user_ip,
+                                        user=user,
+                                        article=A,
+                                        created_at=timezone.now())
+        else:
+            ArticleIpLog.objects.create(ip=user_ip,
+                                        article=A,
+                                        created_at=timezone.now())
+        if request.method == 'POST':
+            if request.POST['vote'] == 'up':
+                A.upvote += 1
+                A.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+            if request.POST['vote'] == 'down':
+                A.downvote += 1
+                A.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+            # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
+        elif request.method == 'GET':
+            if request.GET['vote'] == 'up':
+                A.upvote += 1
+                A.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+            if request.GET['vote'] == 'down':
+                A.downvote += 1
+                A.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+        else:
+            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
 
 
 def board_login(request):
@@ -187,7 +208,7 @@ def board_write(request):
                     return render(request, 'boards/board_write.html', {'form': form,
                                                                        'error_message': '글을 쓰는데에 실패했습니다. 다시 시도해주세요',
                                                                        })
-            if request.POST['SS'] == 'False':
+            elif request.POST['submit'] == 'False':
                 A.title = request.POST['title']
                 A.article_text = request.POST['article_text']
                 A.created_at = timezone.now()
@@ -392,13 +413,47 @@ def board_comment_write(request):
 
 def board_comment_vote(request, comment_id):
     C = get_object_or_404(Comment, pk=comment_id)
-    if request.POST['vote'] == 'up':
-        C.upvote += 1
-        C.save()
+    user = get_user(request)
+    user_ip = get_client_ip(request)
+    if CommentIpLog.objects.filter(ip=user_ip, comment=C).exists():
         return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
-    if request.POST['vote'] == 'down':
-        C.downvote += 1
-        C.save()
-        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
-    # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
+    else:
+        if get_user(request).is_active:
+            CommentIpLog.objects.create(ip=user_ip,
+                                        user=user,
+                                        comment=C,
+                                        created_at=timezone.now())
+        else:
+            CommentIpLog.objects.create(ip=user_ip,
+                                        comment=C,
+                                        created_at=timezone.now())
+        if request.method == 'POST':
+            if request.POST['vote'] == 'up':
+                C.upvote += 1
+                C.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
+            if request.POST['vote'] == 'down':
+                C.downvote += 1
+                C.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
+            # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
+        elif request.method == 'GET':
+            if request.GET['vote'] == 'up':
+                C.upvote += 1
+                C.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
+            if request.GET['vote'] == 'down':
+                C.downvote += 1
+                C.save()
+                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
+        else:
+            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
 
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip

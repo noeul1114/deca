@@ -131,12 +131,12 @@
                                             </a>
                                         </li>
                                         <li></li>
-                                        <li>
-                                            <a href="{% url 'boards:board_vote' article_detail.id %}?vote=down">
-                                                <i class="material-icons color--dark">loupe</i>
-                                            </a>
-                                            <p>Check</p>
-                                        </li>
+{#                                        <li>#}
+{#                                            <a href="{% url 'boards:board_vote' article_detail.id %}?vote=down">#}
+{#                                                <i class="material-icons color--dark">loupe</i>#}
+{#                                            </a>#}
+{#                                            <p>Check</p>#}
+{#                                        </li>#}
                                     </ul>
                                 </div>
 
@@ -182,12 +182,18 @@
                                     {% for comment in comment_list %}
                                         <li>
                                             <div class="comment">
-                                                <div class="comment__avatar"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </div>
+{#                                                <div class="comment__avatar"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </div>#}
                                                 <div class="comment__body">
                                                     <h5 class="type--fine-print">{{ comment.writer }}</h5>
                                                     <div class="comment__meta"> <span>{{ comment.created_at|date:'Y M d D H:i' }}</span>
-                                                        <a href="#"> <i class="material-icons icon icon--xs">thumb_up</i> <span>{{ comment.upvote }}</span> </a>
-                                                        <a href="#"> <i class="color--dark material-icons icon icon--xs">thumb_down</i> <span>{{ comment.downvote }}</span> </a>
+                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=up">
+                                                            <i class="material-icons icon icon--xs">thumb_up</i>
+                                                            <span>{{ comment.upvote }}</span>
+                                                        </a>
+                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=down">
+                                                            <i class="color--dark material-icons icon icon--xs">thumb_down</i>
+                                                            <span>{{ comment.downvote }}</span>
+                                                        </a>
                                                         {% if user == comment.writer %}
                                                             <a href="#">Edit</a>
                                                             <a href="#">Delete</a>
@@ -214,7 +220,10 @@
                                     {% csrf_token %}
                                     {#                                    <div class="col-md-6"> <label>Your Name:</label> <input type="text" name="Name" placeholder="Type name here"> </div>#}
                                     {#                                    <div class="col-md-6"> <label>Email Address:</label> <input type="email" name="email" placeholder="you@mailprovider.com"> </div>#}
-                                    <div class="col-md-12"> <label>Comment:</label> <textarea rows="4" name="comment_text"></textarea> </div>
+                                    <div class="col-md-12">
+                                        <label>Comment:</label>
+                                        <textarea rows="4" name="comment_text"></textarea>
+                                    </div>
                                     <div class="col-md-3"> <button class="btn btn--primary" type="submit">Submit Comment</button> </div>
                                     <input type="hidden" name="article_id" value="{{ article_detail.id }}">
                                 </form>

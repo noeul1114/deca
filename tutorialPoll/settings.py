@@ -15,6 +15,7 @@ from datetime import datetime
 import uuid
 import posixpath
 
+from django.conf.global_settings import TEMPLATES
 
 def custom_uploaded_filepath_debug(instance, filename):
     """
@@ -56,7 +57,7 @@ SECRET_KEY = '+c1@o4ikm@!1s+!wcqdtuaab*c_&3pphnkh7wgmek9v^)uqg8-'
 DEBUG = True
 
 if DEBUG:
-    custom_uploaded_filepath = custom_uploaded_filepath_deploy
+    custom_uploaded_filepath = custom_uploaded_filepath_debug
 else:
     custom_uploaded_filepath = custom_uploaded_filepath_deploy
 
@@ -79,6 +80,7 @@ INSTALLED_APPS = [
     'storages',
     'rest_framework',
     'router',
+    'el_pagination',
 ]
 
 MIDDLEWARE = [
@@ -105,6 +107,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request', ## For EL-pagination
             ],
         },
     },
@@ -198,8 +201,6 @@ if DEBUG:
 
         'attachment_upload_to': custom_uploaded_filepath,
 
-        'attachment_storage_class': 'storages.backends.ftp.FTPStorage',
-
         'attachment_model': 'boards.Attachment'
     }
 else:
@@ -246,8 +247,8 @@ REST_FRAMEWORK = {
 
 
 if DEBUG:
-    MEDIA_URL = 'http://thl1110.jpg2.kr/media/'
-    MEDIA_ROOT = '/media/'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 else:
     MEDIA_URL = 'http://thl1110.jpg2.kr/media/'
     MEDIA_ROOT = '/media/'

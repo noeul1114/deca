@@ -105,7 +105,7 @@
 .title_img_text_only {
   position: relative;
   text-align: center;
-  color: white;
+  color: black;
   display: block;
   overflow: hidden;
   min-height: 150px;
@@ -116,7 +116,7 @@
 .title_img_text_only_top {
   position: relative;
   text-align: center;
-  color: white;
+  color: black;
   display: block;
   overflow: hidden;
   min-height: 150px;
@@ -124,3 +124,6 @@
   border-radius: 12px;
 }
 
+.endless_container {
+    visibility: hidden;
+}

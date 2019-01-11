@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -31,17 +32,24 @@ class assetlink(TemplateView):
 
 def board_index(request):
     user = get_user(request)
-    print(timezone.now() - timedelta(days=3))
-    article_list_top = Article.objects.filter(published=True, activated=True, created_at__gte=timezone.now() - timedelta(days=60)).order_by('upvote').reverse()[:8]
+    article_list_top = Article.objects.filter(published=True, activated=True, created_at__gte=timezone.now() - timedelta(days=3)).order_by('upvote').reverse()[:8]
     article_list = Article.objects.filter(published=True, activated=True).reverse()
 
+    template = 'boards/board_index.html'
+    page_fragment = 'boards/board_index_fragment.html'
+
+    if request.is_ajax():
+        template = page_fragment
+
     if user.is_authenticated :
-        return render(request, 'boards/board_index.html', {'user': user,
-                                                           'article_list': article_list,
-                                                           'article_list_top': article_list_top})
+        return render(request, template, {'user': user,
+                                          'page_fragment': page_fragment,
+                                          'article_list': article_list,
+                                          'article_list_top': article_list_top})
     else:
-        return render(request, 'boards/board_index.html', {'article_list': article_list,
-                                                           'article_list_top': article_list_top})
+        return render(request, template, {'article_list': article_list,
+                                          'page_fragment': page_fragment,
+                                          'article_list_top': article_list_top})
 
 
 def board_index_name(request, board_url='blueboard'):
@@ -73,14 +81,19 @@ def board_detail(request, article_id):
                                                                 'article_list': article_list,
                                                                 'comment_list': C})
     else:
-        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+        article_list_top = Article.objects.filter(published=True, activated=True,
+                                                  created_at__gte=timezone.now() - timedelta(days=3)).order_by(
+            'upvote').reverse()[:8]
+        article_list = Article.objects.filter(published=True, activated=True).reverse()
 
         if user.is_authenticated:
             return render(request, 'boards/board_index.html', {'user': user,
                                                                'article_list': article_list,
+                                                               'article_list_top': article_list_top,
                                                                'error_message': '볼 수 없는 게시물입니다.'})
         else:
             return render(request, 'boards/board_index.html', {'article_list': article_list,
+                                                               'article_list_top': article_list_top,
                                                                'error_message': '볼 수 없는 게시물입니다.'})
 
 
@@ -126,9 +139,13 @@ def board_vote(request, article_id):
 def board_login(request):
     user = get_user(request)
     if user.is_authenticated:
-        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+        article_list_top = Article.objects.filter(published=True, activated=True,
+                                                  created_at__gte=timezone.now() - timedelta(days=3)).order_by(
+            'upvote').reverse()[:8]
+        article_list = Article.objects.filter(published=True, activated=True).reverse()
         return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list,
+                                                           'article_list_top': article_list_top,
                                                            'error_message': '이미 로그인 되어있습니다'
                                                            })
     else:
@@ -244,9 +261,13 @@ def board_write(request):
             return render(request, 'boards/board_write.html', {'form': form,
                                                                })
     else:
-        article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+        article_list_top = Article.objects.filter(published=True, activated=True,
+                                                  created_at__gte=timezone.now() - timedelta(days=3)).order_by(
+            'upvote').reverse()[:8]
+        article_list = Article.objects.filter(published=True, activated=True).reverse()
         return render(request, 'boards/board_index.html', {'user': user,
                                                            'article_list': article_list,
+                                                           'article_list_top': article_list_top,
                                                            'error_message': '글을 쓰기 위해선 로그인 해주세요!'
                                                            })
 

@@ -70,3 +70,60 @@
 .list-inline li:not(:last-child) {
   margin-right: 0.45714286em;
 }
+
+.title_img_centered_text {
+    color: white;
+    font-size: 1.35em;
+    font-family: "Do Hyeon";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 0px 0px 2px black;
+}
+
+.title_img {
+  position: relative;
+  text-align: center;
+  color: white;
+  display: block;
+    overflow: hidden;
+    max-height: 500px;
+}
+
+.title_img_top {
+  position: relative;
+  text-align: center;
+  color: white;
+  display: block;
+    overflow: hidden;
+    max-height: 500px;
+  border: 3px solid #ffaaaa;
+  border-radius: 12px;
+}
+
+.title_img_text_only {
+  position: relative;
+  text-align: center;
+  color: black;
+  display: block;
+  overflow: hidden;
+  min-height: 200px;
+  border: 3px solid lightgrey;
+  border-radius: 12px;
+}
+
+.title_img_text_only_top {
+  position: relative;
+  text-align: center;
+  color: black;
+  display: block;
+  overflow: hidden;
+  min-height: 200px;
+  border: 3px solid #ffaaaa;
+  border-radius: 12px;
+}
+
+.endless_container {
+    visibility: hidden;
+}

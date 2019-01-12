@@ -33,56 +33,10 @@
                             </div>
                         </div>
                     </div>
-{#                    <div class="container">#}
-{#                        <div class="row">#}
-{#                            <div class="col-lg-5 order-lg-1">#}
-{#                                <div class="bar__module">#}
-{#                                    <ul class="menu-horizontal text-left">#}
-{#                                        <li> {% if user.is_authenticated %}#}
-{#                                            <p>#}
-{#                                                안녕하세요! {{ user.username }} 님!#}
-{#                                            </p>#}
-{#                                            <a href="{% url 'boards:board_logout'%}">#}
-{#                                                Logout#}
-{#                                            </a>#}
-{#                                            {% else %}#}
-{##}
-{#                                                <a href="{% url 'boards:board_login' %}">Login</a>#}
-{#                                            {% endif %}#}
-{#                                         </li>#}
-{#                                    </ul>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
                 </nav>
                 <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
                     <div class="side-menu__module pos-vertical-center text-right">
-                        <ul class="menu-vertical">
-                            {% if user.is_authenticated %}
-                                <ul class="menu-vertical">
-                                    <li class="h4"> <a href="#">{{ user.username }}</a> </li>
-                                    <li class="h5">
-                                        <a href="#">Profile</a>
-                                        <a href="#">Points</a>
-                                        <a href="{% url 'boards:board_logout'%}">Logout</a>
-                                    </li>
-                                </ul>
-                            {% else %}
-                                    <li class="h4">
-                                        <a href="{% url 'boards:board_login' %}">Login</a>
-                                    </li>
-                            {% endif %}
-                            <li class="h4"> <a href="#">Single</a> </li>
-                        </ul>
-                    </div>
-                    <div class="side-menu__module pos-bottom pos-absolute col-12 text-right">
-                        <ul class="social-list list-inline list--hover">
-                            <li><a href="#"><i class="socicon socicon-google icon icon--xs"></i></a></li>
-                            <li><a href="#"><i class="socicon socicon-twitter icon icon--xs"></i></a></li>
-                            <li><a href="#"><i class="socicon socicon-facebook icon icon--xs"></i></a></li>
-                            <li><a href="#"><i class="socicon socicon-instagram icon icon--xs"></i></a></li>
-                        </ul>
+                        {% include 'boards/board_navigation.html' %}
                     </div>
                 </div>
             </div>
@@ -100,8 +54,12 @@
                             <article>
                                 <div class="article__title text-center">
                                     <h1 class="h2">{{ article_detail.title }}</h1>{{ article_detail.created_at|date:"Y M d D" }}
-                                    <br>
-                                    <br>
+                                    <br><br><br>
+                                    <div class="text-center card__action">
+                                        <h3 class="h3">
+                                            {{ article_detail.writer.username }}
+                                        </h3>
+                                    </div>
                                     <div class="text-center card__action">
                                         <ul class="social-list list-inline">
                                             <li><a href="{% url 'boards:board_vote' article_detail.id %}?vote=up"><i class="material-icons">thumb_up</i></a><p class="pos-vertical-center"><b>{{ article_detail.upvote }}</b> Likes</p></li>
@@ -131,12 +89,12 @@
                                             </a>
                                         </li>
                                         <li></li>
-                                        <li>
-                                            <a href="{% url 'boards:board_vote' article_detail.id %}?vote=down">
-                                                <i class="material-icons color--dark">loupe</i>
-                                            </a>
-                                            <p>Check</p>
-                                        </li>
+{#                                        <li>#}
+{#                                            <a href="{% url 'boards:board_vote' article_detail.id %}?vote=down">#}
+{#                                                <i class="material-icons color--dark">loupe</i>#}
+{#                                            </a>#}
+{#                                            <p>Check</p>#}
+{#                                        </li>#}
                                     </ul>
                                 </div>
 
@@ -180,17 +138,23 @@
                                 <h3>{{ comment_list.count }} Comments</h3>
                                 <ul class="comments__list">
                                     {% for comment in comment_list %}
-                                        <li>
+                                        {% if comment.activated %}
+                                            <li>
                                             <div class="comment">
-                                                <div class="comment__avatar"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </div>
+{#                                                <div class="comment__avatar"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </div>#}
                                                 <div class="comment__body">
                                                     <h5 class="type--fine-print">{{ comment.writer }}</h5>
                                                     <div class="comment__meta"> <span>{{ comment.created_at|date:'Y M d D H:i' }}</span>
-                                                        <a href="#"> <i class="material-icons icon icon--xs">thumb_up</i> <span>{{ comment.upvote }}</span> </a>
-                                                        <a href="#"> <i class="color--dark material-icons icon icon--xs">thumb_down</i> <span>{{ comment.downvote }}</span> </a>
+                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=up">
+                                                            <i style="color: #ff9999;" class="card__action material-icons icon icon--xs">favorite</i>
+                                                            <span>{{ comment.upvote }}</span>
+                                                        </a>
+                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=down">
+                                                            <i style="color: #888888" class="color--dark material-icons icon icon--xs">thumb_down</i>
+                                                            <span>{{ comment.downvote }}</span>
+                                                        </a>
                                                         {% if user == comment.writer %}
-                                                            <a href="#">Edit</a>
-                                                            <a href="#">Delete</a>
+                                                            <a href="{% url 'boards:board_comment_delete' comment.id %}">Delete</a>
                                                         {% endif %}
                                                     </div>
                                                     {{ comment.comment_text }}
@@ -205,6 +169,20 @@
                                             {#                                            </div>#}
                                             {#                                        </div>#}
                                         </li>
+                                        {% else %}
+                                            <li>
+                                            <div class="comment">
+                                                <div class="comment__body">
+                                                    <div class="align-content-center">
+                                                        <p>
+                                                            삭제된 댓글입니다.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </li>
+                                        {% endif %}
+
                                     {% endfor %}
                                 </ul>
                             </div>
@@ -214,7 +192,10 @@
                                     {% csrf_token %}
                                     {#                                    <div class="col-md-6"> <label>Your Name:</label> <input type="text" name="Name" placeholder="Type name here"> </div>#}
                                     {#                                    <div class="col-md-6"> <label>Email Address:</label> <input type="email" name="email" placeholder="you@mailprovider.com"> </div>#}
-                                    <div class="col-md-12"> <label>Comment:</label> <textarea rows="4" name="comment_text"></textarea> </div>
+                                    <div class="col-md-12">
+                                        <label>Comment:</label>
+                                        <textarea rows="4" name="comment_text"></textarea>
+                                    </div>
                                     <div class="col-md-3"> <button class="btn btn--primary" type="submit">Submit Comment</button> </div>
                                     <input type="hidden" name="article_id" value="{{ article_detail.id }}">
                                 </form>
@@ -226,7 +207,7 @@
             <footer class="footer-7 text-center-xs">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year"></span> Medium Rare — All Rights Reserved</span>
+                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year"></span> Say::Project — All Rights Reserved</span>
                         </div>
                         <div class="col-sm-6 text-right text-center-xs">
                             <ul class="social-list list-inline">

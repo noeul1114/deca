@@ -1,0 +1,17 @@
+{% if user.is_authenticated %}
+    <ul class="menu-vertical">
+        <li class="h4"> <a href="{% url 'boards:board_profile' user.id %}">{{ user.username }}</a> </li>
+        <li class="h5">
+            <a href="{% url 'boards:board_logout'%}">Logout</a>
+        </li>
+    </ul>
+    <ul class="menu-vertical">
+        <li class="h5"> <a href="{% url 'boards:board_write' %}?next={{ request.path }}">Write</a> </li>
+    </ul>
+{% else %}
+    <ul class="menu-vertical">
+        <li class="h5">
+            <a href="{% url 'boards:board_login' %}">Login</a>
+        </li>
+    </ul>
+{% endif %}

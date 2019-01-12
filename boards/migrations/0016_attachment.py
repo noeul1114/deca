@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import django_summernote.settings
+from django_summernote.utils import get_attachment_upload_to
 
 
 class Migration(migrations.Migration):
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, help_text='Defaults to filename, if left blank', max_length=255, null=True)),
-                ('file', models.FileField(upload_to=django_summernote.settings.uploaded_filepath)),
+                ('file', models.FileField(upload_to=get_attachment_upload_to())),
                 ('uploaded', models.DateTimeField(auto_now_add=True)),
                 ('size', models.IntegerField(null=True)),
                 ('article', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='boards.Article')),

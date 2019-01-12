@@ -70,3 +70,16 @@
 .list-inline li:not(:last-child) {
   margin-right: 0.45714286em;
 }
+
+.title_img_centered_text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.title_img {
+  position: relative;
+  text-align: center;
+  color: white;
+}

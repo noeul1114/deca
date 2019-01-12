@@ -13,6 +13,7 @@
         <link href="{% static 'boards/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all" />
         <link href="{% static 'boards/css/theme.css' %}" rel="stylesheet" type="text/css" media="all" />
         <link href="{% static 'boards/css/custom.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,400i,500,600,700" rel="stylesheet">
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     </head>
@@ -37,34 +38,7 @@
                 </nav>
                 <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
                     <div class="side-menu__module pos-vertical-center text-right">
-                        {% if user.is_authenticated %}
-                        <ul class="menu-vertical">
-                            <li class="h4"> <a href="#">{{ user.username }}</a> </li>
-                            <li class="h5">
-                                <a href="{% url 'boards:board_logout'%}">Logout</a>
-                            </li>
-                        </ul>
-                        <ul class="menu-vertical">
-                            <li class="h5"> <a href="{% url 'boards:board_write' %}">Write</a> </li>
-                        </ul>
-                        {% else %}
-                        <ul class="menu-vertical">
-                            <li class="h5">
-                                <a href="{% url 'boards:board_login' %}">Login</a>
-                            </li>
-                        </ul>
-                        {% endif %}
-{#                        <ul class="menu-vertical">#}
-{#                            <li class="h5"> <a href="#">Single</a> </li>#}
-{#                        </ul>#}
-                    </div>
-                    <div class="side-menu__module pos-bottom pos-absolute col-12 text-right">
-                        <ul class="social-list list-inline list--hover">
-                            <li><a href="#"><i class="socicon socicon-google icon icon--xs"></i></a></li>
-                            <li><a href="#"><i class="socicon socicon-twitter icon icon--xs"></i></a></li>
-                            <li><a href="#"><i class="socicon socicon-facebook icon icon--xs"></i></a></li>
-                            <li><a href="#"><i class="socicon socicon-instagram icon icon--xs"></i></a></li>
-                        </ul>
+                        {% include 'boards/board_navigation.html' %}
                     </div>
                 </div>
             </div>
@@ -72,61 +46,56 @@
         <div class="main-container">
             <section>
                 <div class="container">
-                    <div class="masonry">
-                        <div class="row text-block">
-                            <div class="col-md-12 text-center">
-                                <h2>Main Project</h2>
-                            </div>
+
+                {# top article end #}
+                    <div class="masonry"><div class="row text-block">
                             {% if error_message %}
                             <div class="alert bg--error col-12 text-center">
                                 <b>{{ error_message }}</b>
                             </div>
                             {% endif %}
                         </div>
-                        <div class="masonry__container row masonry--active md d-block d-sm-none">
-                            {% for article in article_list %}
-                                {#                                <div class="col-6 col-md-4 masonry__item">#}
-                                {#                                    <article class="feature feature-1">#}
-                                {#                                        {% if article.image %}#}
-                                {#                                        <a href="{% url 'boards:board_detail' article.id %}" class="block"> <img alt="Image" src="{{ article.image }}"> </a>#}
-                                {#                                        {% endif %}#}
-                                {#                                        <div class="feature__body boxed boxed--border card">#}
-                                {#                                            <div class="card__body">#}
-                                {#                                                <span>{{ article.created_at|date:"y/m/d" }}</span>#}
-                                {#                                                <a href="{% url 'boards:board_detail' article.id %}">#}
-                                {#                                                    <h5>{{ article.title|striptags|truncatechars:50 }}</h5>#}
-                                {#                                                </a>#}
-                                {#                                            </div>#}
-                                {#                                            <div class="card__bottom text-right">#}
-                                {#                                                <ul class="list-inline">#}
-                                {#                                                    <li class="list-inline-item">#}
-                                {#                                                        <div class="card__action">#}
-                                {#                                                            <a href="#"> <i class="material-icons">favorite</i> <span>{{ article.upvote }}</span> </a>#}
-                                {#                                                        </div>#}
-                                {#                                                    </li>#}
-                                {#                                                    <li class="list-inline-item">#}
-                                {#                                                        <div class="card__action">#}
-                                {#                                                            <a href="#"> <i class="material-icons">comment</i> <span>{{ article.comment_count }}</span> </a>#}
-                                {#                                                        </div>#}
-                                {#                                                    </li>#}
-                                {#                                                </ul>#}
-                                {#                                            </div>#}
-                                {#                                        </div>#}
-                                {#                                    </article>#}
-                                {#                                </div>#}
-
+                        <div class="row text-block">
+                            <div class="col-md-12 text-center">
+                                <h2>Main Project</h2>
+                            </div>
+                        </div>
+                        <div class="masonry__container row masonry--active md d-block d-sm-block">
+                        {% for article in article_list_top %}
                                 <div class="col-6 col-md-3 masonry__item">
                                     <article class="feature feature-1">
                                         {% if article.image %}
-                                            <a href="{% url 'boards:board_detail' article.id %}" class="block"> <img alt="Image" src="{{ article.image }}"> </a>
+                                            {% if forloop.counter < 5 %}
+                                                <a href="{% url 'boards:board_detail' article.id %}" class="block title_img_top">
+                                                    <div class="title_img_centered_text">{{ article.title }}</div>
+                                                    <img alt="Image" src="{{ article.image }}">
+                                                </a>
+                                            {% else %}
+                                                <a href="{% url 'boards:board_detail' article.id %}" class="block title_img">
+                                                    <div class="title_img_centered_text">{{ article.title }}</div>
+                                                    <img alt="Image" src="{{ article.image }}">
+                                                </a>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if forloop.counter < 5 %}
+                                                <div class="title_img_text_only_top">
+                                                <a href="{% url 'boards:board_detail' article.id %}">
+                                                    <div class="title_img_centered_text">
+                                                        {{ article.title | truncatechars:40 }}
+                                                    </div>
+                                                </a>
+                                                </div>
+                                            {% else %}
+                                                <div class="title_img_text_only">
+                                                <a href="{% url 'boards:board_detail' article.id %}">
+                                                    <div class="title_img_centered_text">
+                                                        {{ article.title | truncatechars:40 }}
+                                                    </div>
+                                                </a>
+                                                </div>
+                                            {% endif %}
                                         {% endif %}
                                         <div class="feature__body boxed card">
-                                            {#                                            <div class="card__body">#}
-                                            {#                                                <span>{{ article.created_at|date:"y/m/d" }}</span>#}
-                                            {#                                                <a href="{% url 'boards:board_detail' article.id %}">#}
-                                            {#                                                    <h5>{{ article.title|striptags|truncatechars:50 }}</h5>#}
-                                            {#                                                </a>#}
-                                            {#                                            </div>#}
                                             <div class="card__bottom text-center">
                                                 <ul class="list-inline">
                                                     <li class="list-inline-item">
@@ -145,136 +114,25 @@
                                     </article>
                                 </div>
                             {% endfor %}
+                            {% include 'boards/board_index_fragment.html' %}
+                            {% block js %}
+                                <script src="http://code.jquery.com/jquery-latest.js"></script>
+                                <script src="{% static 'boards/js/el-pagination.js' %}"></script>
+                                <script>
+                                    $.endlessPaginate({paginateOnScroll: true,
+                                                       paginateOnScrollMargin: 500,
+                                                        });
+                                    $.endlessPaginate({paginateOnScrollMargin: 400});
+                                    $.endlessPaginate({paginateOnScrollMargin: 300});
+                                    $.endlessPaginate({paginateOnScrollMargin: 200});
+                                    $.endlessPaginate({paginateOnScrollMargin: 100});
+                                </script>
+                            {% endblock %}
                         </div>
-                        <div class="masonry__container row masonry--active md d-none d-sm-block">
-                            {% for article in article_list %}
-{#                                <div class="col-6 col-md-4 masonry__item">#}
-{#                                    <article class="feature feature-1">#}
-{#                                        {% if article.image %}#}
-{#                                        <a href="{% url 'boards:board_detail' article.id %}" class="block"> <img alt="Image" src="{{ article.image }}"> </a>#}
-{#                                        {% endif %}#}
-{#                                        <div class="feature__body boxed boxed--border card">#}
-{#                                            <div class="card__body">#}
-{#                                                <span>{{ article.created_at|date:"y/m/d" }}</span>#}
-{#                                                <a href="{% url 'boards:board_detail' article.id %}">#}
-{#                                                    <h5>{{ article.title|striptags|truncatechars:50 }}</h5>#}
-{#                                                </a>#}
-{#                                            </div>#}
-{#                                            <div class="card__bottom text-right">#}
-{#                                                <ul class="list-inline">#}
-{#                                                    <li class="list-inline-item">#}
-{#                                                        <div class="card__action">#}
-{#                                                            <a href="#"> <i class="material-icons">favorite</i> <span>{{ article.upvote }}</span> </a>#}
-{#                                                        </div>#}
-{#                                                    </li>#}
-{#                                                    <li class="list-inline-item">#}
-{#                                                        <div class="card__action">#}
-{#                                                            <a href="#"> <i class="material-icons">comment</i> <span>{{ article.comment_count }}</span> </a>#}
-{#                                                        </div>#}
-{#                                                    </li>#}
-{#                                                </ul>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                    </article>#}
-{#                                </div>#}
-
-                                <div class="col-6 col-md-3 masonry__item">
-                                    <article class="feature feature-1">
-                                        {% if article.image %}
-                                        <a href="{% url 'boards:board_detail' article.id %}" class="block"> <img alt="Image" src="{{ article.image }}"> </a>
-                                        {% endif %}
-                                        <div class="feature__body boxed card">
-{#                                            <div class="card__body">#}
-{#                                                <span>{{ article.created_at|date:"y/m/d" }}</span>#}
-{#                                                <a href="{% url 'boards:board_detail' article.id %}">#}
-{#                                                    <h5>{{ article.title|striptags|truncatechars:50 }}</h5>#}
-{#                                                </a>#}
-{#                                            </div>#}
-                                            <div class="card__bottom text-center">
-                                                <ul class="list-inline">
-                                                    <li class="list-inline-item">
-                                                        <div class="card__action">
-                                                            <a href="#"> <i style="color: #ff5e5e" class="material-icons">favorite</i> <span>{{ article.upvote }}</span> </a>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-inline-item">
-                                                        <div class="card__action">
-                                                            <a href="#"> <i class="material-icons">comment</i> <span>{{ article.comment_count }}</span> </a>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </article>
-                                </div>
-                            {% endfor %}
                     </div>
                 </div>
             </section>
         <div class="main-container">
-{#            <section>#}
-{#                <div class="container">#}
-{#                    <div class="masonry">#}
-{#                        <div class="masonry__container row masonry--active">#}
-{#                            {% for article in article_list %}#}
-{#                            <div class="col-md-4 masonry__item">#}
-{#                                <div class="card card-1 boxed boxed--sm boxed--border">#}
-{#                                    <div class="card__top">#}
-{#                                        <div class="card__avatar">#}
-{#                                            <a href="{% url 'boards:board_detail' article.id %}">#}
-{#                                                <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}">#}
-{#                                            </a> <span><strong>{{ article.writer }}</strong></span> </div>#}
-{#                                        <div class="card__meta"> <span>{{ article.created_at|date:"y/m/d" }}</span> </div>#}
-{#                                    </div>#}
-{#                                    <div class="card__body">#}
-{#                                        <a href="{% url 'boards:board_detail' article.id %}">#}
-{#                                            <img src="{% static 'boards/img/inner-5.jpg' %}" alt="Image" class="border--round">#}
-{#                                        </a>#}
-{#                                        {{ article.title|striptags|truncatechars:50 }}#}
-{#                                    </div>#}
-{#                                    <div class="card__bottom">#}
-{#                                        <ul class="list-inline">#}
-{#                                            <li class="list-inline-item">#}
-{#                                                <div class="card__action">#}
-{#                                                    <a href="#"> <i class="material-icons">favorite</i> <span>{{ article.upvote }}</span> </a>#}
-{#                                                </div>#}
-{#                                            </li>#}
-{#                                            <li class="list-inline-item">#}
-{#                                                <div class="card__action">#}
-{#                                                    <a href="#"> <i class="material-icons">comment</i> <span>{{ article.comment_count }}</span> </a>#}
-{#                                                </div>#}
-{#                                            </li>#}
-{#                                            <li class="list-inline-item">#}
-{#                                                <div class="card__action">#}
-{#                                                    <a href="#"> <i class="material-icons">share</i>{{ article.shared }}</a>#}
-{#                                                </div>#}
-{#                                            </li>#}
-{#                                        </ul>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </section>#}
-
-{#            <section class="unpad instagram text-center">#}
-{#                <div class="instafeed instafeed--gapless" data-user-name="mediumrarethemes" data-amount="15" data-grid="3">#}
-{#                    <ul class="">#}
-{#                    {% spaceless %}#}
-{#                        {% for i in article_list %}#}
-{#                        <li class="">#}
-{#                            <a href="">#}
-{#                                <img src="https://scontent.cdninstagram.com/vp/54c7626766ee6006db5deed2cd156423/5BEDA535/t51.2885-15/e35/s320x320/14574117_223262144753776_4686345941739896832_n.jpg" alt="">#}
-{#                            </a>#}
-{#                        </li>#}
-{#                        {% endfor %}#}
-{#                    {% endspaceless %}#}
-{#                    </ul>#}
-{#                </div>#}
-{#            </section>#}
-
             <footer class="footer-7 text-center-xs">
                 <div class="container">
                     <div class="row">

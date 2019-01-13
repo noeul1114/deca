@@ -101,11 +101,9 @@ def board_vote(request, article_id):
     A = get_object_or_404(Article, pk=article_id)
     user = get_user(request)
     user_ip = get_client_ip(request)
-
-    try:
-        if ArticleIpLog.objects.get(ip=user_ip, article_id=A.id):
-            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
-    except ArticleIpLog.DoesNotExist:
+    if ArticleIpLog.objects.filter(ip=user_ip, article=A).exists():
+        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+    else:
         if get_user(request).is_active:
             ArticleIpLog.objects.create(ip=user_ip,
                                         user=user,
@@ -439,10 +437,9 @@ def board_comment_vote(request, comment_id):
     C = get_object_or_404(Comment, pk=comment_id)
     user = get_user(request)
     user_ip = get_client_ip(request)
-    try:
-        if CommentIpLog.objects.filter(ip=user_ip, comment=C):
-            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
-    except CommentIpLog.DoesNotExist:
+    if CommentIpLog.objects.filter(ip=user_ip, comment=C).exists():
+        return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
+    else:
         if get_user(request).is_active:
             CommentIpLog.objects.create(ip=user_ip,
                                         user=user,

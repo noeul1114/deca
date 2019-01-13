@@ -107,10 +107,10 @@ def deploy():
     _update_static_files()
     _update_database()
     _ufw_allow()
-    _setup_for_ssl
-    _grant_ssl_live
+    # _setup_for_ssl
+    # _grant_ssl_live
     _make_virtualhost()
-    _make_virtualhost_https()
+    # _make_virtualhost_https()
     _grant_apache2()
     # _grant_sqlite3()
     _restart_apache2()
@@ -210,7 +210,7 @@ def _ufw_allow():
     sudo("ufw reload")
 
 
-def _make_virtualhost():
+def _make_virtualhost_forhttps():
     script = """'<VirtualHost *:80>
     ServerName {servername}
     <Directory /home/{username}/{project_name}/{project_name}>
@@ -223,6 +223,39 @@ def _make_virtualhost():
     
     Redirect permanent / https://sayproject.site/
     
+    ErrorLog ${{APACHE_LOG_DIR}}/error.log
+    CustomLog ${{APACHE_LOG_DIR}}/access.log combined
+    </VirtualHost>'""".format(
+        static_root=STATIC_ROOT_NAME,
+        username=env.user,
+        project_name=PROJECT_NAME,
+        static_url=STATIC_URL_NAME,
+        servername=REMOTE_HOST,
+        media_url=MEDIA_ROOT
+    )
+    sudo('echo {} > /etc/apache2/sites-available/{}.conf'.format(script, PROJECT_NAME))
+    sudo('sudo a2ensite {}.conf'.format(PROJECT_NAME))
+
+
+def _make_virtualhost():
+    script = """'<VirtualHost *:80>
+    ServerName {servername}
+    Alias /{static_url} /home/{username}/{project_name}/{static_root}
+    Alias /{media_url} /home/{username}/{project_name}/{media_url}
+    <Directory /home/{username}/{project_name}/{media_url}>
+        Require all granted
+    </Directory>
+    <Directory /home/{username}/{project_name}/{static_root}>
+        Require all granted
+    </Directory>
+    <Directory /home/{username}/{project_name}/{project_name}>
+        <Files wsgi.py>
+            Require all granted
+        </Files>
+    </Directory>
+    WSGIDaemonProcess {project_name} python-home=/home/{username}/.virtualenvs/{project_name}/bin/ python-path=/home/{username}/{project_name}
+    WSGIProcessGroup {project_name}
+    WSGIScriptAlias / /home/{username}/{project_name}/{project_name}/wsgi.py
     ErrorLog ${{APACHE_LOG_DIR}}/error.log
     CustomLog ${{APACHE_LOG_DIR}}/access.log combined
     </VirtualHost>'""".format(

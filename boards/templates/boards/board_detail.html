@@ -62,8 +62,26 @@
                                     </div>
                                     <div class="text-center card__action">
                                         <ul class="social-list list-inline">
-                                            <li><a href="{% url 'boards:board_vote' article_detail.id %}?vote=up"><i class="material-icons">thumb_up</i></a><p class="pos-vertical-center"><b>{{ article_detail.upvote }}</b> Likes</p></li>
-                                            <li><a href="#"><i class="material-icons">comment</i></a><p class="pos-vertical-center"><b>{{ article_detail.comment_count }}</b> Comment</p></li>
+                                            <li>
+                                                <form action="{% url 'boards:board_vote' article_detail.id %}" method="post">
+                                                    {% csrf_token %}
+                                                  <button type="submit" name="vote" value="up" class="btn alert alert-light">
+                                                      &ensp;&ensp;<i class="material-icons" style="font-size:1.4em">thumb_up</i>&ensp;
+                                                      <strong style="font-size: 1.15em">{{ article_detail.upvote }}</strong> Likes&ensp;&ensp;
+                                                  </button>
+                                                </form>
+                                            </li>
+                                            <li>
+                                                <form action="#" method="post">
+                                                    {% csrf_token %}
+                                                  <button type="submit" class="btn alert alert-light">
+                                                      &ensp;&ensp;<i class="material-icons" style="font-size:1.4em">comment</i>&ensp;
+                                                      <strong style="font-size: 1.15em">{{ article_detail.comment_count }}</strong> Comment&ensp;&ensp;
+                                                  </button>
+                                                </form>
+                                            </li>
+{#                                            <li><a href="{% url 'boards:board_vote' article_detail.id %}?vote=up"><i class="material-icons">thumb_up</i></a><p class="pos-vertical-center"><b>{{ article_detail.upvote }}</b> Likes</p></li>#}
+{#                                            <li><a href="#"><i class="material-icons">comment</i></a><p class="pos-vertical-center"><b>{{ article_detail.comment_count }}</b> Comment</p></li>#}
                                         </ul>
                                     </div>
                                 </div>
@@ -145,20 +163,37 @@
                                                 <div class="comment__body">
                                                     <h5 class="type--fine-print">{{ comment.writer }}</h5>
                                                     <div class="comment__meta"> <span>{{ comment.created_at|date:'Y M d D H:i' }}</span>
-                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=up">
-                                                            <i style="color: #ff9999;" class="card__action material-icons icon icon--xs">favorite</i>
-                                                            <span>{{ comment.upvote }}</span>
-                                                        </a>
-                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=down">
-                                                            <i style="color: #888888" class="color--dark material-icons icon icon--xs">thumb_down</i>
-                                                            <span>{{ comment.downvote }}</span>
-                                                        </a>
+{#                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=up">#}
+{#                                                            <i style="color: #ff9999;" class="card__action material-icons icon icon--xs">favorite</i>#}
+{#                                                            <span>{{ comment.upvote }}</span>#}
+{#                                                        </a>#}
+{#                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=down">#}
+{#                                                            <i style="color: #888888" class="color--dark material-icons icon icon--xs">thumb_down</i>#}
+{#                                                            <span>{{ comment.downvote }}</span>#}
+{#                                                        </a>#}
                                                         {% if user == comment.writer %}
                                                             <a href="{% url 'boards:board_comment_delete' comment.id %}">Delete</a>
                                                         {% endif %}
+
                                                     </div>
                                                     {{ comment.comment_text }}
                                                 </div>
+                                            <div >
+
+                                                                <form action="{% url 'boards:board_comment_vote' comment.id %}" method="post" class="col-6" style="float: right;">
+                                                                    {% csrf_token %}
+                                                                  <button style="margin-bottom: 0px; margin-top: 2px; float: right; margin-left: 10px"
+                                                                          type="submit" name="vote" value="down" class="btn alert col-3">
+                                                                      <i class="material-icons" style="font-size:1.1em; color: #666666;">thumb_down</i>&ensp;
+                                                                      <strong style="font-size: 1.15em; color: #666666">{{ comment.downvote }}</strong>
+                                                                  </button>
+                                                                  <button style="margin-bottom: 0px; margin-top: 2px; float: right"
+                                                                          type="submit" name="vote" value="up" class="btn alert border-danger alert-danger col-3">
+                                                                      <i class="material-icons" style="font-size:1.1em; color: #ff9999;">favorite</i>&ensp;
+                                                                      <strong style="font-size: 1.15em; color: #666666">{{ comment.upvote }}</strong>
+                                                                  </button>
+                                                                </form>
+                                            </div>
                                             </div>
                                             {#                                        <div class="comment">#}
                                             {#                                            <div class="comment__avatar"> <img alt="Image" src="img/avatar-round-3.png"> </div>#}

@@ -127,3 +127,11 @@
 .endless_container {
     visibility: hidden;
 }
+
+.comment .comment_footer{
+    width: 100%;
+}
+
+.comment .comment_footer form .btn{
+    vertical-align: middle;
+}

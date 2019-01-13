@@ -124,14 +124,7 @@ def board_vote(request, article_id):
                 return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
             # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
         elif request.method == 'GET':
-            if request.GET['vote'] == 'up':
-                A.upvote += 1
-                A.save()
-                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
-            if request.GET['vote'] == 'down':
-                A.downvote += 1
-                A.save()
-                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
+            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
         else:
             return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': article_id}))
 
@@ -460,14 +453,7 @@ def board_comment_vote(request, comment_id):
                 return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
             # up이랑 down 이랑 안되는 케이스도 어떻게 커버하는게 좋을듯
         elif request.method == 'GET':
-            if request.GET['vote'] == 'up':
-                C.upvote += 1
-                C.save()
-                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
-            if request.GET['vote'] == 'down':
-                C.downvote += 1
-                C.save()
-                return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
+            return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
         else:
             return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))
 

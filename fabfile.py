@@ -336,3 +336,10 @@ def apache_stop():
 
 def apache_start():
     sudo('sudo service apache2 start')
+
+
+def _create_superuser_django():
+    virtualenv_folder = project_folder + '/../.virtualenvs/{}'.format(PROJECT_NAME)
+    run('cd %s && %s/bin/python3 manage.py migrate --noinput' % (
+        project_folder, virtualenv_folder
+    ))

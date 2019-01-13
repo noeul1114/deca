@@ -271,25 +271,6 @@ def board_write(request):
                                                            'error_message': '글을 쓰기 위해선 로그인 해주세요!'
                                                            })
 
-# def board_write(request):
-#     user = get_user(request)
-#     if user.is_authenticated:
-#         if request.method == 'POST':
-#             A = Article(title=request.POST['title'],
-#                         article_text=request.POST['article_text'],
-#                         created_at=timezone.now(),
-#                         writer=user,
-#                         )
-#             try:
-#                 A.save()
-#                 return HttpResponseRedirect(reverse('boards:board_index'))
-#             except:
-#                 return HttpResponseRedirect(reverse('boards:board_write'))
-#
-#         return render(request, 'boards/board_write.html')
-#     else:
-#         return HttpResponseRedirect(reverse('boards:board_index'))
-
 
 def board_delete(request, article_id):
     user = get_user(request)
@@ -346,6 +327,7 @@ def board_delete_fix(request):
                                                             'article_list': article_list,
                                                             'comment_list': C,
                                                             'error_message': "잘못된 접근입니다."})
+
 
 def board_edit(request, article_id):
     user = get_user(request)

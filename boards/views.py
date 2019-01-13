@@ -436,7 +436,8 @@ def board_comment_write(request):
 def board_comment_vote(request, comment_id):
     C = get_object_or_404(Comment, pk=comment_id)
     user = get_user(request)
-    user_ip = get_client_ip(request)
+    user_ip = None
+    # user_ip = get_client_ip(request)
     if user_ip:
         if CommentIpLog.objects.filter(ip=user_ip, comment=C).exists():
             return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': C.article_id}))

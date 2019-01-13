@@ -4,6 +4,7 @@
 {% for img_fetch in article_list %}
                                     <script>
                                         var img = new Image();
+                                        img.onload = function() { mr.masonry.updateLayout(); };
                                         img.src = "{{ img_fetch.image }}"
                                     </script>
 {% endfor %}
@@ -65,8 +66,5 @@
                                         </div>
                                     </article>
                                 </div>
-                                    <script>
-                                        mr.masonry.updateLayout();
-                                    </script>
                             {% endfor %}
 {% show_more %}

@@ -54,7 +54,7 @@
                             <article>
                                 <div class="article__title text-center">
                                     <h1 class="h2">{{ article_detail.title }}</h1>{{ article_detail.created_at|date:"Y M d D" }}
-                                    <br><br><br>
+                                    <br><br>
                                     <div class="text-center card__action">
                                         <h3 class="h3">
                                             {{ article_detail.writer.username }}
@@ -65,18 +65,22 @@
                                             <li>
                                                 <form action="{% url 'boards:board_vote' article_detail.id %}" method="post">
                                                     {% csrf_token %}
-                                                  <button type="submit" name="vote" value="up" class="btn alert alert-light">
-                                                      &ensp;&ensp;<i class="material-icons" style="font-size:1.4em">thumb_up</i>&ensp;
-                                                      <strong style="font-size: 1.15em">{{ article_detail.upvote }}</strong> Likes&ensp;&ensp;
+                                                  <button type="submit" name="vote" value="up" class="btn alert alert-light border-0 text-center">
+                                                    <p class="col-12" >
+                                                        <i class="material-icons" style="font-size:1.2em; color: #ff9a9a; vertical-align: middle">thumb_up</i>
+                                                        <strong style="font-size:1.2em; vertical-align: middle">{{ article_detail.upvote }}</strong>
+                                                    </p>
                                                   </button>
                                                 </form>
                                             </li>
                                             <li>
                                                 <form action="#" method="post">
                                                     {% csrf_token %}
-                                                  <button type="submit" class="btn alert alert-light">
-                                                      &ensp;&ensp;<i class="material-icons" style="font-size:1.4em">comment</i>&ensp;
-                                                      <strong style="font-size: 1.15em">{{ article_detail.comment_count }}</strong> Comment&ensp;&ensp;
+                                                  <button type="submit" class="btn alert alert-light text-center border-0">
+                                                      <p class="col-12">
+                                                      <i class="material-icons" style="font-size:1.2em;  color: #767676; vertical-align: middle">comment</i>
+                                                        <strong style="font-size:1.2em; vertical-align: middle">{{ article_detail.comment_count }}</strong>
+                                                      </p>
                                                   </button>
                                                 </form>
                                             </li>
@@ -84,6 +88,7 @@
 {#                                            <li><a href="#"><i class="material-icons">comment</i></a><p class="pos-vertical-center"><b>{{ article_detail.comment_count }}</b> Comment</p></li>#}
                                         </ul>
                                     </div>
+
                                 </div>
                                 {% if user == article_detail.writer %}
                                     <div class="article__title text-right">
@@ -182,15 +187,15 @@
 
                                                                 <form action="{% url 'boards:board_comment_vote' comment.id %}" method="post" class="col-6" style="float: right;">
                                                                     {% csrf_token %}
-                                                                  <button style="margin-bottom: 0px; margin-top: 2px; float: right; margin-left: 10px"
-                                                                          type="submit" name="vote" value="down" class="btn alert col-3">
-                                                                      <i class="material-icons" style="font-size:1.1em; color: #666666;">thumb_down</i>&ensp;
-                                                                      <strong style="font-size: 1.15em; color: #666666">{{ comment.downvote }}</strong>
+                                                                  <button style="margin-bottom: 0px; margin-top: 2px; float: right; margin-left: 10px;"
+                                                                          type="submit" name="vote" value="down" class="btn alert border-0 col-4 col-md-3">
+                                                                      <i class="material-icons" style="font-size:1.1em; color: #767676; vertical-align: middle">thumb_down</i>&ensp;
+                                                                      <strong style="font-size: 1.15em; color: #767676; vertical-align: middle">{{ comment.downvote }}</strong>
                                                                   </button>
                                                                   <button style="margin-bottom: 0px; margin-top: 2px; float: right"
-                                                                          type="submit" name="vote" value="up" class="btn alert border-danger alert-danger col-3">
-                                                                      <i class="material-icons" style="font-size:1.1em; color: #ff9999;">favorite</i>&ensp;
-                                                                      <strong style="font-size: 1.15em; color: #666666">{{ comment.upvote }}</strong>
+                                                                          type="submit" name="vote" value="up" class="btn alert border-0 alert-danger col-4 col-md-3">
+                                                                      <i class="material-icons" style="font-size:1.1em; color: #ff9999; vertical-align: middle">favorite</i>&ensp;
+                                                                      <strong style="font-size: 1.15em; color: #767676; vertical-align: middle">{{ comment.upvote }}</strong>
                                                                   </button>
                                                                 </form>
                                             </div>

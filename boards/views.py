@@ -519,9 +519,14 @@ def board_profile(request, user_id):
 #     return ip
 
 def get_client_ip(request):
-    ip = request.META.get("HTTP_X_FORWARDED_FOR", None)
-    if ip:
+    try:
+        ip = request.META.get("HTTP_X_FORWARDED_FOR", None)
         ip = ip.split(", ")[0]
-    else:
-        ip = request.META.get("REMOTE_ADDR", "")
-    return ip
+        return ip
+    except:
+        try:
+            ip = request.META.get("REMOTE_ADDR", "")
+            return ip
+        except:
+            return None
+        return None

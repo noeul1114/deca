@@ -1,13 +1,13 @@
 {% load el_pagination_tags %}
 
-{% paginate 5 article_list %}
-{% for img_fetch in article_list %}
-                                    <script>
-                                        var img = new Image();
-                                        img.onload = function() { mr.masonry.updateLayout(); };
-                                        img.src = "{{ img_fetch.image }}"
-                                    </script>
-{% endfor %}
+{% paginate 10 article_list %}
+{#{% for img_fetch in article_list %}#}
+{#                                    <script>#}
+{#                                        var img = new Image();#}
+{#                                        img.onload = function() { mr.masonry.updateLayout(); };#}
+{#                                        img.src = "{{ img_fetch.image }}"#}
+{#                                    </script>#}
+{#{% endfor %}#}
 {% for article in article_list %}
                                 <div class="col-6 col-md-3 masonry__item">
                                     <article class="feature feature-1">
@@ -67,4 +67,7 @@
                                     </article>
                                 </div>
                             {% endfor %}
+                                    <script>
+                                        mr.masonry.updateLayout();
+                                    </script>
 {% show_more %}

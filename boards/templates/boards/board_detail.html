@@ -53,16 +53,13 @@
                         <div class="col-md-10 col-lg-10">
                             <article>
                                 <div class="article__title text-center">
-                                    <h1 class="h2">{{ article_detail.title }}</h1>{{ article_detail.created_at|date:"Y M d D" }}
-                                    <br><br>
-                                    <div class="text-center card__action">
-                                        <h3 class="h3">
-                                            {{ article_detail.writer.username }}
-                                        </h3>
-                                    </div>
+                                    <h1 class="h2">{{ article_detail.title }}</h1>
+                                    {{ article_detail.created_at|date:"Y M d D" }}
+                                    <br>
+                                    Hits : {{ article_detail.hit }}
                                     <div class="text-center card__action">
                                         <ul class="social-list list-inline">
-                                            <li>
+                                            <li style="margin-right: 0px">
                                                 <form action="{% url 'boards:board_vote' article_detail.id %}" method="post">
                                                     {% csrf_token %}
                                                   <button type="submit" name="vote" value="up" class="btn alert alert-light border-0 text-center">
@@ -88,6 +85,12 @@
 {#                                            <li><a href="#"><i class="material-icons">comment</i></a><p class="pos-vertical-center"><b>{{ article_detail.comment_count }}</b> Comment</p></li>#}
                                         </ul>
                                     </div>
+                                    <div class="text-center card__action">
+                                        <a style="color: #000000" class="h3" href="{% url 'boards:board_profile' article_detail.writer.id %}">
+                                                {{ article_detail.writer.username }}
+                                        </a>
+                                    </div>
+
 
                                 </div>
                                 {% if user == article_detail.writer %}

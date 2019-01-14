@@ -68,17 +68,19 @@ def board_detail(request, article_id):
     A = get_object_or_404(Article, pk=article_id)
     if A.published and A.activated:
         if user.is_authenticated:
-            article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+            # article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
             C = Comment.objects.filter(article_id=article_id)
+            A.hit += 1
+            A.save()
             return render(request, 'boards/board_detail.html', {'article_detail': A,
                                                                 'user': user,
-                                                                'article_list': article_list,
                                                                 'comment_list': C})
         else:
-            article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
+            # article_list = Article.objects.filter(published=True, activated=True).order_by('upvote').reverse()
             C = Comment.objects.filter(article_id=article_id)
+            A.hit += 1
+            A.save()
             return render(request, 'boards/board_detail.html', {'article_detail': A,
-                                                                'article_list': article_list,
                                                                 'comment_list': C})
     else:
         article_list_top = Article.objects.filter(published=True, activated=True,
@@ -471,7 +473,7 @@ def board_comment_delete(request, comment_id):
 
 def board_profile(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    request_user = get_user(request)
+    # request_user = get_user(request)
     article_list = Article.objects.filter(published=True, writer=user.id).reverse()
 
     template = 'boards/board_profile.html'
@@ -480,16 +482,21 @@ def board_profile(request, user_id):
     if request.is_ajax():
         template = page_fragment
 
-    if user.is_authenticated :
-        if user == request_user:
-            return render(request, template, {'user': user,
-                                              'page_fragment': page_fragment,
-                                              'article_list': article_list,
-                                              })
-        else:
-            return HttpResponseRedirect(reverse('boards:board_index'))
-    else:
-        return HttpResponseRedirect(reverse('boards:board_index'))
+    return render(request, template, {'user': user,
+                                      'page_fragment': page_fragment,
+                                      'article_list': article_list,
+                                      })
+
+    # if user.is_authenticated :
+    #     if user == request_user:
+    #         return render(request, template, {'user': user,
+    #                                           'page_fragment': page_fragment,
+    #                                           'article_list': article_list,
+    #                                           })
+    #     else:
+    #         return HttpResponseRedirect(reverse('boards:board_index'))
+    # else:
+    #     return HttpResponseRedirect(reverse('boards:board_index'))
 
 
 def get_client_ip(request):
@@ -499,3 +506,7 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+def board_navigator(request):
+    pass

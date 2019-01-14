@@ -9,6 +9,22 @@ from django_summernote.models import AbstractAttachment
 # Create your models here.
 
 
+class AdditionalUserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    nickname = models.CharField(max_length=30, null=True)
+    introduction = models.CharField(max_length=400, null=True)
+
+    image = models.CharField(max_length=500, null=True)
+
+    age = models.IntegerField(null=True)
+    sex = models.CharField(max_length=20, null=True)
+
+    email = models.EmailField(max_length=200, null=True)
+
+    phone = models.CharField(max_length=30, null=True)
+
+
 class Vote(models.Model):
     created_at = models.DateTimeField('Date published')
     voter = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -17,15 +33,31 @@ class Vote(models.Model):
     up_down = models.BooleanField(default=True)
 
 
+class Board(models.Model):
+    name = models.CharField(max_length=40)
+    image = models.CharField(max_length=500, null=True)
+    description = models.CharField(max_length=200, null=True)
+
+    created_at = models.DateTimeField('Date created')
+
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    higher_board = models.CharField(max_length=40, null=True)
+    has_higher_board = models.BooleanField(default=False)
+
+    activated = models.BooleanField(default=True)
+
+
 class Article(models.Model):
     title = models.CharField(max_length=200)
     article_text = models.TextField()
     created_at = models.DateTimeField('Date published')
     edited_at = models.DateTimeField('Latest edited date', auto_now=True)
 
-    image = models.CharField(max_length=200, null=True)
+    image = models.CharField(max_length=500, null=True)
 
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
+    board = models.OneToOneField(Board, on_delete=models.CASCADE, null=True)
 
     comment_count = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
@@ -36,6 +68,8 @@ class Article(models.Model):
 
     published = models.BooleanField(default=False)
     activated = models.BooleanField(default=False)
+
+    hit = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['created_at']

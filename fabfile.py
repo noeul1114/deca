@@ -55,6 +55,7 @@ apt_requirements = [
     'libjpeg8-dev',
     'zlib1g-dev',
     'postgresql',
+    'goaccess',
 ]
 
 

@@ -47,12 +47,38 @@
             <section>
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-md-6"> <img alt="Image" class="border--round" src="{% static 'boards/img/avatar-wide-2.jpg' %}"> </div>
+                        <div class="col-md-6">
+{#                            {% if user.additionaluserprofile %}#}
+{#                                {% if user.additionaluserprofile.image %}#}
+{#                                    <img class="border--round" src="{{ user.additionaluserprofile.image }}" alt="Image">#}
+{#                                {% else %}#}
+                                    <img class="border--round" src="{% static 'boards/img/avatar-round-4.png' %}" alt="Image">
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+                        </div>
                         <div class="col-md-6 col-lg-5">
                             <div class="switchable__text">
                                 <div class="text-block text-center">
-                                    <h2>{{ user.username }}</h2> <span class="text-center">{{ user.id }}</span> </div>
-                                <p class="lead text-center">{% lorem %}</p>
+                                    <h2>{{ user.username }}</h2>
+                                    <span class="text-center">
+                                        {% if user.additionaluserprofile %}
+                                            {{ user.additionaluserprofile.nickname }}
+                                        {% else %}
+                                            {{ user.username }}
+                                        {% endif %}
+                                    </span> </div>
+                                <p class="lead text-center">
+                                    {% if user.additionaluserprofile %}
+                                        {% if user.additionaluserprofile.introduction %}
+                                            {{ user.additionaluserprofile.introduction }}
+                                            gg
+                                        {% else %}
+                                            안녕하세요. {{ user.username }} 입니다.
+                                        {% endif %}
+                                    {% else %}
+                                        안녕하세요. {{ user.username }} 입니다.
+                                    {% endif %}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -64,9 +90,10 @@
                             </div>
                             {% endif %}
                         </div>
+                        <br><br>
                         <div class="row text-block">
                             <div class="col-md-12 text-center">
-                                <h4>{{ user.username }} 님이 쓴 글</h4>
+                                <h4><strong>{{ user.username }}</strong> 님이 쓴 글</h4>
                             </div>
                         </div>
                         <div class="masonry__container row masonry--active md d-block d-sm-block">
@@ -82,6 +109,8 @@
                                     $.endlessPaginate({paginateOnScrollMargin: 300});
                                     $.endlessPaginate({paginateOnScrollMargin: 200});
                                     $.endlessPaginate({paginateOnScrollMargin: 100});
+                                    $.endlessPaginate({paginateOnScrollMargin: 1});
+                                    $.endlessPaginate({paginateOnScrollMargin: 0});
                                 </script>
                             {% endblock %}
                         </div>

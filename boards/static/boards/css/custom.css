@@ -82,6 +82,17 @@
   text-shadow: 0px 0px 2px black;
 }
 
+.title_img_centered_text_text_only {
+    color: #787878;
+    font-size: 1.3em;
+    font-family: "Do Hyeon";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /*text-shadow: 0px 0px 2px white;*/
+}
+
 .title_img {
   position: relative;
   text-align: center;
@@ -134,4 +145,13 @@
 
 .comment .comment_footer form .btn{
     vertical-align: middle;
+}
+
+.dh_font {
+    font-family: "Do Hyeon";
+    font-size: 1.5em;
+}
+
+.dropdown__trigger {
+    font-size: 2em;
 }

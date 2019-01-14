@@ -8,10 +8,20 @@
     <ul class="menu-vertical">
         <li class="h5"> <a href="{% url 'boards:board_write' %}?next={{ request.path }}">Write</a> </li>
     </ul>
+    <ul class="menu-vertical">
+        <li class="h5">
+            <a href="{% url 'boards:board_navigator' %}">Boards</a>
+        </li>
+    </ul>
 {% else %}
     <ul class="menu-vertical">
         <li class="h5">
             <a href="{% url 'boards:board_login' %}">Login</a>
+        </li>
+    </ul>
+    <ul class="menu-vertical">
+        <li class="h5">
+            <a href="{% url 'boards:board_navigator' %}">Boards</a>
         </li>
     </ul>
 {% endif %}

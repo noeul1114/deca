@@ -38,6 +38,8 @@ class Board(models.Model):
     image = models.CharField(max_length=500, null=True)
     description = models.CharField(max_length=200, null=True)
 
+    points = models.IntegerField(default=0)
+
     created_at = models.DateTimeField('Date created')
 
     creator = models.ForeignKey(User, on_delete=models.CASCADE)

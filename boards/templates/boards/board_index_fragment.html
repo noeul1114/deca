@@ -14,20 +14,24 @@
                                         {% if article.image %}
                                             {% if article.upvote > 10 %}
                                                 <a href="{% url 'boards:board_detail' article.id %}" class="block title_img_top">
-                                                    <div class="title_img_centered_text">{{ article.title }}</div>
+                                                    <div class="title_img_centered_text">
+                                                        {{ article.title | truncatechars:25 }}
+                                                    </div>
                                                     <img alt="Image" src="{{ article.image }}">
                                                 </a>
                                             {% else %}
                                                 <a href="{% url 'boards:board_detail' article.id %}" class="block title_img">
-                                                    <div class="title_img_centered_text">{{ article.title }}</div>
+                                                    <div class="title_img_centered_text">
+                                                        {{ article.title | truncatechars:25 }}
+                                                    </div>
                                                     <img alt="Image" src="{{ article.image }}">
                                                 </a>
                                             {% endif %}
                                         {% else %}
                                             {% if article.upvote > 10 %}
-                                                <div class="title_img_text_only_top">
+                                                <div class="title_img_text_only">
                                                 <a href="{% url 'boards:board_detail' article.id %}">
-                                                    <div class="title_img_centered_text">
+                                                    <div class="title_img_centered_text_text_only">
                                                         {{ article.title | truncatechars:40 }}
                                                     </div>
                                                 </a>
@@ -35,7 +39,7 @@
                                             {% else %}
                                                 <div class="title_img_text_only">
                                                 <a href="{% url 'boards:board_detail' article.id %}">
-                                                    <div class="title_img_centered_text">
+                                                    <div class="title_img_centered_text_text_only">
                                                         {{ article.title | truncatechars:40 }}
                                                     </div>
                                                 </a>

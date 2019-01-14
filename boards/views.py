@@ -19,7 +19,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
 from .models import Article, ArticleIpLog, Comment, CommentIpLog
-from .models import Attachment
+from .models import Attachment, Board, AdditionalUserProfile
 from .form import BasicForm
 
 from bs4 import BeautifulSoup
@@ -509,4 +509,11 @@ def get_client_ip(request):
 
 
 def board_navigator(request):
-    pass
+    boards_activated = Board.objects.filter(activated=True).order_by('points').reverse()
+    boards_deactivated = Board.objects.filter(activated=False).order_by('created_at').reverse()
+    user = get_user(request)
+
+    return render(request, 'boards/board_navigator.html', {'boards_activated': boards_activated,
+                                                           'boards_deactivated': boards_deactivated,
+                                                           'user': user,
+                                                           })

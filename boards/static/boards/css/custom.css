@@ -98,7 +98,7 @@
   display: block;
     overflow: hidden;
     max-height: 500px;
-  border: 3px outset #ffaaaa;
+  border: 3px solid #ffaaaa;
   border-radius: 12px;
 }
 
@@ -134,8 +134,4 @@
 
 .comment .comment_footer form .btn{
     vertical-align: middle;
-}
-
-.detail_li {
-    margin: 0px 0px 0px 0px;
 }

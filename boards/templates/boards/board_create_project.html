@@ -1,0 +1,161 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Say::Project - Say it for MORE</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{% static 'boards/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all">
+        <link href="{% static 'boards/css/socicon.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="{% static 'boards/css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/theme.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'boards/css/custom.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,400i,500,600,700" rel="stylesheet">
+
+    </head>
+    <body data-smooth-scroll-offset="77">
+        <div class="nav-container">
+            <div>
+                <nav class="bar bar-toggle">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div style="padding-left: 2em" class="col-6">
+                                <div class="bar__module">
+                                    <a href="{% url 'boards:board_index' %}">
+                                        <img class="logo logo-dark" alt="logo"
+                                             src="{% static 'boards/img/logo-dark.png' %}">
+                                        <img class="logo logo-light" alt="logo"
+                                             src="{% static 'boards/img/logo-light.png' %}"> </a>
+                                </div>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end">
+                                <div class="bar__module">
+                                    <a class="menu-toggle pull-right" href="#" data-notification-link="sidebar-menu">
+                                        <i class="stack-interface stack-menu"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <div class="notification pos-right pos-top side-menu bg--white"
+                     data-notification-link="sidebar-menu" data-animation="from-right">
+                    <div class="side-menu__module pos-vertical-center text-right">
+                        {% include 'boards/board_navigation.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-container">
+            <section>
+                <div class="container">
+                    <div class="row text-block">
+                        {% if error_message %}
+                        <div class="alert bg--error col-12 text-center">
+                            <b>{{ error_message }}</b>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row text-center justify-content-center">
+                        <h2 class="h2">
+                            Create Project
+                        </h2>
+                    </div>
+                    <br>
+                    <div class="row justify-content-center no-gutters">
+                        <div class="col-md-10 col-lg-8">
+                            <div class="boxed boxed--border">
+                                <form method="post" action="{% url 'boards:board_create_project' %}"
+                                      class="text-left row mx-0 justify-content-center"
+                                      data-error="필수 정보를 모두 기입해 주세요."
+                                      enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="col-md-6"> <span>프로젝트 이름:</span>
+                                        <input type="text" name="name" class="validate-required">
+                                    </div>
+                                    <div class="col-md-6"> </div>
+                                    <div class="col-md-6">
+                                        <span>상위 프로젝트:</span>
+                                    <div class="form-group">
+                                      <select name="higher_board">
+                                        <option value="none">없음</option>
+                                          {% for board in boards_activated_highest %}
+                                              <option value="{{ board.name }}">{{ board.name }}</option>
+                                          {% endfor %}
+                                      </select>
+                                    </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span>대표이미지:</span>
+                                        <input type="file" name="board_image" formenctype="multipart/form-data">
+                                    </div>
+                                    <div class="col-md-12"> <span>프로젝트 소개:</span> <textarea rows="5" name="description" class="validate-required"></textarea> </div>
+{#                                    <div class="col-md-12 text-center boxed">#}
+{#                                        <h5>Services Required</h5>#}
+{#                                    </div>#}
+{#                                    <div class="col-md-3 col-6 text-center"> <span class="block">Design</span>#}
+{#                                        <div class="input-checkbox"> <input type="checkbox" name="design"> <label></label> </div>#}
+{#                                    </div>#}
+{#                                    <div class="col-md-3 col-6 text-center"> <span class="block">Development</span>#}
+{#                                        <div class="input-checkbox"> <input type="checkbox" name="dev"> <label></label> </div>#}
+{#                                    </div>#}
+{#                                    <div class="col-md-3 col-6 text-center"> <span class="block">Branding</span>#}
+{#                                        <div class="input-checkbox"> <input type="checkbox" name="brand"> <label></label> </div>#}
+{#                                    </div>#}
+{#                                    <div class="col-md-3 col-6 text-center"> <span class="block">Marketing</span>#}
+{#                                        <div class="input-checkbox"> <input type="checkbox" name="marketing"> <label></label> </div>#}
+{#                                    </div>#}
+                                    <div class="col-md-12 text-center boxed">
+                                        <h5>프로젝트 개설자 공개여부</h5>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <div class="input-radio"> <span>공개</span>
+                                            <input checked="checked" type="radio"
+                                                   name="creator_public" value="true" class="validate-required">
+                                            <label></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <div class="input-radio"> <span>비공개</span>
+                                            <input type="radio" name="creator_public" value="false" class="validate-required">
+                                            <label></label>
+                                        </div>
+                                    </div>
+{#                                <div class="col-12"></div>#}
+                                    <div class="col-md-12 boxed text-center">
+                                        <button type="submit" class="btn btn--primary type--uppercase col-7" style="font-size: 1em">프로젝트 생성</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="footer-7 text-center-xs">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year">
+                        </span> Say::Project — All Rights Reserved</span>
+                        </div>
+                        <div class="col-sm-6 text-right text-center-xs">
+                            <ul class="social-list list-inline">
+                                <li><a href="#"><i class="socicon socicon-google icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-twitter icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-facebook icon icon--xs"></i></a></li>
+                                <li><a href="#"><i class="socicon socicon-instagram icon icon--xs"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script src="{% static 'boards/js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'boards/js/parallax.js' %}"></script>
+        <script src="{% static 'boards/js/smooth-scroll.min.js' %}"></script>
+        <script src="{% static 'boards/js/scripts.js' %}"></script>
+
+    </body>
+
+</html>

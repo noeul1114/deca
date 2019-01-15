@@ -24,18 +24,24 @@
                         <div class="row align-items-center">
                             <div style="padding-left: 2em" class="col-6">
                                 <div class="bar__module">
-                                    <a href="{% url 'boards:board_index' %}"> <img class="logo logo-dark" alt="logo" src="{% static 'boards/img/logo-dark.png' %}"> <img class="logo logo-light" alt="logo" src="{% static 'boards/img/logo-light.png' %}"> </a>
+                                    <a href="{% url 'boards:board_index' %}">
+                                        <img class="logo logo-dark" alt="logo"
+                                             src="{% static 'boards/img/logo-dark.png' %}">
+                                        <img class="logo logo-light" alt="logo"
+                                             src="{% static 'boards/img/logo-light.png' %}"> </a>
                                 </div>
                             </div>
                             <div class="col-6 d-flex justify-content-end">
                                 <div class="bar__module">
-                                    <a class="menu-toggle pull-right" href="#" data-notification-link="sidebar-menu"> <i class="stack-interface stack-menu"></i> </a>
+                                    <a class="menu-toggle pull-right" href="#" data-notification-link="sidebar-menu">
+                                        <i class="stack-interface stack-menu"></i> </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </nav>
-                <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
+                <div class="notification pos-right pos-top side-menu bg--white"
+                     data-notification-link="sidebar-menu" data-animation="from-right">
                     <div class="side-menu__module pos-vertical-center text-right">
                         {% include 'boards/board_navigation.html' %}
                     </div>
@@ -44,12 +50,20 @@
         </div>
         <div class="main-container">
             <section>
+            <div class="row text-block">
+                {% if error_message %}
+                <div class="alert bg--error col-12 text-center">
+                    <b>{{ error_message }}</b>
+                </div>
+                {% endif %}
+            </div>
                 {% include 'boards/board_nav_board_list.html' %}
             </section>
             <footer class="footer-7 text-center-xs">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year"></span> Say::Project — All Rights Reserved</span>
+                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year">
+                        </span> Say::Project — All Rights Reserved</span>
                         </div>
                         <div class="col-sm-6 text-right text-center-xs">
                             <ul class="social-list list-inline">

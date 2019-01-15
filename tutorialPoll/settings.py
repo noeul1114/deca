@@ -16,31 +16,8 @@ import uuid
 import posixpath
 
 from django.conf.global_settings import TEMPLATES
-
-def custom_uploaded_filepath_debug(instance, filename):
-    """
-    Returns default filepath for uploaded files.
-    """
-    ext = filename.split('.')[-1]
-    filename = "%s.%s" % (uuid.uuid4(), ext)
-    year = datetime.now().strftime('%Y')
-    month = datetime.now().strftime('%m')
-    day = datetime.now().strftime('%d')
-    hour = datetime.now().strftime('%H')
-    return os.path.join('django-summernote', year, month, day, hour, filename)
-
-
-def custom_uploaded_filepath_deploy(instance, filename):
-    """
-    Returns default filepath for uploaded files.
-    """
-    ext = filename.split('.')[-1]
-    filename = "%s.%s" % (uuid.uuid4(), ext)
-    year = datetime.now().strftime('%Y')
-    month = datetime.now().strftime('%m')
-    day = datetime.now().strftime('%d')
-    hour = datetime.now().strftime('%H')
-    return posixpath.join('django-summernote', year, month, day, hour, filename)
+from .custom_upload_path import custom_uploaded_filepath_debug, custom_uploaded_filepath_deploy \
+ ,custom_uploaded_filepath_debug_board_image, custom_uploaded_filepath_deploy_board_image
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -60,6 +37,11 @@ if DEBUG:
     custom_uploaded_filepath = custom_uploaded_filepath_debug
 else:
     custom_uploaded_filepath = custom_uploaded_filepath_deploy
+
+if DEBUG:
+    BOARD_IMAGE_UPLOADPATH = custom_uploaded_filepath_debug_board_image
+else:
+    BOARD_IMAGE_UPLOADPATH = custom_uploaded_filepath_deploy_board_image
 
 ALLOWED_HOSTS = ['*']
 

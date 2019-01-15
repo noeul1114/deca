@@ -18,8 +18,8 @@ from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 
-from .models import Article, ArticleIpLog, Comment, CommentIpLog
-from .models import Attachment, Board, AdditionalUserProfile
+from .models import Article, ArticleIpLog, Comment, CommentIpLog, Board
+from .models import Attachment, Board, AdditionalUserProfile, BoardImage
 from .form import BasicForm
 
 from bs4 import BeautifulSoup
@@ -224,9 +224,10 @@ def board_write(request):
                     form = BasicForm(initial={'title': A.title,
                                               'article_text': A.article_text,
                                               })
-                    return render(request, 'boards/board_write.html', {'form': form,
-                                                                       'error_message': '글을 쓰는데에 실패했습니다. 다시 시도해주세요',
-                                                                       })
+                    return render(request, 'boards/board_write.html',
+                                  {'form': form,
+                                   'error_message': '글을 쓰는데에 실패했습니다. 다시 시도해주세요',
+                                    })
             elif request.POST['submit'] == 'False':
                 A.title = request.POST['title']
                 A.article_text = request.POST['article_text']
@@ -253,9 +254,10 @@ def board_write(request):
                     form = BasicForm(initial={'title': A.title,
                                               'article_text': A.article_text,
                                               })
-                    return render(request, 'boards/board_write.html', {'form': form,
-                                                                       'error_message': '글을 저장하는 데에 실패했습니다. 다시 시도해주세요',
-                                                                       })
+                    return render(request, 'boards/board_write.html',
+                                  {'form': form,
+                                   'error_message': '글을 저장하는 데에 실패했습니다. 다시 시도해주세요',
+                                    })
         else:
             form = BasicForm(initial={'title': A.title,
                                       'article_text': A.article_text,
@@ -509,11 +511,94 @@ def get_client_ip(request):
 
 
 def board_navigator(request):
-    boards_activated = Board.objects.filter(activated=True).order_by('points').reverse()
-    boards_deactivated = Board.objects.filter(activated=False).order_by('created_at').reverse()
+    boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
+    boards_activated_has_higher = Board.objects.filter(activated=True, has_higher_board=True).order_by('points').reverse()
+    # boards_deactivated = Board.objects.filter(activated=False).order_by('created_at').reverse()
     user = get_user(request)
 
-    return render(request, 'boards/board_navigator.html', {'boards_activated': boards_activated,
-                                                           'boards_deactivated': boards_deactivated,
+    return render(request, 'boards/board_navigator.html', {'boards_activated_highest': boards_activated_highest,
+                                                           'boards_activated_has_higher': boards_activated_has_higher,
                                                            'user': user,
                                                            })
+
+
+def board_create_project_page(request):
+    boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
+    boards_activated_has_higher = Board.objects.filter(activated=True, has_higher_board=True).order_by('points').reverse()
+    user = get_user(request)
+    if user.is_authenticated:
+        return render(request, 'boards/board_create_project.html', {'user': user,
+                                                                    'boards_activated_highest': boards_activated_highest,
+                                                                    })
+    else:
+        return render(request, 'boards/board_navigator.html', {
+                                                                    'error_message': '프로젝트를 개설하기 위해선 로그인 해주시길 바랍니다.',
+                                                                    'boards_activated_highest': boards_activated_highest,
+                                                                    'boards_activated_has_higher': boards_activated_has_higher,
+                                                                    'user': user,
+                                                                    })
+
+
+def board_create_project(request, *args, **kwargs):
+    if request.method == 'POST':
+        boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
+        file = request.FILES['board_image']
+
+        user = get_user(request)
+        if user.is_authenticated:
+            has_higher = False
+            if request.POST['higher_board'] == 'none':
+                has_higher = False
+            else:
+                has_higher = True
+
+            creator_public = True
+            if request.POST['creator_public'] == 'true':
+                creator_public = True
+            else:
+                creator_public = False
+
+            if request.POST['higher_board'] == 'none':
+                higher_board = None
+            else:
+                higher_board = get_object_or_404(Board, name=request.POST['higher_board'])
+
+            newBoard = Board()
+
+            newBoard.name = request.POST['name']
+            newBoard.has_higher_board = has_higher
+            newBoard.description = request.POST['description']
+            newBoard.creator_public = creator_public
+            newBoard.created_at = timezone.now()
+            newBoard.creator = user
+            newBoard.higher_board = higher_board
+            kwargs = request.POST.copy()
+            kwargs.pop("name", None)
+            kwargs.pop("description", None)
+            kwargs.pop("creator_public", None)
+            kwargs.pop("higher_board", None)
+
+            file = request.FILES['board_image']
+
+            kwargs.pop("csrfmiddlewaretoken", None)
+            try:
+                board_image = BoardImage()
+                board_image.file = file
+                board_image.name = file.name
+
+                board_image.save(**kwargs)
+                newBoard.image_file = board_image
+            except IOError:
+                newBoard.delete()
+                return render(request, 'boards/board_create_project.html', {'user': user,
+                                                                            'error_message': '프로젝트 생성에 실패했습니다.',
+                                                                            'boards_activated_highest': boards_activated_highest,
+                                                                            })
+            newBoard.save()
+            return render(request, 'boards/board_navigator.html', {'user': user,
+                                                                   'boards_activated_highest': boards_activated_highest,
+                                                                   })
+        else:
+            return HttpResponseRedirect(reverse('boards:board_index'))
+    else:
+        return HttpResponseRedirect(reverse('boards:board_index'))

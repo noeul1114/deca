@@ -1,93 +1,26 @@
                 <div class="container" style="font-size: 1.3em">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
-                            <h6 class="type--uppercase">Company</h6>
-                            <ul class="list--hover">
-                                <li><a href="#">About Company</a></li>
-                                <li><a href="#">Our Team</a></li>
-                                <li><a href="#">Locations</a></li>
-                                <li><a href="#">History</a></li>
-                                <li><a href="#">Work With Us</a></li>
-                            </ul>
-                            <br>
-                        </div>
-                        <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
-                            <h6 class="type--uppercase">Developers</h6>
-                            <ul class="list--hover">
-                                <li><a href="#">Developer Center</a></li>
-                                <li><a href="#">API Reference</a></li>
-                                <li><a href="#">Downloads</a></li>
-                                <li><a href="#">Tools</a></li>
-                                <li><a href="#">Developer Blog</a></li>
-                                <li><a href="#">Developer Forums</a></li>
-                            </ul>
-                            <br>
-                        </div>
-                        <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
-                            <h6 class="type--uppercase">Support</h6>
-                            <ul class="list--hover">
-                                <li><a href="#">Help Center</a></li>
-                                <li><a href="#">Live Chat</a></li>
-                                <li><a href="#">Downloads</a></li>
-                                <li><a href="#">Press Kit</a></li>
-                            </ul>
-                            <br>
-                        </div>
-                        <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
-                            <h6 class="type--uppercase">Locations</h6>
-                            <ul class="list--hover">
-                                <li><a href="#">Melbourne</a></li>
-                                <li><a href="#">London</a></li>
-                                <li><a href="#">New York</a></li>
-                                <li><a href="#">San Francisco</a></li>
-                            </ul>
-                            <br>
-                        </div>
+                    <div class="row justify-content-center">
+                        <button  style="padding: 0px; margin: 0px; margin-top: auto; margin-left: 3em; margin-right: 3em" onclick="window.location.href='{% url 'boards:board_create_project_page' %}'"
+                                 class="btn col-4 col-xs-12">
+                                Create Project
+                        </button>
                     </div>
-                    <br><br>
+                    <br><br><br><br>
                     <div class="row">
-                        <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
-                            <h6 class="type--uppercase">Company</h6>
-                            <ul class="list--hover">
-                                <li><a href="#">About Company</a></li>
-                                <li><a href="#">Our Team</a></li>
-                                <li><a href="#">Locations</a></li>
-                                <li><a href="#">History</a></li>
-                                <li><a href="#">Work With Us</a></li>
-                            </ul>
-                            <br>
-                        </div>
-                        <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
-                            <h6 class="type--uppercase">Developers</h6>
-                            <ul class="list--hover">
-                                <li><a href="#">Developer Center</a></li>
-                                <li><a href="#">API Reference</a></li>
-                                <li><a href="#">Downloads</a></li>
-                                <li><a href="#">Tools</a></li>
-                                <li><a href="#">Developer Blog</a></li>
-                                <li><a href="#">Developer Forums</a></li>
-                            </ul>
-                            <br>
-                        </div>
-                        <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
-                            <h6 class="type--uppercase">Support</h6>
-                            <ul class="list--hover">
-                                <li><a href="#">Help Center</a></li>
-                                <li><a href="#">Live Chat</a></li>
-                                <li><a href="#">Downloads</a></li>
-                                <li><a href="#">Press Kit</a></li>
-                            </ul>
-                            <br>
-                        </div>
-                        <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
-                            <h6 class="type--uppercase">Locations</h6>
-                            <ul class="list--hover">
-                                <li><a href="#">Melbourne</a></li>
-                                <li><a href="#">London</a></li>
-                                <li><a href="#">New York</a></li>
-                                <li><a href="#">San Francisco</a></li>
-                            </ul>
-                            <br>
-                        </div>
+                        {% for highest in boards_activated_highest %}
+                            <div class="col-sm-6 col-md-3 col-xs-6 col-12 text-center" style="padding: 0px">
+                                <a href="#{# highest board link #}" style="text-decoration: none">
+                                    <h4 class="type--uppercase">{{ highest.name }}</h4>
+                                </a>
+                                <ul class="list--hover">
+                                    {% for under_board in highest.higher_board_related.all %}
+                                        <li>
+                                            <a href="#">{{ under_board.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <br>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>

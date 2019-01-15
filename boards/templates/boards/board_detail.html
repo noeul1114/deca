@@ -23,18 +23,26 @@
                         <div class="row align-items-center">
                             <div style="padding-left: 2em" class="col-6">
                                 <div class="bar__module">
-                                    <a href="{% url 'boards:board_index' %}"> <img class="logo logo-dark" alt="logo" src="{% static 'boards/img/logo-dark.png' %}"> <img class="logo logo-light" alt="logo" src="{% static 'boards/img/logo-light.png' %}"> </a>
+                                    <a href="{% url 'boards:board_index' %}">
+                                        <img class="logo logo-dark" alt="logo"
+                                             src="{% static 'boards/img/logo-dark.png' %}">
+                                        <img class="logo logo-light" alt="logo"
+                                             src="{% static 'boards/img/logo-light.png' %}">
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-6 d-flex justify-content-end">
                                 <div class="bar__module">
-                                    <a class="menu-toggle pull-right" href="#" data-notification-link="sidebar-menu"> <i class="stack-interface stack-menu"></i> </a>
+                                    <a class="menu-toggle pull-right" href="#" data-notification-link="sidebar-menu">
+                                        <i class="stack-interface stack-menu"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </nav>
-                <div class="notification pos-right pos-top side-menu bg--white" data-notification-link="sidebar-menu" data-animation="from-right">
+                <div class="notification pos-right pos-top side-menu bg--white"
+                     data-notification-link="sidebar-menu" data-animation="from-right">
                     <div class="side-menu__module pos-vertical-center text-right">
                         {% include 'boards/board_navigation.html' %}
                     </div>
@@ -60,9 +68,11 @@
                                     <div class="text-center card__action">
                                         <ul class="social-list list-inline">
                                             <li style="margin-right: 0px">
-                                                <form action="{% url 'boards:board_vote' article_detail.id %}" method="post">
+                                                <form action="{% url 'boards:board_vote' article_detail.id %}"
+                                                      method="post">
                                                     {% csrf_token %}
-                                                  <button type="submit" name="vote" value="up" class="btn alert alert-light border-0 text-center">
+                                                  <button type="submit" name="vote" value="up"
+                                                          class="btn alert alert-light border-0 text-center">
                                                     <p class="col-12" >
                                                         <i class="material-icons" style="font-size:1.2em; color: #ff9a9a; vertical-align: middle">thumb_up</i>
                                                         <strong style="font-size:1.2em; vertical-align: middle">{{ article_detail.upvote }}</strong>
@@ -73,9 +83,10 @@
                                             <li>
                                                 <form action="#" method="post">
                                                     {% csrf_token %}
-                                                  <button type="submit" class="btn alert alert-light text-center border-0">
+                                                  <button type="submit"
+                                                          class="btn alert alert-light text-center border-0">
                                                       <p class="col-12">
-                                                      <i class="material-icons" style="font-size:1.2em;  color: #767676; vertical-align: middle">comment</i>
+                                                        <i class="material-icons" style="font-size:1.2em;  color: #767676; vertical-align: middle">comment</i>
                                                         <strong style="font-size:1.2em; vertical-align: middle">{{ article_detail.comment_count }}</strong>
                                                       </p>
                                                   </button>
@@ -86,12 +97,11 @@
                                         </ul>
                                     </div>
                                     <div class="text-center card__action">
-                                        <a style="color: #000000" class="h3" href="{% url 'boards:board_profile' article_detail.writer.id %}">
+                                        <a style="color: #000000" class="h3"
+                                           href="{% url 'boards:board_profile' article_detail.writer.id %}">
                                                 {{ article_detail.writer.username }}
                                         </a>
                                     </div>
-
-
                                 </div>
                                 {% if user == article_detail.writer %}
                                     <div class="article__title text-right">
@@ -170,7 +180,9 @@
 {#                                                <div class="comment__avatar"> <img alt="Image" src="{% static 'boards/img/avatar-round-1.png' %}"> </div>#}
                                                 <div class="comment__body">
                                                     <h5 class="type--fine-print">{{ comment.writer }}</h5>
-                                                    <div class="comment__meta"> <span>{{ comment.created_at|date:'Y M d D H:i' }}</span>
+                                                    <div class="comment__meta">
+                                                        <span>{{ comment.created_at|date:'Y M d D H:i' }}
+                                                        </span>
 {#                                                        <a href="{% url 'boards:board_comment_vote' comment.id %}?vote=up">#}
 {#                                                            <i style="color: #ff9999;" class="card__action material-icons icon icon--xs">favorite</i>#}
 {#                                                            <span>{{ comment.upvote }}</span>#}
@@ -180,27 +192,31 @@
 {#                                                            <span>{{ comment.downvote }}</span>#}
 {#                                                        </a>#}
                                                         {% if user == comment.writer %}
-                                                            <a href="{% url 'boards:board_comment_delete' comment.id %}">Delete</a>
+                                                            <a href="{% url 'boards:board_comment_delete' comment.id %}">
+                                                                Delete
+                                                            </a>
                                                         {% endif %}
 
                                                     </div>
                                                     {{ comment.comment_text }}
                                                 </div>
                                             <div >
-
-                                                                <form action="{% url 'boards:board_comment_vote' comment.id %}" method="post" class="col-6" style="float: right;">
-                                                                    {% csrf_token %}
-                                                                  <button style="margin-bottom: 0px; margin-top: 2px; float: right; margin-left: 10px;"
-                                                                          type="submit" name="vote" value="down" class="btn alert border-0 col-4 col-md-3">
-                                                                      <i class="material-icons" style="font-size:1.1em; color: #767676; vertical-align: middle">thumb_down</i>&ensp;
-                                                                      <strong style="font-size: 1.15em; color: #767676; vertical-align: middle">{{ comment.downvote }}</strong>
-                                                                  </button>
-                                                                  <button style="margin-bottom: 0px; margin-top: 2px; float: right"
-                                                                          type="submit" name="vote" value="up" class="btn alert border-0 alert-danger col-4 col-md-3">
-                                                                      <i class="material-icons" style="font-size:1.1em; color: #ff9999; vertical-align: middle">favorite</i>&ensp;
-                                                                      <strong style="font-size: 1.15em; color: #767676; vertical-align: middle">{{ comment.upvote }}</strong>
-                                                                  </button>
-                                                                </form>
+                                                <form action="{% url 'boards:board_comment_vote' comment.id %}"
+                                                      method="post" class="col-6" style="float: right;">
+                                                    {% csrf_token %}
+                                                  <button style="margin-bottom: 0px; margin-top: 2px; float: right; margin-left: 10px;"
+                                                          type="submit" name="vote" value="down"
+                                                          class="btn alert border-0 col-4 col-md-3">
+                                                      <i class="material-icons" style="font-size:1.1em; color: #767676; vertical-align: middle">thumb_down</i>&ensp;
+                                                      <strong style="font-size: 1.15em; color: #767676; vertical-align: middle">{{ comment.downvote }}</strong>
+                                                  </button>
+                                                  <button style="margin-bottom: 0px; margin-top: 2px; float: right"
+                                                          type="submit" name="vote" value="up"
+                                                          class="btn alert border-0 alert-danger col-4 col-md-3">
+                                                      <i class="material-icons" style="font-size:1.1em; color: #ff9999; vertical-align: middle">favorite</i>&ensp;
+                                                      <strong style="font-size: 1.15em; color: #767676; vertical-align: middle">{{ comment.upvote }}</strong>
+                                                  </button>
+                                                </form>
                                             </div>
                                             </div>
                                             {#                                        <div class="comment">#}
@@ -239,7 +255,11 @@
                                         <label>Comment:</label>
                                         <textarea rows="4" name="comment_text"></textarea>
                                     </div>
-                                    <div class="col-md-3"> <button class="btn btn--primary" type="submit">Submit Comment</button> </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn--primary" type="submit">
+                                            Submit Comment
+                                        </button>
+                                    </div>
                                     <input type="hidden" name="article_id" value="{{ article_detail.id }}">
                                 </form>
                             </div>
@@ -250,7 +270,11 @@
             <footer class="footer-7 text-center-xs">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-6"> <span class="type--fine-print">© <span class="update-year"></span> Say::Project — All Rights Reserved</span>
+                        <div class="col-sm-6">
+                            <span class="type--fine-print">
+                                © <span class="update-year">
+                                </span> Say::Project — All Rights Reserved
+                            </span>
                         </div>
                         <div class="col-sm-6 text-right text-center-xs">
                             <ul class="social-list list-inline">

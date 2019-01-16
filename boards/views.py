@@ -589,6 +589,7 @@ def board_create_project(request, *args, **kwargs):
             newBoard.created_at = timezone.now()
             newBoard.creator = user
             newBoard.higher_board = higher_board
+
             kwargs = request.POST.copy()
             kwargs.pop("name", None)
             kwargs.pop("description", None)
@@ -612,9 +613,7 @@ def board_create_project(request, *args, **kwargs):
                                                                             'boards_activated_highest': boards_activated_highest,
                                                                             })
             newBoard.save()
-            return render(request, 'boards/board_navigator.html', {'user': user,
-                                                                   'boards_activated_highest': boards_activated_highest,
-                                                                   })
+            return HttpResponseRedirect(reverse('boards:board_navigator'))
         else:
             return HttpResponseRedirect(reverse('boards:board_index'))
     else:

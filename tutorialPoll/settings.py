@@ -230,6 +230,7 @@ REST_FRAMEWORK = {
 
 if DEBUG:
     MEDIA_URL = '/media/'
+    BOARD_IMG_FTP = 'http://thl1110.jpg2.kr/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 else:
     MEDIA_URL = 'http://thl1110.jpg2.kr/'

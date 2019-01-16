@@ -522,6 +522,23 @@ def board_navigator(request):
                                                            })
 
 
+def board_navigator2(request):
+    user = get_user(request)
+    boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
+
+    template = 'boards/board_navigator2.html'
+    page_fragment = 'boards/board_project_list_fragment.html'
+
+    if request.is_ajax():
+        template = page_fragment
+
+    user = get_user(request)
+
+    return render(request, template, {'boards_activated_highest': boards_activated_highest,
+                                       'user': user,
+                                       })
+
+
 def board_create_project_page(request):
     boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
     boards_activated_has_higher = Board.objects.filter(activated=True, has_higher_board=True).order_by('points').reverse()

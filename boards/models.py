@@ -65,6 +65,7 @@ class Board(models.Model):
     higher_board = models.ForeignKey('self', on_delete=models.PROTECT,
                                      null=True, related_name='higher_board_related')
     has_higher_board = models.BooleanField(default=False)
+    has_lower_board = models.BooleanField(default=False)
 
     activated = models.BooleanField(default=True)
 

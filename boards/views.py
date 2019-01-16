@@ -532,11 +532,13 @@ def board_navigator2(request):
     if request.is_ajax():
         template = page_fragment
 
-    user = get_user(request)
-
-    return render(request, template, {'boards_activated_highest': boards_activated_highest,
-                                       'user': user,
-                                       })
+    if user.is_authenticated :
+        return render(request, template, {'user': user,
+                                          'page_fragment': page_fragment,
+                                          'boards_activated_highest': boards_activated_highest})
+    else:
+        return render(request, template, {'boards_activated_highest': boards_activated_highest,
+                                          'page_fragment': page_fragment,})
 
 
 def board_create_project_page(request):

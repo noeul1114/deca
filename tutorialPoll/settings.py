@@ -232,8 +232,8 @@ if DEBUG:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 else:
-    MEDIA_URL = 'http://thl1110.jpg2.kr/media/'
-    MEDIA_ROOT = '/media/'
+    MEDIA_URL = 'http://thl1110.jpg2.kr/'
+    MEDIA_ROOT = '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

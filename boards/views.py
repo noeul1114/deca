@@ -510,23 +510,23 @@ def get_client_ip(request):
     return ip
 
 
+# def board_navigator(request):
+#     boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
+#     boards_activated_has_higher = Board.objects.filter(activated=True, has_higher_board=True).order_by('points').reverse()
+#     # boards_deactivated = Board.objects.filter(activated=False).order_by('created_at').reverse()
+#     user = get_user(request)
+#
+#     return render(request, 'boards/board_navigator3.html', {'boards_activated_highest': boards_activated_highest,
+#                                                            'boards_activated_has_higher': boards_activated_has_higher,
+#                                                            'user': user,
+#                                                             })
+
+
 def board_navigator(request):
-    boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
-    boards_activated_has_higher = Board.objects.filter(activated=True, has_higher_board=True).order_by('points').reverse()
-    # boards_deactivated = Board.objects.filter(activated=False).order_by('created_at').reverse()
-    user = get_user(request)
-
-    return render(request, 'boards/board_navigator.html', {'boards_activated_highest': boards_activated_highest,
-                                                           'boards_activated_has_higher': boards_activated_has_higher,
-                                                           'user': user,
-                                                           })
-
-
-def board_navigator2(request):
     user = get_user(request)
     boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
 
-    template = 'boards/board_navigator2.html'
+    template = 'boards/board_navigator.html'
     page_fragment = 'boards/board_project_list_fragment.html'
 
     if request.is_ajax():
@@ -550,7 +550,7 @@ def board_create_project_page(request):
                                                                     'boards_activated_highest': boards_activated_highest,
                                                                     })
     else:
-        return render(request, 'boards/board_navigator.html', {
+        return render(request, 'boards/board_navigator3.html', {
                                                                     'error_message': '프로젝트를 개설하기 위해선 로그인 해주시길 바랍니다.',
                                                                     'boards_activated_highest': boards_activated_highest,
                                                                     'boards_activated_has_higher': boards_activated_has_higher,

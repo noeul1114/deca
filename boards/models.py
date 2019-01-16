@@ -68,6 +68,10 @@ class Board(models.Model):
 
     activated = models.BooleanField(default=True)
 
+    def __str__(self):
+        return '%d: %s' % (self.id, self.name)
+
+
 
 class Article(models.Model):
     title = models.CharField(max_length=200)

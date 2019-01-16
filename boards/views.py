@@ -187,7 +187,7 @@ def board_register(request):
         return render(request, 'boards/board_register.html')
 
 
-def board_write(request):
+def board_write(request, **kwargs):
     user = get_user(request)
     if user.is_authenticated:
         if Article.objects.filter(writer=user, published=False).count() == 0:

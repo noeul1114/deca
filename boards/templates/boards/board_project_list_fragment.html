@@ -9,26 +9,26 @@
 {#                                    </script>#}
 {#{% endfor %}#}
 {% for board in boards_activated_highest %}
-                                <div class="col-6 col-md-3 masonry__item">
+                                <div  class="col-6 col-md-3 masonry__item ">
                                     <article class="feature feature-1">
                                         {% if board.image_file %}
                                             {% if board.points > 100 %}
-                                                <a href="{% url 'boards:board_detail' board.id %}" class="block title_img_top">
-                                                    <div style="font-size: 2em" class="title_img_centered_text">
-                                                        {{ board.name | truncatechars:20 }}
-                                                        <br><br>
-                                                        <i style="color: #ff5e5e;" class="material-icons">favorite</i>
-                                                        <span style="font-size: 0.9em;">{{ board.points }}</span>
+                                                <a {% if board.has_lower_board %}
+                                                        style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
+                                                    {% endif %}
+                                                   href="{% url 'boards:board_detail' board.id %}" class="block title_img_top">
+                                                    <div class="title_img_centered_text">
+                                                        {{ board.name | truncatechars:25 }}
                                                     </div>
                                                     <img alt="Image" src="http://thl1110.jpg2.kr/{{ board.image_file.file }}">
                                                 </a>
                                             {% else %}
-                                                <a href="{% url 'boards:board_detail' board.id %}" class="block title_img">
-                                                    <div style="font-size: 2em" class="title_img_centered_text">
-                                                        {{ board.name | truncatechars:20 }}
-                                                        <br><br>
-                                                        <i style="color: #ff5e5e;" class="material-icons">favorite</i>
-                                                        <span style="font-size: 0.9em;">{{ board.points }}</span>
+                                                <a {% if board.has_lower_board %}
+                                                        style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
+                                                    {% endif %}
+                                                        href="{% url 'boards:board_detail' board.id %}" class="block title_img">
+                                                    <div class="title_img_centered_text">
+                                                        {{ board.name | truncatechars:25 }}
                                                     </div>
                                                     <img alt="Image" src="http://thl1110.jpg2.kr/{{ board.image_file.file }}">
                                                 </a>
@@ -40,46 +40,46 @@
                                             </script>
                                         {% else %}
                                             {% if board.upvote > 10 %}
-                                                <div style="font-size: 2em" class="title_img_text_only">
+                                                <div  {% if board.has_lower_board %}
+                                                        style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
+                                                    {% endif %}
+                                                        class="title_img_text_only">
                                                 <a href="{% url 'boards:board_detail' board.id %}">
                                                     <div class="title_img_centered_text_text_only">
-                                                        {{ board.name | truncatechars:20 }}
-                                                        <br><br>
-                                                        <i style="color: #ff5e5e;" class="material-icons">favorite</i>
-                                                        <span style="font-size: 0.9em;">{{ board.points }}</span>
+                                                        {{ board.name | truncatechars:40 }}
                                                     </div>
                                                 </a>
                                                 </div>
                                             {% else %}
-                                                <div style="font-size: 2em" class="title_img_text_only">
+                                                <div {% if board.has_lower_board %}
+                                                        style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
+                                                    {% endif %}
+                                                        class="title_img_text_only">
                                                 <a href="{% url 'boards:board_detail' board.id %}">
                                                     <div class="title_img_centered_text_text_only">
-                                                        {{ board.name | truncatechars:20 }}
-                                                        <br><br>
-                                                        <i style="color: #ff5e5e;" class="material-icons">favorite</i>
-                                                        <span style="font-size: 0.9em;">{{ board.points }}</span>
+                                                        {{ board.name | truncatechars:40 }}
                                                     </div>
                                                 </a>
                                                 </div>
-{#                                                <div class="card__bottom text-center">#}
-{#                                                <ul class="list-inline">#}
-{#                                                    <li class="list-inline-item">#}
-{#                                                        <div style="font-size: 0.9em;" class="card__action">#}
-{#                                                            <a href="#"> <i style="color: #ff5e5e;" class="material-icons">favorite</i>#}
-{#                                                                <span>{{ board.points }}</span> </a>#}
-{#                                                        </div>#}
-{#                                                    </li>#}
-{#                                                </ul>#}
-{#                                            </div>#}
                                             {% endif %}
                                         {% endif %}
-                                        <div class="feature__body boxed card">
+                                        <div style="margin-top: 1.5em" class="feature__body boxed card">
                                             {#                                            <div class="card__body">#}
                                             {#                                                <span>{{ article.created_at|date:"y/m/d" }}</span>#}
                                             {#                                                <a href="{% url 'boards:board_detail' article.id %}">#}
                                             {#                                                    <h5>{{ article.title|striptags|truncatechars:50 }}</h5>#}
                                             {#                                                </a>#}
                                             {#                                            </div>#}
+                                            <div class="card__bottom text-center">
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+                                                        <div style="font-size: 0.9em;" class="card__action">
+                                                            <a href="#"> <i style="color: #ff5e5e;" class="material-icons">favorite</i>
+                                                                <span>{{ board.points }}</span> </a>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </article>
                                 </div>

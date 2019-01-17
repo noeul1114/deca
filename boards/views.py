@@ -561,7 +561,6 @@ def board_create_project_page(request):
 def board_create_project(request, *args, **kwargs):
     if request.method == 'POST':
         boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
-        file = request.FILES['board_image']
 
         user = get_user(request)
         if user.is_authenticated:
@@ -598,22 +597,24 @@ def board_create_project(request, *args, **kwargs):
             kwargs.pop("creator_public", None)
             kwargs.pop("higher_board", None)
 
-            file = request.FILES['board_image']
+            if len(request.FILES) != 0:
+                file = request.FILES['board_image']
+                kwargs.pop("csrfmiddlewaretoken", None)
+                try:
+                    board_image = BoardImage()
+                    board_image.file = file
+                    board_image.name = file.name
 
-            kwargs.pop("csrfmiddlewaretoken", None)
-            try:
-                board_image = BoardImage()
-                board_image.file = file
-                board_image.name = file.name
-
-                board_image.save(**kwargs)
-                newBoard.image_file = board_image
-            except IOError:
-                newBoard.delete()
-                return render(request, 'boards/board_create_project.html', {'user': user,
-                                                                            'error_message': '프로젝트 생성에 실패했습니다.',
-                                                                            'boards_activated_highest': boards_activated_highest,
-                                                                            })
+                    board_image.save(**kwargs)
+                    newBoard.image_file = board_image
+                except IOError:
+                    newBoard.delete()
+                    return render(request, 'boards/board_create_project.html', {'user': user,
+                                                                                'error_message': '프로젝트 생성에 실패했습니다.',
+                                                                                'boards_activated_highest': boards_activated_highest,
+                                                                                })
+            higher_board.has_lower_board = True
+            higher_board.save()
             newBoard.save()
             return HttpResponseRedirect(reverse('boards:board_navigator'))
         else:

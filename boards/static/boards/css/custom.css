@@ -100,6 +100,7 @@
   display: block;
     overflow: hidden;
     max-height: 500px;
+  border-radius: 12px;
 }
 
 .title_img_top {
@@ -109,8 +110,8 @@
   display: block;
     overflow: hidden;
     max-height: 500px;
-  /*border: 3px solid #ffaaaa;*/
-  /*border-radius: 12px;*/
+  border: 3px solid #ff8888;
+  border-radius: 12px 12px 40px 12px;
 }
 
 .title_img_text_only {
@@ -131,8 +132,8 @@
   display: block;
   overflow: hidden;
   min-height: 200px;
-  /*border: 3px solid #ffaaaa;*/
-  /*border-radius: 12px;*/
+  border: 3px solid #ff8888;
+  border-radius: 12px 12px 40px 12px;
 }
 
 .endless_container {

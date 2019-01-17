@@ -3,6 +3,8 @@ from django import forms
 from django_summernote.widgets import SummernoteWidget
 from .models import Board
 
+from phonenumber_field.formfields import PhoneNumberField
+
 
 class BasicForm(forms.Form):
     title = forms.CharField(max_length=200)
@@ -24,11 +26,26 @@ class BasicForm(forms.Form):
         super(BasicForm, self).__init__(*args, **kwargs)
 
 
-# class UserRegisterForm(forms.Form):
-#     username = forms.CharField(max_length=150)
-#     password = forms.CharField(widget=forms.PasswordInput)
-#
-#     first_name = forms.CharField(max_length=30)
-#     family_name = forms.CharField(max_length=150)
-#
-#     email = forms.EmailField(max_length=200)
+class UserRegisterForm(forms.Form):
+    username = forms.CharField(max_length=150, label='아이디', required=True, min_length=10)
+    password = forms.CharField(widget=forms.PasswordInput, required=True, label='비밀번호', min_length=8)
+
+
+class UserRegisterFormOptional(forms.Form):
+    CHOICES = (('M', '남자',), ('W', '여자',))
+
+    profile_image = forms.ImageField(label='프로필 이미지', required=False)
+
+    nickname = forms.CharField(max_length=30, label='닉네임', required=False)
+
+    family_name = forms.CharField(max_length=150, label='성', required=False)
+    first_name = forms.CharField(max_length=30, label='이름', required=False)
+
+    email = forms.EmailField(max_length=200, label='이메일', required=False)
+
+    age = forms.IntegerField(min_value=0, max_value=255, label='나이', required=False)
+    sex = forms.ChoiceField(choices=CHOICES, widget=forms.Select, label='성별', required=False)
+
+    phone = PhoneNumberField(label='전화번호', required=False)
+
+    introduction = forms.CharField(max_length=400, widget=forms.Textarea, label='소개글', required=False)

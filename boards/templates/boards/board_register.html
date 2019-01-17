@@ -30,9 +30,19 @@
                                 <form action="{% url 'boards:board_register' %}" method="post">
                                     {% csrf_token %}
                                     <div class="row">
-                                        <div class="col-12"> <input type="text" name="username" placeholder="Your ID"> </div>
-                                        <div class="col-12"> <input type="password" name="password" placeholder="Password"> </div>
-                                        <div class="col-12"> <button type="submit" class="btn btn--primary">Create Account</button> </div>
+                                    {{ form_required }}
+                                    </div>
+                                    <br><hr class="short">
+                                    <div class="row col-12">
+                                        <p style="text-align: center; color: #0066cc" class="text-center">
+                                            아래로는 선택입력사항입니다.
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        {{ form_optional }}
+                                    </div>
+                                    <div class="row">
+                                        <div style="margin-top: 2em" class="col-12"> <button type="submit" class="btn btn--primary">Create Account</button> </div>
                                         <hr>
                                         <div class="col-12"> <span class="type--fine-print">By signing up, you agree to the <a href="#">Terms of Service</a></span> </div>
                                     </div>

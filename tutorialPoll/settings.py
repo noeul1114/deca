@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'router',
     'el_pagination',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

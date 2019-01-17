@@ -20,7 +20,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import Article, ArticleIpLog, Comment, CommentIpLog, Board
 from .models import Attachment, Board, AdditionalUserProfile, BoardImage
-from .form import BasicForm
+from .form import BasicForm, UserRegisterForm, UserRegisterFormOptional
 
 from bs4 import BeautifulSoup
 
@@ -184,7 +184,11 @@ def board_register(request):
         except:
             return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다'})
     else:
-        return render(request, 'boards/board_register.html')
+        form_required = UserRegisterForm()
+        form_optional = UserRegisterFormOptional()
+
+        return render(request, 'boards/board_register.html', {'form_required': form_required,
+                                                              'form_optional': form_optional})
 
 
 def board_write(request, **kwargs):

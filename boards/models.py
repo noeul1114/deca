@@ -10,7 +10,19 @@ from django_summernote.models import AbstractAttachment
 
 from storages.backends.ftp import FTPStorage
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 # Create your models here.
+
+
+class UserProfileImage(models.Model):
+    user = models.OneToOneField(User, on_delete=models.PROTECT, null=True)
+
+    file_name = models.CharField(max_length=255, null=True, blank=True, help_text="Defaults to filename, if left blank")
+    file = models.ImageField(
+        upload_to=settings.BOARD_IMAGE_UPLOADPATH,
+        storage=FTPStorage()
+    )
 
 
 class AdditionalUserProfile(models.Model):
@@ -19,14 +31,12 @@ class AdditionalUserProfile(models.Model):
     nickname = models.CharField(max_length=30, null=True)
     introduction = models.CharField(max_length=400, null=True)
 
-    image = models.CharField(max_length=500, null=True)
-
     age = models.IntegerField(null=True)
     sex = models.CharField(max_length=20, null=True)
 
     email = models.EmailField(max_length=200, null=True)
 
-    phone = models.CharField(max_length=30, null=True)
+    phone = PhoneNumberField()
 
 
 class Vote(models.Model):

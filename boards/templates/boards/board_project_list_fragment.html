@@ -9,12 +9,13 @@
 {#                                    </script>#}
 {#{% endfor %}#}
 {% for board in boards_activated_highest %}
-                                <div style="padding-left: 1em; padding-right: 1em" class="col-6 col-md-4 masonry__item ">
+                                <div style="padding-left: 1.3em; padding-right: 1.3em" class="col-6 col-md-4 masonry__item ">
                                     <article class="feature feature-1">
                                         {% if board.image_file %}
                                             {% if board.points > 100 %}
                                                 <a {% if board.has_lower_board %}
-                                                        style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
+                                                        style="box-shadow: 0.4em 0.4em #ff5e5e, 0.8em 0.8em #ffaeae;
+                                                                border-radius: 0.2em"
                                                     {% endif %}
                                                    href="{% url 'boards:board_detail' board.id %}" class="block title_img_top">
                                                     <div class="title_img_centered_text">
@@ -25,7 +26,8 @@
                                             {% else %}
                                                 <div style="width: 100%">
                                                 <a {% if board.has_lower_board %}
-                                                        style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
+                                                        style="box-shadow: 0.4em 0.4em #ff5e5e, 0.8em 0.8em #ffaeae;
+                                                                border-radius: 0.2em"
                                                     {% endif %}
                                                         href="{% url 'boards:board_detail' board.id %}" class="block title_img">
                                                     <div class="title_img_centered_text">
@@ -44,7 +46,8 @@
                                         {% else %}
                                             {% if board.upvote > 10 %}
                                                 <div  {% if board.has_lower_board %}
-                                                        style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
+                                                        style="box-shadow: 0.4em 0.4em #ff5e5e, 0.8em 0.8em #ffaeae;
+                                                                border-radius: 0.2em"
                                                     {% endif %}
                                                         class="title_img_text_only">
                                                 <a href="{% url 'boards:board_detail' board.id %}">
@@ -55,7 +58,8 @@
                                                 </div>
                                             {% else %}
                                                 <div {% if board.has_lower_board %}
-                                                        style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
+                                                        style="box-shadow: 0.4em 0.4em #ff5e5e, 0.8em 0.8em #ffaeae;
+                                                                border-radius: 0.2em"
                                                     {% endif %}
                                                         class="title_img_text_only">
                                                 <a href="{% url 'boards:board_detail' board.id %}">

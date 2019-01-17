@@ -75,11 +75,13 @@
                                     <article class="feature feature-1">
                                         {% if article.image %}
                                             {% if forloop.counter < 5 %}
+                                                <div style="background: linear-gradient(to bottom right, #ffffff 82%, #ff7070 73%);">
                                                 <a href="{% url 'boards:board_detail' article.id %}"
                                                    class="block title_img_top">
                                                     <div class="title_img_centered_text">{{ article.title }}</div>
                                                     <img alt="Image" src="{{ article.image }}">
                                                 </a>
+                                                </div>
                                             {% else %}
                                                 <a href="{% url 'boards:board_detail' article.id %}"
                                                    class="block title_img">
@@ -89,12 +91,14 @@
                                             {% endif %}
                                         {% else %}
                                             {% if forloop.counter < 5 %}
+                                                <div style="background: linear-gradient(to bottom right, #ffffff 82%, #ff7070 73%);">
                                                 <div class="title_img_text_only_top">
                                                 <a href="{% url 'boards:board_detail' article.id %}">
                                                     <div class="title_img_centered_text_text_only">
                                                         {{ article.title | truncatechars:40 }}
                                                     </div>
                                                 </a>
+                                                </div>
                                                 </div>
                                             {% else %}
                                                 <div class="title_img_text_only">

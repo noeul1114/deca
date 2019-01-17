@@ -22,3 +22,13 @@ class BasicForm(forms.Form):
         # Finally update the kwargs initial reference
         kwargs.update(initial=updated_initial)
         super(BasicForm, self).__init__(*args, **kwargs)
+
+
+# class UserRegisterForm(forms.Form):
+#     username = forms.CharField(max_length=150)
+#     password = forms.CharField(widget=forms.PasswordInput)
+#
+#     first_name = forms.CharField(max_length=30)
+#     family_name = forms.CharField(max_length=150)
+#
+#     email = forms.EmailField(max_length=200)

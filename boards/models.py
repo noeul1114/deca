@@ -36,7 +36,7 @@ class AdditionalUserProfile(models.Model):
 
     email = models.EmailField(max_length=200, null=True)
 
-    phone = PhoneNumberField()
+    phone = PhoneNumberField(null=True)
 
 
 class Vote(models.Model):

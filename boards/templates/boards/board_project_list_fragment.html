@@ -9,7 +9,7 @@
 {#                                    </script>#}
 {#{% endfor %}#}
 {% for board in boards_activated_highest %}
-                                <div style="padding: 2em" class="col-6 col-md-4 masonry__item ">
+                                <div style="padding-left: 1em; padding-right: 1em" class="col-6 col-md-4 masonry__item ">
                                     <article class="feature feature-1">
                                         {% if board.image_file %}
                                             {% if board.points > 100 %}
@@ -66,7 +66,10 @@
                                                 </div>
                                             {% endif %}
                                         {% endif %}
-                                        <div style="margin-top: 1.5em" class="feature__body boxed card">
+                                        <div {% if board.has_lower_board %}
+                                                        style="margin-top: 1.5em"
+                                                    {% endif %}
+                                                 class="feature__body boxed card">
                                             {#                                            <div class="card__body">#}
                                             {#                                                <span>{{ article.created_at|date:"y/m/d" }}</span>#}
                                             {#                                                <a href="{% url 'boards:board_detail' article.id %}">#}

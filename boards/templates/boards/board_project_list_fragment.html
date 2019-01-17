@@ -9,7 +9,7 @@
 {#                                    </script>#}
 {#{% endfor %}#}
 {% for board in boards_activated_highest %}
-                                <div  class="col-6 col-md-3 masonry__item ">
+                                <div style="padding: 2em" class="col-6 col-md-4 masonry__item ">
                                     <article class="feature feature-1">
                                         {% if board.image_file %}
                                             {% if board.points > 100 %}
@@ -23,6 +23,7 @@
                                                     <img alt="Image" src="http://thl1110.jpg2.kr/{{ board.image_file.file }}">
                                                 </a>
                                             {% else %}
+                                                <div style="width: 100%">
                                                 <a {% if board.has_lower_board %}
                                                         style="box-shadow: 0.7em 0.7em #ff5e5e, 1.4em 1.4em #ffaeae;"
                                                     {% endif %}
@@ -32,6 +33,8 @@
                                                     </div>
                                                     <img alt="Image" src="http://thl1110.jpg2.kr/{{ board.image_file.file }}">
                                                 </a>
+
+                                                </div>
                                             {% endif %}
                                             <script>
                                                 var img = new Image();

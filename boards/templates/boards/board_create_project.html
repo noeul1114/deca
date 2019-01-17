@@ -82,7 +82,7 @@
                                       <select name="higher_board">
                                         <option value="none">없음</option>
                                           {% for board in boards_activated_highest %}
-                                              <option value="{{ board.name }}">{{ board.name }}</option>
+                                              <option value="{{ board.id }}">ID : {{ board.id }} | 이름 : {{ board.name }}</option>
                                           {% endfor %}
                                       </select>
                                     </div>

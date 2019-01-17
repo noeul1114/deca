@@ -579,7 +579,7 @@ def board_create_project(request, *args, **kwargs):
             if request.POST['higher_board'] == 'none':
                 higher_board = None
             else:
-                higher_board = get_object_or_404(Board, name=request.POST['higher_board'])
+                higher_board = get_object_or_404(Board, id=request.POST['higher_board'])
 
             newBoard = Board()
 
@@ -613,8 +613,9 @@ def board_create_project(request, *args, **kwargs):
                                                                                 'error_message': '프로젝트 생성에 실패했습니다.',
                                                                                 'boards_activated_highest': boards_activated_highest,
                                                                                 })
-            higher_board.has_lower_board = True
-            higher_board.save()
+            if higher_board:
+                higher_board.has_lower_board = True
+                higher_board.save()
             newBoard.save()
             return HttpResponseRedirect(reverse('boards:board_navigator'))
         else:

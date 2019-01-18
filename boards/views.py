@@ -191,6 +191,10 @@ def board_register(request):
                                                               'form_optional': form_optional})
 
 
+def board_agreement(request):
+    return render(request, 'boards/board_agreement.html')
+
+
 def board_write(request, **kwargs):
     user = get_user(request)
     if user.is_authenticated:
@@ -526,7 +530,7 @@ def get_client_ip(request):
 #                                                             })
 
 
-def board_navigator(request):
+def board_navigator(request, **kwargs):
     user = get_user(request)
     boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by('points').reverse()
 
@@ -554,12 +558,19 @@ def board_create_project_page(request):
                                                                     'boards_activated_highest': boards_activated_highest,
                                                                     })
     else:
-        return render(request, 'boards/board_navigator3.html', {
-                                                                    'error_message': '프로젝트를 개설하기 위해선 로그인 해주시길 바랍니다.',
-                                                                    'boards_activated_highest': boards_activated_highest,
-                                                                    'boards_activated_has_higher': boards_activated_has_higher,
-                                                                    'user': user,
-                                                                    })
+        boards_activated_highest = Board.objects.filter(activated=True, has_higher_board=False).order_by(
+            'points').reverse()
+
+        template = 'boards/board_navigator.html'
+        page_fragment = 'boards/board_project_list_fragment.html'
+
+        if request.is_ajax():
+            template = page_fragment
+
+        else:
+            return render(request, template, {'boards_activated_highest': boards_activated_highest,
+                                              'error_message': '프로젝트를 개설하기 위해선 로그인 해주시길 바랍니다.',
+                                              'page_fragment': page_fragment, })
 
 
 def board_create_project(request, *args, **kwargs):

@@ -18,7 +18,7 @@
                                                 img.src = "{{ article.image }}"
                                             </script>
                                             {% if article.upvote > 10 %}
-                                                <div style="background: linear-gradient(to bottom right, #ffffff 82%, #ff7070 73%);">
+                                                <div >
                                                 <a href="{% url 'boards:board_detail' article.id %}" class="block title_img_top">
                                                     <div class="title_img_centered_text">
                                                         {{ article.title | truncatechars:25 }}
@@ -27,16 +27,18 @@
                                                 </a>
                                                 </div>
                                             {% else %}
+                                                <div>
                                                 <a href="{% url 'boards:board_detail' article.id %}" class="block title_img">
                                                     <div class="title_img_centered_text">
                                                         {{ article.title | truncatechars:25 }}
                                                     </div>
                                                     <img alt="Image" src="{{ article.image }}">
                                                 </a>
+                                                </div>
                                             {% endif %}
                                         {% else %}
                                             {% if article.upvote > 10 %}
-                                                <div style="background: linear-gradient(to bottom right, #ffffff 82%, #ff7070 73%);">
+                                                <div >
                                                 <div class="title_img_text_only">
                                                 <a href="{% url 'boards:board_detail' article.id %}">
                                                     <div class="title_img_centered_text_text_only">

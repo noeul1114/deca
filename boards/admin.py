@@ -32,5 +32,17 @@ class BoardAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
+class BoardIPLOG(admin.ModelAdmin):
+    list_display = ('id', 'created_at', 'ip', 'article_id', 'user_id')
+    list_filter = ['created_at']
+
+
+class BoardCommentIPLOG(admin.ModelAdmin):
+    list_display = ('id', 'created_at', 'ip', 'comment_id', 'user_id')
+    list_filter = ['created_at']
+
+
+admin.site.register(ArticleIpLog, BoardIPLOG)
+admin.site.register(CommentIpLog, BoardCommentIPLOG)
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Board, BoardAdmin)

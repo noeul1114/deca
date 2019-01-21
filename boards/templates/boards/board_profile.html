@@ -62,31 +62,31 @@
 {#                                {% endif %}#}
 {#                            {% endif %}#}
                         </div>
-                        <div class="col-md-6 col-lg-5">
-                            <div class="switchable__text">
-                                <div class="text-block text-center">
-                                {% if user.additionaluserprofile.nickname %}
-                                    <h2>{{ user.additionaluserprofile.nickname }}</h2>
-                                    {% else %}
-                                    <h2>{{ user.username }}</h2>
-                                {% endif %}
-                                    <span class="text-center">
-                                            {{ user.username }}
-                                    </span>
-                                </div>
-                                <p class="lead text-center">
-                                    {% if user.additionaluserprofile %}
-                                        {% if user.additionaluserprofile.introduction %}
-                                            {{ user.additionaluserprofile.introduction }}
-                                        {% else %}
-                                            안녕하세요. {{ user.username }} 입니다.
-                                        {% endif %}
-                                    {% else %}
-                                        안녕하세요. {{ user.username }} 입니다.
-                                    {% endif %}
-                                </p>
-                            </div>
-                        </div>
+{#                        <div class="col-md-6 col-lg-5">#}
+{#                            <div class="switchable__text">#}
+{#                                <div class="text-block text-center">#}
+{#                                {% if user.additionaluserprofile.nickname %}#}
+{#                                    <h2>{{ user.additionaluserprofile.nickname }}</h2>#}
+{#                                    {% else %}#}
+{#                                    <h2>{{ user.username }}</h2>#}
+{#                                {% endif %}#}
+{#                                    <span class="text-center">#}
+{#                                            {{ user.username }}#}
+{#                                    </span>#}
+{#                                </div>#}
+{#                                <p class="lead text-center">#}
+{#                                    {% if user.additionaluserprofile %}#}
+{#                                        {% if user.additionaluserprofile.introduction %}#}
+{#                                            {{ user.additionaluserprofile.introduction }}#}
+{#                                        {% else %}#}
+{#                                            안녕하세요. {{ user.username }} 입니다.#}
+{#                                        {% endif %}#}
+{#                                    {% else %}#}
+{#                                        안녕하세요. {{ user.username }} 입니다.#}
+{#                                    {% endif %}#}
+{#                                </p>#}
+{#                            </div>#}
+{#                        </div>#}
                     </div>
                 {# top article end #}
                     <div class="masonry"><div class="row text-block">
@@ -100,11 +100,11 @@
                         <div class="row text-block">
                             <div class="col-md-12 text-center">
                                 <h4><strong>
-                                {% if user.additionaluserprofile.nickname %}
-                                    {{ user.additionaluserprofile.nickname }}
-                                    {% else %}
-                                    {{ user.username }}
-                                {% endif %}
+{#                                {% if user.additionaluserprofile.nickname %}#}
+{#                                    {{ user.additionaluserprofile.nickname }}#}
+{#                                    {% else %}#}
+{#                                    {{ user.username }}#}
+{#                                {% endif %}#}
                                 </strong> 님이 쓴 글</h4>
                             </div>
                         </div>

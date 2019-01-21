@@ -235,6 +235,7 @@ if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 else:
     MEDIA_URL = 'http://thl1110.jpg2.kr/'
+    BOARD_IMG_FTP = 'http://thl1110.jpg2.kr/'
     MEDIA_ROOT = '/'
 
 # Static files (CSS, JavaScript, Images)

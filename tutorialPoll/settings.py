@@ -39,7 +39,7 @@ else:
     custom_uploaded_filepath = custom_uploaded_filepath_deploy
 
 if DEBUG:
-    BOARD_IMAGE_UPLOADPATH = custom_uploaded_filepath_debug_board_image
+    BOARD_IMAGE_UPLOADPATH = custom_uploaded_filepath_deploy_board_image
 else:
     BOARD_IMAGE_UPLOADPATH = custom_uploaded_filepath_deploy_board_image
 

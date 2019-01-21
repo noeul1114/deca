@@ -27,10 +27,11 @@
                                         <b>{{ error_message }}</b>
                                     </div>
                                 {% endif %}
-                                <form action="{% url 'boards:board_register' %}" method="post">
+                                <form action="{% url 'boards:board_register' %}" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="row">
-                                    {{ form_required }}
+                                    {{ form_required.errors }}
+                                        {{ form_required }}
                                     </div>
                                     <br><hr class="short">
                                     <div class="row col-12">
@@ -39,6 +40,7 @@
                                         </p>
                                     </div>
                                     <div class="row">
+                                    {{ form_optional.errors }}
                                         {{ form_optional }}
                                     </div>
                                     <div class="row">

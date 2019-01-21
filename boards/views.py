@@ -18,8 +18,10 @@ from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 
+from django.conf import settings
+
 from .models import Article, ArticleIpLog, Comment, CommentIpLog, Board
-from .models import Attachment, Board, AdditionalUserProfile, BoardImage
+from .models import Attachment, Board, AdditionalUserProfile, BoardImage, UserProfileImage
 from .form import BasicForm, UserRegisterForm, UserRegisterFormOptional
 
 from bs4 import BeautifulSoup
@@ -178,11 +180,65 @@ def board_register(request):
     if request.method == 'POST':
         try:
             user = User.objects.create_user(username=request.POST['username'],
-                                            password=request.POST['password'],)
-            user.save()
-            return HttpResponseRedirect(reverse('boards:board_index'))
+                                            password=request.POST['password'],
+                                            first_name=request.POST['first_name'],
+                                            last_name=request.POST['family_name'],
+                                            email=request.POST['email'],)
         except:
             return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다'})
+
+        if len(request.FILES) != 0:
+            kwargs = request.POST.copy()
+            file = request.FILES['profile_image']
+            try:
+                profile_image = UserProfileImage()
+
+                kwargs = request.POST.copy()
+                kwargs.pop("csrfmiddlewaretoken", None)
+                kwargs.pop("username", None)
+                kwargs.pop("introduction", None)
+                kwargs.pop("age", None)
+                kwargs.pop("sex", None)
+                kwargs.pop("phone", None)
+                kwargs.pop("email", None)
+                kwargs.pop("family_name", None)
+                kwargs.pop("first_name", None)
+                kwargs.pop("password", None)
+                kwargs.pop("nickname", None)
+
+                profile_image = UserProfileImage()
+                profile_image.file = file
+                profile_image.name = file.name
+                profile_image.user = user
+
+                profile_image.save(**kwargs)
+
+            except IOError:
+                user.delete()
+                profile_image.delete()
+                return render(request, 'boards/board_register.html', {'error_message': '가입에 실패하였습니다'})
+
+        try:
+            addtional = AdditionalUserProfile()
+            addtional.nickname = request.POST['nickname']
+            addtional.introduction = request.POST['introduction']
+            addtional.age = request.POST['age']
+            addtional.sex = request.POST['sex']
+            addtional.phone = request.POST['phone']
+            addtional.user = user
+
+            addtional.save()
+
+            return HttpResponseRedirect(reverse('boards:board_index'))
+
+        except:
+            user.delete()
+            addtional.delete()
+            profile_image.delete()
+            return render(request, 'boards/board_register.html', {'error_message': '가입에 실패하였습니다'})
+
+
+
     else:
         form_required = UserRegisterForm()
         form_optional = UserRegisterFormOptional()
@@ -485,6 +541,7 @@ def board_profile(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     # request_user = get_user(request)
     article_list = Article.objects.filter(published=True, writer=user.id).reverse()
+    PROFILE_IMG_URL = settings.BOARD_IMG_FTP
 
     template = 'boards/board_profile.html'
     page_fragment = 'boards/board_index_fragment.html'
@@ -493,6 +550,7 @@ def board_profile(request, user_id):
         template = page_fragment
 
     return render(request, template, {'user': user,
+                                      'PROFILE_IMG_URL': PROFILE_IMG_URL,
                                       'page_fragment': page_fragment,
                                       'article_list': article_list,
                                       })

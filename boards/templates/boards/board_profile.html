@@ -47,31 +47,37 @@
             <section>
                 <div class="container">
                     <div class="row justify-content-center">
-                        <div class="col-md-6">
+                        <div class="title_img col-md-6 feature feature-1">
 {#                            {% if user.additionaluserprofile %}#}
 {#                                {% if user.additionaluserprofile.image %}#}
 {#                                    <img class="border--round" src="{{ user.additionaluserprofile.image }}" alt="Image">#}
 {#                                {% else %}#}
-                                    <img class="border--round col-12" src="{% static 'boards/img/avatar-round-4.png' %}" alt="Image">
+                            {% if user.userprofileimage %}
+                                <img style="border-radius: 1.5em 1.5em 1.5em 1.5em"
+                                     src="{{ PROFILE_IMG_URL }}{{ user.userprofileimage.file }}" alt="Image">
+                            {% else %}
+                                <img class="border--round col-12" src="{% static 'boards/img/avatar-round-4.png' %}" alt="Image">
+                            {% endif %}
+
 {#                                {% endif %}#}
 {#                            {% endif %}#}
                         </div>
                         <div class="col-md-6 col-lg-5">
                             <div class="switchable__text">
                                 <div class="text-block text-center">
+                                {% if user.additionaluserprofile.nickname %}
+                                    <h2>{{ user.additionaluserprofile.nickname }}</h2>
+                                    {% else %}
                                     <h2>{{ user.username }}</h2>
+                                {% endif %}
                                     <span class="text-center">
-                                        {% if user.additionaluserprofile %}
-                                            {{ user.additionaluserprofile.nickname }}
-                                        {% else %}
                                             {{ user.username }}
-                                        {% endif %}
-                                    </span> </div>
+                                    </span>
+                                </div>
                                 <p class="lead text-center">
                                     {% if user.additionaluserprofile %}
                                         {% if user.additionaluserprofile.introduction %}
                                             {{ user.additionaluserprofile.introduction }}
-                                            gg
                                         {% else %}
                                             안녕하세요. {{ user.username }} 입니다.
                                         {% endif %}
@@ -93,7 +99,13 @@
                         <br><br>
                         <div class="row text-block">
                             <div class="col-md-12 text-center">
-                                <h4><strong>{{ user.username }}</strong> 님이 쓴 글</h4>
+                                <h4><strong>
+                                {% if user.additionaluserprofile.nickname %}
+                                    {{ user.additionaluserprofile.nickname }}
+                                    {% else %}
+                                    {{ user.username }}
+                                {% endif %}
+                                </strong> 님이 쓴 글</h4>
                             </div>
                         </div>
                         <div class="masonry__container row masonry--active md d-block d-sm-block">

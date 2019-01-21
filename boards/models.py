@@ -16,7 +16,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class UserProfileImage(models.Model):
-    user = models.OneToOneField(User, on_delete=models.PROTECT, null=True)
+    user = models.OneToOneField(User, on_delete=models.PROTECT, null=True, related_name='userprofileimage')
 
     file_name = models.CharField(max_length=255, null=True, blank=True, help_text="Defaults to filename, if left blank")
     file = models.ImageField(
@@ -26,7 +26,7 @@ class UserProfileImage(models.Model):
 
 
 class AdditionalUserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='additionaluserprofile')
 
     nickname = models.CharField(max_length=30, null=True)
     introduction = models.CharField(max_length=400, null=True)

@@ -5,6 +5,7 @@ from . import views
 app_name = 'boards'
 urlpatterns = [
     path('', views.board_index, name='board_index'),
+    path('project/<int:board_id>', views.board_index_name, name='board_index_name'),
     path('login/', views.board_login, name='board_login'),
     path('logout/', views.board_logout, name='board_logout'),
     path('agreement/', views.board_agreement, name='board_agreement'),
@@ -16,7 +17,9 @@ urlpatterns = [
 
     path('edit/<int:article_id>', views.board_edit, name='board_edit'),
     path('edit_fix/', views.board_edit_fix, name='board_edit_fix'),
+
     path('<int:article_id>/', views.board_detail, name='board_detail'),
+
     path('vote/<int:article_id>', views.board_vote, name='board_vote'),
 
     path('comment/', views.board_comment_write, name='board_comment_write'),
@@ -25,6 +28,7 @@ urlpatterns = [
     path('profile/<int:user_id>', views.board_profile, name='board_profile'),
 
     path('navigatior/', views.board_navigator, name='board_navigator'),
+    path('navigatior/<int:board_id>', views.board_navigator_under, name='board_navigator_under'),
     path('projectCreatePage/', views.board_create_project_page, name='board_create_project_page'),
     path('projectCreate/', views.board_create_project, name='board_create_project'),
 

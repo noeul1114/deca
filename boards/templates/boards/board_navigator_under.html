@@ -63,52 +63,59 @@
                             </div>
                             {% endif %}
                         </div>
-                        <div class="row text-block">
-                            <div class="col-md-12 text-center">
-                                {% if board %}
-                                    <h2>{{ board.name }}</h2>
-                                {% else %}
-                                <h2>Main Project</h2>
-                                {% endif %}
-                            </div>
+                        <div class="row justify-content-center">
+                            <button  style="padding: 0px; margin: 0px; margin-top: auto; margin-left: 3em; margin-right: 3em"
+                                     onclick="window.location.href='{% url 'boards:board_create_project_page' %}'"
+                                     class="btn col-4 col-xs-12">
+                                    Create Project
+                            </button>
                         </div>
-                        <br>
+                        <br><br>
                         <div class="masonry__container row masonry--active md d-block d-sm-block">
-                        {% for article in article_list_top %}
-                                <div class="col-6 col-md-3 masonry__item">
+                                <div class="col-6 col-md-4 masonry__item ">
                                     <article class="feature feature-1">
-                                        {% if article.image %}
-                                            {% if forloop.counter < 5 %}
-                                                <div>
-                                                <a href="{% url 'boards:board_detail' article.id %}"
-                                                   class="block title_img_top">
-                                                    <div class="title_img_centered_text">{{ article.title }}</div>
-                                                    <img alt="Image" src="{{ article.image }}">
+                                        {% if board_self.image_file %}
+                                            {% if board_self.points > 100 %}
+                                                <a style="border-radius: 1em"
+                                                   href="{% url 'boards:board_index_name' board_self.id %}" class="block title_img_top">
+                                                    <div class="title_img_centered_text">
+                                                        {{ board_self.name | truncatechars:25 }}
+                                                    </div>
+                                                    <img alt="Image" src="http://thl1110.jpg2.kr/{{ board_self.image_file.file }}">
                                                 </a>
-                                                </div>
                                             {% else %}
-                                                <a href="{% url 'boards:board_detail' article.id %}"
-                                                   class="block title_img">
-                                                    <div class="title_img_centered_text">{{ article.title }}</div>
-                                                    <img alt="Image" src="{{ article.image }}">
+                                                <div style="width: 100%">
+                                                <a style="border-radius: 1em"
+                                                        href="{% url 'boards:board_index_name' board_self.id %}" class="block title_img">
+                                                    <div class="title_img_centered_text">
+                                                        {{ board_self.name | truncatechars:25 }}
+                                                    </div>
+                                                    <img alt="Image" src="http://thl1110.jpg2.kr/{{ board_self.image_file.file }}">
                                                 </a>
+
+                                                </div>
                                             {% endif %}
+                                            <script>
+                                                var img = new Image();
+                                                img.onload = function() { mr.masonry.updateLayout(); };
+                                                img.src = "http://thl1110.jpg2.kr/{{ board_self.image_file.file }}"
+                                            </script>
                                         {% else %}
-                                            {% if forloop.counter < 5 %}
-                                                <div>
-                                                <div class="title_img_text_only_top">
-                                                <a href="{% url 'boards:board_detail' article.id %}">
+                                            {% if board_self.points > 10 %}
+                                                <div style="border-radius: 1em"
+                                                        class="title_img_text_only">
+                                                <a href="{% url 'boards:board_index_name' board_self.id %}">
                                                     <div class="title_img_centered_text_text_only">
-                                                        {{ article.title | truncatechars:40 }}
+                                                        {{ board_self.name | truncatechars:40 }}
                                                     </div>
                                                 </a>
                                                 </div>
-                                                </div>
                                             {% else %}
-                                                <div class="title_img_text_only">
-                                                <a href="{% url 'boards:board_detail' article.id %}">
+                                                <div style="border-radius: 1em"
+                                                        class="title_img_text_only">
+                                                <a href="{% url 'boards:board_index_name' board_self.id %}">
                                                     <div class="title_img_centered_text_text_only">
-                                                        {{ article.title | truncatechars:40 }}
+                                                        {{ board_self.name | truncatechars:40 }}
                                                     </div>
                                                 </a>
                                                 </div>
@@ -119,21 +126,8 @@
                                                 <ul class="list-inline">
                                                     <li class="list-inline-item">
                                                         <div style="font-size: 0.9em;" class="card__action">
-                                                            <a href="#">
-                                                                <i style="color: #ff5e5e;" class="material-icons">
-                                                                    favorite
-                                                                </i>
-                                                                <span>{{ article.upvote }}</span>
-                                                            </a>
-                                                        </div>
-                                                    </li>
-                                                    <li class="list-inline-item">
-                                                        <div style="font-size: 0.9em;" class="card__action">
-                                                            <a href="#">
-                                                                <i class="material-icons">
-                                                                comment
-                                                                </i>
-                                                                <span>{{ article.comment_count }}</span> </a>
+                                                            <a href="#"> <i style="color: #ff5e5e;" class="material-icons">favorite</i>
+                                                                <span>{{ board_self.points }}</span> </a>
                                                         </div>
                                                     </li>
                                                 </ul>
@@ -141,8 +135,7 @@
                                         </div>
                                     </article>
                                 </div>
-                            {% endfor %}
-                            {% include 'boards/board_index_fragment.html' %}
+                            {% include 'boards/board_project_list_fragment.html' %}
                             {% block js %}
                                 <script src="http://code.jquery.com/jquery-latest.js"></script>
                                 <script src="{% static 'boards/js/el-pagination.js' %}"></script>

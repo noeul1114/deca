@@ -16,10 +16,11 @@
                                                 <a {% if board.has_lower_board %}
                                                         style="box-shadow: 0.4em 0.4em #aa6666, 0.8em 0.8em #ffcccc;
                                                                 border-radius: 1em; margin-right: 0.8em"
+                                                   href="{% url 'boards:board_navigator_under' board.id %}" class="block title_img_top">
                                                         {% else %}
                                                         style="border-radius: 1em"
+                                                   href="{% url 'boards:board_index_name' board.id %}" class="block title_img_top">
                                                     {% endif %}
-                                                   href="{% url 'boards:board_detail' board.id %}" class="block title_img_top">
                                                     <div class="title_img_centered_text">
                                                         {{ board.name | truncatechars:25 }}
                                                     </div>
@@ -30,10 +31,11 @@
                                                 <a {% if board.has_lower_board %}
                                                         style="box-shadow: 0.4em 0.4em #aa6666, 0.8em 0.8em #ffcccc;
                                                                 border-radius: 1em; margin-right: 0.8em"
+                                                   href="{% url 'boards:board_navigator_under' board.id %}" class="block title_img_top">
                                                         {% else %}
                                                         style="border-radius: 1em"
+                                                   href="{% url 'boards:board_index_name' board.id %}" class="block title_img_top">
                                                     {% endif %}
-                                                        href="{% url 'boards:board_detail' board.id %}" class="block title_img">
                                                     <div class="title_img_centered_text">
                                                         {{ board.name | truncatechars:25 }}
                                                     </div>
@@ -52,11 +54,13 @@
                                                 <div  {% if board.has_lower_board %}
                                                         style="box-shadow: 0.4em 0.4em #aa6666, 0.8em 0.8em #ffcccc;
                                                                 border-radius: 1em; margin-right: 0.8em"
+                                                        class="title_img_text_only">
+                                                <a href="{% url 'boards:board_navigator_under' board.id %}">
                                                         {% else %}
                                                         style="border-radius: 1em"
-                                                    {% endif %}
                                                         class="title_img_text_only">
-                                                <a href="{% url 'boards:board_detail' board.id %}">
+                                                <a href="{% url 'boards:board_index_name' board.id %}">
+                                                    {% endif %}
                                                     <div class="title_img_centered_text_text_only">
                                                         {{ board.name | truncatechars:40 }}
                                                     </div>
@@ -66,11 +70,13 @@
                                                 <div {% if board.has_lower_board %}
                                                         style="box-shadow: 0.4em 0.4em #aa6666, 0.8em 0.8em #ffcccc;
                                                                 border-radius: 1em; margin-right: 0.8em"
+                                                        class="title_img_text_only">
+                                                <a href="{% url 'boards:board_navigator_under' board.id %}">
                                                         {% else %}
                                                         style="border-radius: 1em"
-                                                    {% endif %}
                                                         class="title_img_text_only">
-                                                <a href="{% url 'boards:board_detail' board.id %}">
+                                                <a href="{% url 'boards:board_index_name' board.id %}">
+                                                    {% endif %}
                                                     <div class="title_img_centered_text_text_only">
                                                         {{ board.name | truncatechars:40 }}
                                                     </div>

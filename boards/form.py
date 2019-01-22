@@ -10,7 +10,7 @@ from phonenumber_field.formfields import PhoneNumberField
 
 class BasicForm(forms.Form):
     title = forms.CharField(max_length=200)
-    project = forms.ModelChoiceField(queryset=Board.objects.filter(has_higher_board=False, activated=True))
+    project = forms.ModelChoiceField(queryset=Board.objects.filter(activated=True))
     article_text = forms.CharField(widget=SummernoteWidget())
 
     def __init__(self, *args, **kwargs):

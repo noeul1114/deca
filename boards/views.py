@@ -58,7 +58,7 @@ def board_index_name(request, board_id):
     user = get_user(request)
     board = get_object_or_404(Board, pk=board_id)
     article_list_top = Article.objects.filter(board_id=board_id, published=True, activated=True, created_at__gte=timezone.now() - timedelta(days=3)).order_by('upvote').reverse()[:8]
-    article_list = Article.objects.filter(board=board_id, published=True, activated=True).reverse()
+    article_list = Article.objects.filter(board_id=board_id, published=True, activated=True).reverse()
 
     template = 'boards/board_index.html'
     page_fragment = 'boards/board_index_fragment.html'
@@ -320,6 +320,7 @@ def board_write(request, **kwargs):
                 try:
                     A.published = True
                     A.activated = True
+                    A.board_id = request.POST['project']
                     A.save()
                     Attachment.objects.filter(article=A).update(activated=True)
                     return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': A.id}))

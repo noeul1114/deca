@@ -112,9 +112,9 @@ class Article(models.Model):
 
 
 class ArticleIpLog(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField('Date published')
-    article = models.ForeignKey(Article, on_delete=models.PROTECT, null=True)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True)
     ip = models.GenericIPAddressField()
 
 
@@ -123,7 +123,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField('Date published')
     edited_at = models.DateTimeField('Latest edited date')
 
-    article = models.ForeignKey(Article, on_delete=models.PROTECT, related_name='comments')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
     writer = models.ForeignKey(User, on_delete=models.PROTECT, related_name='writers')
 
     upvote = models.IntegerField(default=0)
@@ -140,9 +140,9 @@ class Comment(models.Model):
 
 
 class CommentIpLog(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField('Date published')
-    comment = models.ForeignKey(Comment, on_delete=models.PROTECT, null=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
     ip = models.GenericIPAddressField()
 
 

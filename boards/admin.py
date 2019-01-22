@@ -22,6 +22,11 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['writer']
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'article', 'upvote', 'writer')
+    list_filter = ['created_at']
+
+
 class BoardAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,  {'fields': ['description']}),
@@ -45,4 +50,5 @@ class BoardCommentIPLOG(admin.ModelAdmin):
 admin.site.register(ArticleIpLog, BoardIPLOG)
 admin.site.register(CommentIpLog, BoardCommentIPLOG)
 admin.site.register(Article, ArticleAdmin)
+admin.site.register(Comment, CommentAdmin)
 admin.site.register(Board, BoardAdmin)

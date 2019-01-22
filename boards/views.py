@@ -57,7 +57,7 @@ def board_index(request):
 def board_index_name(request, board_id):
     user = get_user(request)
     board = get_object_or_404(Board, pk=board_id)
-    article_list_top = Article.objects.filter(board=board_id, published=True, activated=True, created_at__gte=timezone.now() - timedelta(days=3)).order_by('upvote').reverse()[:8]
+    article_list_top = Article.objects.filter(board_id=board_id, published=True, activated=True, created_at__gte=timezone.now() - timedelta(days=3)).order_by('upvote').reverse()[:8]
     article_list = Article.objects.filter(board=board_id, published=True, activated=True).reverse()
 
     template = 'boards/board_index.html'

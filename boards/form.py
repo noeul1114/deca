@@ -3,6 +3,8 @@ from django import forms
 from django_summernote.widgets import SummernoteWidget
 from .models import Board
 
+from django.contrib.auth.models import User
+
 from phonenumber_field.formfields import PhoneNumberField
 
 
@@ -26,9 +28,24 @@ class BasicForm(forms.Form):
         super(BasicForm, self).__init__(*args, **kwargs)
 
 
-class UserRegisterForm(forms.Form):
+class UserRegisterForm(forms.ModelForm):
     username = forms.CharField(max_length=150, label='아이디', required=True, min_length=10)
     password = forms.CharField(widget=forms.PasswordInput, required=True, label='비밀번호', min_length=8)
+    confirm_password = forms.CharField(widget=forms.PasswordInput, required=True, label='비밀번호 확인', min_length=8)
+
+    class Meta:
+        model = User
+        fields = ('username','password')
+
+    def clean(self):
+        cleaned_data = super(UserRegisterForm, self).clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password != confirm_password:
+            raise forms.ValidationError(
+                "비밀번호가 맞지 않습니다."
+            )
 
 
 class UserRegisterFormOptional(forms.Form):

@@ -204,14 +204,18 @@ def board_logout(request):
 
 def board_register(request):
     if request.method == 'POST':
+        form_required = UserRegisterForm(data=request.POST)
+        form_optional = UserRegisterFormOptional(data=request.POST)
         try:
+            form_required.clean()
             user = User.objects.create_user(username=request.POST['username'],
                                             password=request.POST['password'],
                                             first_name=request.POST['first_name'],
                                             last_name=request.POST['family_name'],
                                             email=request.POST['email'],)
         except:
-            return render(request, 'boards/board_register.html', { 'error_message': '가입에 실패하였습니다'})
+            return render(request, 'boards/board_register.html', {'form_required': form_required,
+                                                              'form_optional': form_optional})
 
         if len(request.FILES) != 0:
             kwargs = request.POST.copy()
@@ -240,28 +244,37 @@ def board_register(request):
                 profile_image.save(**kwargs)
 
             except IOError:
-                user.delete()
-                profile_image.delete()
-                return render(request, 'boards/board_register.html', {'error_message': '가입에 실패하였습니다'})
+                if user:
+                    user.delete()
+                if profile_image:
+                    profile_image.delete()
+                return render(request, 'boards/board_register.html', {'form_required': form_required,
+                                                              'form_optional': form_optional})
 
-        try:
-            addtional = AdditionalUserProfile()
-            addtional.nickname = request.POST['nickname']
-            addtional.introduction = request.POST['introduction']
-            addtional.age = request.POST['age']
-            addtional.sex = request.POST['sex']
-            addtional.phone = request.POST['phone']
-            addtional.user = user
+        if form_optional.is_bound:
+            try:
+                addtional = AdditionalUserProfile()
+                addtional.nickname = request.POST['nickname']
+                addtional.introduction = request.POST['introduction']
+                if request.POST['age'] == '':
+                    addtional.age = None
+                else:
+                    addtional.age = request.POST['age']
+                addtional.sex = request.POST['sex']
+                addtional.phone = request.POST['phone']
+                addtional.user = user
 
-            addtional.save()
+                addtional.save()
 
-            return HttpResponseRedirect(reverse('boards:board_index'))
+                return HttpResponseRedirect(reverse('boards:board_index'))
 
-        except:
-            user.delete()
-            addtional.delete()
-            profile_image.delete()
-            return render(request, 'boards/board_register.html', {'error_message': '가입에 실패하였습니다'})
+            except:
+                if user:
+                    user.delete()
+                if len(request.FILES) != 0:
+                    profile_image.delete()
+                return render(request, 'boards/board_register.html', {'form_required': form_required,
+                                                                  'form_optional': form_optional})
 
 
 

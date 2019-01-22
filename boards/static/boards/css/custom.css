@@ -157,3 +157,7 @@
 .dropdown__trigger {
     font-size: 2em;
 }
+
+.errorlist {
+    display: none;
+}

@@ -22,15 +22,24 @@
                             <div class="switchable__text">
                                 <h2>회원가입</h2> <span>이미 회원이신가요? &nbsp;&nbsp; <a href="{% url 'boards:board_login' %}"> 로그인</a></span>
                                 <hr class="short">
-                                {% if error_message %}
+{#                            {% if form_required.has_error %}#}
+{#                                <div class="alert bg--error col-12 text-center">#}
+{#                                    <b>{{ form_required.non_field_errors }}</b>#}
+{#                                </div >#}
+{#                            {% endif %}#}
+                                {% if form_required.errors %}
                                     <div class="alert bg--error col-12 text-center">
-                                        <b>{{ error_message }}</b>
+                                    {% for error in form_required.non_field_errors  %}
+                                        <b>{{ error|striptags }}</b>
+                                    {% endfor %}
                                     </div>
                                 {% endif %}
                                 <form action="{% url 'boards:board_register' %}" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
+                                    <div class="row col-12">
+                                    </div>
                                     <div class="row">
-                                    {{ form_required.errors }}
+                                        {{ form_required.errors }}
                                         {{ form_required }}
                                     </div>
                                     <br><hr class="short">

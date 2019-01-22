@@ -93,7 +93,7 @@ class Article(models.Model):
     image = models.CharField(max_length=500, null=True)
 
     writer = models.ForeignKey(User, on_delete=models.PROTECT)
-    board = models.OneToOneField(Board, on_delete=models.PROTECT, null=True)
+    board = models.ForeignKey(Board, on_delete=models.PROTECT, null=True)
 
     comment_count = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)

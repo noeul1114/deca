@@ -209,10 +209,7 @@ def board_register(request):
         try:
             form_required.clean()
             user = User.objects.create_user(username=request.POST['username'],
-                                            password=request.POST['password'],
-                                            first_name=request.POST['first_name'],
-                                            last_name=request.POST['family_name'],
-                                            email=request.POST['email'],)
+                                            password=request.POST['password'],)
         except:
             return render(request, 'boards/board_register.html', {'form_required': form_required,
                                                               'form_optional': form_optional})
@@ -253,6 +250,13 @@ def board_register(request):
 
         if form_optional.is_bound:
             try:
+                register_user = get_object_or_404(User, username=request.POST['username'])
+                register_user.first_name = request.POST['first_name']
+                register_user.email = request.POST['email']
+                register_user.last_name = request.POST['family_name']
+
+                register_user.save()
+
                 addtional = AdditionalUserProfile()
                 addtional.nickname = request.POST['nickname']
                 addtional.introduction = request.POST['introduction']

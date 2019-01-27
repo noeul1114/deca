@@ -83,22 +83,14 @@
                                                 <a href="{% url 'boards:board_detail' article.id %}"
                                                    class="block title_img_top">
                                                     <div class="title_img_centered_text">{{ article.title }}</div>
-                                                    <img alt="Image" src="  {% if article.thumb %}
-                                                                            {{ article.thumb }}
-                                                                            {% else %}
-                                                                            {{ article.image }}
-                                                                            {% endif %}">
+                                                    <img alt="Image" src="{% if article.thumb %}http://thl1110.jpg2.kr/{{ article.thumb }}{% else %}{{ article.image }}{% endif %}">
                                                 </a>
                                                 </div>
                                             {% else %}
                                                 <a href="{% url 'boards:board_detail' article.id %}"
                                                    class="block title_img">
                                                     <div class="title_img_centered_text">{{ article.title }}</div>
-                                                    <img alt="Image" src="  {% if article.thumb %}
-                                                                            {{ article.thumb }}
-                                                                            {% else %}
-                                                                            {{ article.image }}
-                                                                            {% endif %}">
+                                                    <img alt="Image" src="{% if article.thumb %}http://thl1110.jpg2.kr/{{ article.thumb }}{% else %}{{ article.image }}{% endif %}">
                                                 </a>
                                             {% endif %}
                                         {% else %}

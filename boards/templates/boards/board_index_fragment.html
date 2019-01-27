@@ -23,7 +23,11 @@
                                                     <div class="title_img_centered_text">
                                                         {{ article.title | truncatechars:25 }}
                                                     </div>
-                                                    <img alt="Image" src="{{ article.image }}">
+                                                    <img alt="Image" src="  {% if article.thumb %}
+                                                                            {{ article.thumb }}
+                                                                            {% else %}
+                                                                            {{ article.image }}
+                                                                            {% endif %}">
                                                 </a>
                                                 </div>
                                             {% else %}
@@ -32,7 +36,11 @@
                                                     <div class="title_img_centered_text">
                                                         {{ article.title | truncatechars:25 }}
                                                     </div>
-                                                    <img alt="Image" src="{{ article.image }}">
+                                                    <img alt="Image" src="  {% if article.thumb %}
+                                                                            {{ article.thumb }}
+                                                                            {% else %}
+                                                                            {{ article.image }}
+                                                                            {% endif %}">
                                                 </a>
                                                 </div>
                                             {% endif %}

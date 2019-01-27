@@ -49,12 +49,12 @@
         <div class="main-container">
             <section>
                 <div class="container">
+                    <form action="{% url 'boards:board_write' %}" method="post">
                     {% if success_message %}
                     <div class="alert col-12 bg--success">
                         {{ success_message }}
                     </div>
                     {% endif %}
-                    <form action="{% url 'boards:board_write' %}" method="post">
                         {% csrf_token %}
 
                         {{ form|safe }}

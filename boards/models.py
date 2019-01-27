@@ -83,7 +83,6 @@ class Board(models.Model):
         return '%d: %s' % (self.id, self.name)
 
 
-
 class Article(models.Model):
     title = models.CharField(max_length=200)
     article_text = models.TextField()
@@ -91,6 +90,44 @@ class Article(models.Model):
     edited_at = models.DateTimeField('Latest edited date', auto_now=True)
 
     image = models.CharField(max_length=500, null=True)
+    thumb = models.ImageField(
+        upload_to=settings.THUMB_IMAGE_UPLOADPATH,
+        storage=FTPStorage(),
+        null=True
+    )
+
+    def save_thumb(self):
+        from PIL import Image
+        from io import BytesIO
+        from django.core.files.uploadedfile import InMemoryUploadedFile
+        import sys
+        if self.image:
+            if not self.image.__contains__('django-summernote'):
+                pass
+            else:
+                # try:
+                print(self.image[1:])
+                print(Attachment.objects.get(file=self.image[1:]))
+                img = Image.open(Attachment.objects.get(file=self.image[1:]).file)
+
+                output = BytesIO()
+
+                width, height = img.size
+                ratio = height / width
+                pixel = 265
+
+                img = img.resize((pixel, round(pixel * ratio)))
+
+                img.save(output, format='JPEG', quality=99)
+                output.seek(0)
+
+                self.thumb = InMemoryUploadedFile(output, "ImageField", self.image.split('/')[-1], 'image/jpeg',
+                                                  sys.getsizeof(output), None)
+
+                super(Article, self).save(update_fields=["thumb"])
+                # except:
+                #     pass
+
 
     writer = models.ForeignKey(User, on_delete=models.PROTECT)
     board = models.ForeignKey(Board, on_delete=models.PROTECT, null=True)
@@ -150,5 +187,3 @@ class Attachment(AbstractAttachment):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True)
     activated = models.BooleanField(default=False)
-
-

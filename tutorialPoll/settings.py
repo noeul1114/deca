@@ -17,7 +17,8 @@ import posixpath
 
 from django.conf.global_settings import TEMPLATES
 from .custom_upload_path import custom_uploaded_filepath_debug, custom_uploaded_filepath_deploy \
- ,custom_uploaded_filepath_debug_board_image, custom_uploaded_filepath_deploy_board_image
+ ,custom_uploaded_filepath_debug_board_image, custom_uploaded_filepath_deploy_board_image \
+, custom_uploaded_filepath_debug_thumb_image, custom_uploaded_filepath_deploy_thumb_image
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -42,6 +43,11 @@ if DEBUG:
     BOARD_IMAGE_UPLOADPATH = custom_uploaded_filepath_deploy_board_image
 else:
     BOARD_IMAGE_UPLOADPATH = custom_uploaded_filepath_deploy_board_image
+
+if DEBUG:
+    THUMB_IMAGE_UPLOADPATH = custom_uploaded_filepath_deploy_thumb_image
+else:
+    THUMB_IMAGE_UPLOADPATH = custom_uploaded_filepath_deploy_thumb_image
 
 ALLOWED_HOSTS = ['*']
 
@@ -230,7 +236,7 @@ REST_FRAMEWORK = {
 
 
 if DEBUG:
-    MEDIA_URL = '/media/'
+    MEDIA_URL = '/'
     BOARD_IMG_FTP = 'http://thl1110.jpg2.kr/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 else:

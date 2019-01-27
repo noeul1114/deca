@@ -73,24 +73,24 @@
 
 .title_img_centered_text {
     color: white;
-    font-size: 1.35em;
+    font-size: 1.4em;
     font-family: "Do Hyeon";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  text-shadow: 0px 0px 2px black;
+  text-shadow: 0px 0px 5px black;
 }
 
 .title_img_centered_text_text_only {
-    color: #787878;
-    font-size: 1.3em;
+    color: white;
+    font-size: 1.4em;
     font-family: "Do Hyeon";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /*text-shadow: 0px 0px 2px white;*/
+  text-shadow: 0px 0px 5px black;
 }
 
 .title_img {
@@ -111,7 +111,7 @@
     overflow: hidden;
     max-height: 500px;
   /*border: 3px solid #ff8888;*/
-  border-radius: 12px 12px 40px 12px;
+  border-radius: 12px;
 }
 
 .title_img_text_only {
@@ -132,8 +132,8 @@
   display: block;
   overflow: hidden;
   min-height: 200px;
-  border: 3px solid lightgrey;
-  border-radius: 12px 12px 40px 12px;
+  border: 2px solid #ffaeae;
+  border-radius: 12px;
   background-color: white;
 }
 

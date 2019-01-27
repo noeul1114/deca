@@ -326,6 +326,10 @@ def board_write(request, **kwargs):
                     A.activated = True
                     A.board_id = request.POST['project']
                     A.save()
+                    # try:
+                    A.save_thumb()
+                    # except:
+                    #     pass
                     Attachment.objects.filter(article=A).update(activated=True)
                     return HttpResponseRedirect(reverse('boards:board_detail', kwargs={'article_id': A.id}))
                 except:

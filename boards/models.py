@@ -106,9 +106,8 @@ class Article(models.Model):
                 pass
             else:
                 # try:
-                print(self.image[1:])
-                print(Attachment.objects.get(file=self.image[1:]))
-                img = Image.open(Attachment.objects.get(file=self.image[1:]).file)
+                print(Attachment.objects.get(file__contains=self.image.split('/')[-1]).file)
+                img = Image.open(Attachment.objects.get(file__contains=self.image.split('/')[-1]).file)
 
                 output = BytesIO()
 

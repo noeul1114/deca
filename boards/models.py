@@ -115,9 +115,9 @@ class Article(models.Model):
                 ratio = height / width
                 pixel = 265
 
-                img = img.resize((pixel, round(pixel * ratio)))
+                img = img.resize((pixel, round(pixel * ratio)), Image.ANTIALIAS)
 
-                img.save(output, format='JPEG', quality=99)
+                img.save(output, format='JPEG', quality=90)
                 output.seek(0)
 
                 self.thumb = InMemoryUploadedFile(output, "ImageField", self.image.split('/')[-1], 'image/jpeg',

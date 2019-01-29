@@ -38,13 +38,18 @@ class UserRegisterForm(forms.ModelForm):
         fields = ('username','password')
 
     def clean(self):
-        cleaned_data = super(UserRegisterForm, self).clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
+        if super(UserRegisterForm, self).is_valid():
+            cleaned_data = super(UserRegisterForm, self).clean()
+            password = cleaned_data.get("password")
+            confirm_password = cleaned_data.get("confirm_password")
 
-        if password != confirm_password:
+            if password != confirm_password:
+                raise forms.ValidationError(
+                    "비밀번호가 맞지 않습니다."
+                )
+        else:
             raise forms.ValidationError(
-                "비밀번호가 맞지 않습니다."
+                "유효하지 않은 입력입니다."
             )
 
 

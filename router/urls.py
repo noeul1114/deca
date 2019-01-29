@@ -24,7 +24,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'image', 'upvote', 'comment_count', 'downvote', 'published')
 
 
-class ArticleDetailSerializer(serializers.HyperlinkedModelSerializer):
+class ArticleDetailSerializer(serializers.ModelSerializer):
     comments = serializers.StringRelatedField(many=True)
 
     class Meta:

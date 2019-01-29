@@ -27,13 +27,18 @@
 {#                                    <b>{{ form_required.non_field_errors }}</b>#}
 {#                                </div >#}
 {#                            {% endif %}#}
-                                {% if form_required.errors %}
-                                    <div class="alert bg--error col-12 text-center">
-                                    {% for error in form_required.non_field_errors  %}
-                                        <b>{{ error|striptags }}</b>
-                                    {% endfor %}
-                                    </div>
-                                {% endif %}
+                            {% if error_message %}
+                                <div class="alert bg--error col-12 text-center">
+                                    <b>{{ error_message }}</b>
+                                </div >
+                            {% endif %}
+                            {% if form_required.errors %}
+                                <div class="alert bg--error col-12 text-center">
+                                {% for error in form_required.non_field_errors  %}
+                                    <b>{{ error|striptags }}</b>
+                                {% endfor %}
+                                </div>
+                            {% endif %}
                                 <form action="{% url 'boards:board_register' %}" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="row col-12">

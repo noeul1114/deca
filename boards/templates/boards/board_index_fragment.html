@@ -12,11 +12,6 @@
                                 <div class="col-6 col-md-3 masonry__item">
                                     <article class="feature feature-1">
                                         {% if article.image %}
-                                            <script>
-                                                var img = new Image();
-                                                img.onload = function() { mr.masonry.updateLayout(); };
-                                                img.src = "{{ article.image }}"
-                                            </script>
                                             {% if article.upvote > 10 %}
                                                 <div >
                                                 <a href="{% url 'boards:board_detail' article.id %}" class="block title_img_top">

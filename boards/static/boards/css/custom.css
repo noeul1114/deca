@@ -161,3 +161,7 @@
 .errorlist {
     display: none;
 }
+
+.article__body {
+    word-wrap: break-word;
+}

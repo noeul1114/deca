@@ -10,7 +10,7 @@ beautifulsoup4==4.6.1
 django-storages==1.6.6
 django-el-pagination==3.2.4
 
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 markdown==2.6.11
 django-filter==2.0.0
 Pygments==2.2.0

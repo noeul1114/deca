@@ -13,7 +13,7 @@ django-el-pagination==3.2.4
 djangorestframework==3.8.2
 markdown==2.6.11
 django-filter==2.0.0
-Pygments==2.2.0
+Pygments==2.7.4
 
 django-phonenumber-field==2.1.0
 phonenumbers==8.10.3
